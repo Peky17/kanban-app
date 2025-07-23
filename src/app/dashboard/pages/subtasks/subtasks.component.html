@@ -1,0 +1,80 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Subtasks</h1>
+      <p class="lead text-muted">Here you can manage all the ILP subtasks</p>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>SubTask list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Priority</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Task ID</th>
+                  <th>Created At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let subtask of subtasks">
+                  <td>{{ subtask.id }}</td>
+                  <td>{{ subtask.name }}</td>
+                  <td>
+                    <div *ngIf="getPriorityColor(subtask.priority) == 1">
+                      <span class="badge bg-danger">{{
+                        subtask.priority
+                      }}</span>
+                    </div>
+                    <div *ngIf="getPriorityColor(subtask.priority) == 2">
+                      <span class="badge bg-warning">{{
+                        subtask.priority
+                      }}</span>
+                    </div>
+                    <div *ngIf="getPriorityColor(subtask.priority) == 3">
+                      <span class="badge bg-success">{{
+                        subtask.priority
+                      }}</span>
+                    </div>
+                  </td>
+                  <td>{{ subtask.startdDate }}</td>
+                  <td>{{ subtask.dueDate }}</td>
+                  <td>{{ subtask.task.id }}</td>
+                  <td>{{ subtask.createdAt }}</td>
+                  <td>
+                    <div>
+                      <app-update-subtask-modal
+                        [subtask]="subtask"
+                      ></app-update-subtask-modal>
+                      <button
+                        class="btn btn-danger"
+                        (click)="confirmDelete(subtask.id, subtask.name)"
+                      >
+                        Delete
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <!-- Create task modal -->
+          <app-add-subtask-modal></app-add-subtask-modal>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

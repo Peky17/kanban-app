@@ -1,0 +1,70 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Kanban Board</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="updateFormulario" (ngSubmit)="updateBoard()">
+      <!-- name -->
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Kanban name"
+        />
+      </div>
+      <!-- description -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Description</b></label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="Board description"
+          ></textarea>
+        </div>
+      </div>
+      <!-- project -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Select the project</b></label>
+          <select class="form-control" formControlName="project">
+            <option disabled value="-17">Select the origin project</option>
+            <div *ngFor="let project of projects">
+              <option value="{{ project.id }}">{{ project.name }}</option>
+            </div>
+          </select>
+        </div>
+      </div>
+      <!-- created at -->
+      <div class="form-group" hidden>
+        <div class="form-group">
+          <label for="name"><b>CreatedAt</b></label>
+          <input
+            formControlName="createdAt"
+            value="1"
+            class="form-control"
+            type="date"
+          />
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">
+        Update Kanban Board
+        <i class="fa fa-pen" style="margin-left: 4px"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-success" (click)="open(content)">
+  Update Board <i style="margin-left: 2px" class="fa fa-pen"></i>
+</button>

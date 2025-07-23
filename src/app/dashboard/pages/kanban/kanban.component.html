@@ -1,0 +1,67 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Kanban Boards</h1>
+      <p class="lead text-muted">
+        Here you can manage all the Kanban Boards. Here you can Add, Delete, and
+        Update boards for task management.
+      </p>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Kanban boards list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Created At</th>
+                  <th>Project Id</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let board of boards">
+                  <td>{{ board.id }}</td>
+                  <td>{{ board.name }}</td>
+                  <td>{{ board.description }}</td>
+                  <td>{{ board.createdAt }}</td>
+                  <td>{{ board.project.id }}</td>
+                  <td>
+                    <button
+                      class="btn btn-secondary"
+                      (click)="redirectToBoard(board)"
+                    >
+                      View
+                      <i class="fa fa-eye"></i>
+                    </button>
+                    <app-update-kanban-modal
+                      [board]="board"
+                    ></app-update-kanban-modal>
+                    <button
+                      class="btn btn-danger"
+                      (click)="confirmDelete(board.id, board.name)"
+                    >
+                      Delete
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <app-add-kanban-modal></app-add-kanban-modal>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

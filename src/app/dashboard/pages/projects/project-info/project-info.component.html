@@ -1,0 +1,45 @@
+<!-- Button trigger -->
+<a
+  class="btn btn-ligth"
+  data-bs-toggle="offcanvas"
+  href="#offcanvasExample"
+  role="button"
+  aria-controls="offcanvasExample"
+>
+  View
+  <i style="margin-left: 5px" class="fa fa-eye"></i>
+</a>
+
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="offcanvasExample"
+  aria-labelledby="offcanvasExampleLabel"
+>
+  <!-- canvas header -->
+  <div class="offcanvas-header">
+    <h3 class="offcanvas-title" id="offcanvasExampleLabel">
+      {{ project.name }}
+    </h3>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <!-- canvas body -->
+  <div class="offcanvas-body">
+    <p><b>Start Date:</b> {{ project.startDate }}</p>
+    <p><b>Due Date:</b> {{ project.dueDate }}</p>
+    <p><b>Created At:</b> {{ project.createdAt }}</p>
+    <br />
+    <h5>Project description:</h5>
+    <div>{{ project.description }}</div>
+    <br />
+    <!-- <h5>Project Options:</h5> -->
+    <a class="btn btn-secondary" (click)="redirectToProjectBoards()"
+      >View Boards <i class="fa fa-eye"></i
+    ></a>
+  </div>
+</div>

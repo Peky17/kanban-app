@@ -1,0 +1,135 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New Kanban Bucket</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addFormulario" (ngSubmit)="createBucket()">
+      <!-- name -->
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Bucket name"
+        />
+      </div>
+      <!-- description -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Description</b></label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="bucket description"
+          ></textarea>
+        </div>
+      </div>
+      <!-- color picker -->
+      <div class="form-group">
+        <label for="colorpicker"><b>Choose the bucket color</b></label
+        ><br />
+        <div
+          class="btn-group"
+          role="group"
+          aria-label="Basic radio toggle button group"
+        >
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio2"
+            value="secondary"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-secondary" for="btnradio2">White</label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio3"
+            value="success"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-success" for="btnradio3">Aqua</label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio4"
+            value="info"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-info" for="btnradio4">Blue</label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio5"
+            value="warning"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-warning" for="btnradio5">Orange</label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio6"
+            value="danger"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-danger" for="btnradio6">Red</label>
+          <input
+            type="radio"
+            class="btn-check"
+            name="color"
+            id="btnradio7"
+            value="light"
+            formControlName="color"
+          />
+          <label class="btn btn-outline-light" for="btnradio7">Gray</label>
+        </div>
+      </div>
+      <!-- kanban board -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Select the assigned board</b></label>
+          <select class="form-control" formControlName="board">
+            <option disabled value="-17">Select the origin board</option>
+            <div *ngFor="let board of boards">
+              <option value="{{ board.id }}">{{ board.name }}</option>
+            </div>
+          </select>
+        </div>
+      </div>
+      <!-- created at -->
+      <div class="form-group" hidden>
+        <div class="form-group">
+          <label for="name"><b>CreatedAt</b></label>
+          <input
+            formControlName="createdAt"
+            value="1"
+            class="form-control"
+            type="date"
+          />
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">
+        Save Bucket
+        <i class="fa fa-check" style="margin-left: 4px"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-primary" (click)="open(content)">
+  Create New Bucket <i style="margin-left: 2px" class="fa fa-bookmark"></i>
+</button>

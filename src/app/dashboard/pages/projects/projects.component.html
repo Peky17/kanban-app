@@ -1,0 +1,71 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">ILP Projects</h1>
+      <p class="lead text-muted">Here you can manage all the ILP projects.</p>
+      <!-- Assign user to project and board -->
+      <app-assign-user></app-assign-user>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Project list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Created At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let project of projects">
+                  <td>{{ project.id }}</td>
+                  <td>{{ project.name }}</td>
+                  <td>{{ project.description }}</td>
+                  <td>{{ project.startDate }}</td>
+                  <td>{{ project.dueDate }}</td>
+                  <td>{{ project.createdAt }}</td>
+                  <td>
+                    <div>
+                      <app-project-info [project]="project"></app-project-info>
+                      <app-update-project
+                        [project]="project"
+                      ></app-update-project>
+                      <button
+                        class="btn btn-danger"
+                        (click)="
+                          confirmDelete(
+                            project.id.toString(),
+                            project.name,
+                            project.description
+                          )
+                        "
+                      >
+                        Delete
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <!-- Create project modal -->
+          <app-add-project></app-add-project>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

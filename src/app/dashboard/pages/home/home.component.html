@@ -1,0 +1,32 @@
+<main class="jumbotron" role="main">
+  <!-- menu section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <div class="row">
+        <!-- cards -->
+        <div class="col-lg-3" *ngFor="let card of modules">
+          <div
+            class="card-module card border-light mb-3"
+            style="max-width: 20rem"
+          >
+            <div class="card-body">
+              <h1><i class="{{ card.icon }}"></i></h1>
+              <h4 class="card-title">
+                {{ card.title }}
+              </h4>
+              <p class="card-text">{{ card.description }}</p>
+              <button
+                routerLink="{{ card.redirection }}"
+                class="btn btn-secondary"
+              >
+                Open module
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+<br />
+<br />

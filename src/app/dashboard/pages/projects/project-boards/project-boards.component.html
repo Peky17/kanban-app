@@ -1,0 +1,39 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">{{ project.name }} boards</h1>
+      <p class="lead text-muted">
+        Here you can find the associated boards for this project
+      </p>
+    </div>
+  </section>
+  <br />
+  <section class="jumbotron text-center">
+    <div class="container">
+      <div class="row">
+        <!-- cards -->
+        <div class="col-lg-3" *ngFor="let board of boards">
+          <div
+            class="card-module card border-light mb-3"
+            style="max-width: 20rem"
+          >
+            <div class="card-body">
+              <h1><i class="fa fa-table"></i></h1>
+              <h4 class="card-title">
+                {{ board.name }}
+              </h4>
+              <p class="card-text">{{ board.description }}</p>
+              <button
+                class="btn btn-secondary"
+                (click)="redirectToBoards(board)"
+              >
+                View Kanban board <i class="fa fa-eye"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

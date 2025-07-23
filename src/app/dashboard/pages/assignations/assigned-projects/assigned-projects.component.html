@@ -1,0 +1,54 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">My Assigned Projects</h1>
+      <p class="lead text-muted">
+        Here you can access to your assigned projects.
+      </p>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Project list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Created At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let project of projects">
+                  <td>{{ project.id }}</td>
+                  <td>{{ project.name }}</td>
+                  <td>{{ project.description }}</td>
+                  <td>{{ project.startDate }}</td>
+                  <td>{{ project.dueDate }}</td>
+                  <td>{{ project.createdAt }}</td>
+                  <td>
+                    <div>
+                      <button class="btn btn-secondary">
+                        View Boards
+                        <i class="fa fa-eye"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

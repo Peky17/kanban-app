@@ -1,0 +1,59 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Kanban Buckets</h1>
+      <p class="lead text-muted">
+        Here you can manage all the buckets for all the kanban boards.
+      </p>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Bucket list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Created At</th>
+                  <th>Board Id</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let bucket of buckets">
+                  <td>{{ bucket.id }}</td>
+                  <td>{{ bucket.name }}</td>
+                  <td>{{ bucket.description }}</td>
+                  <td>{{ bucket.createdAt }}</td>
+                  <td>{{ bucket.board.id }}</td>
+                  <td>
+                    <app-update-bucket-modal
+                      [bucket]="bucket"
+                    ></app-update-bucket-modal>
+                    <button
+                      class="btn btn-danger"
+                      (click)="confirmDelete(bucket.id, bucket.name)"
+                    >
+                      Delete
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <app-add-bucket-modal></app-add-bucket-modal>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

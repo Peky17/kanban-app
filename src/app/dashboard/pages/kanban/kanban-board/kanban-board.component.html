@@ -1,0 +1,43 @@
+<div class="container overflow-auto">
+  <div class="row">
+    <div class="col" *ngFor="let bucket of buckets">
+      <div class="card mb-3" style="max-width: 20rem">
+        <div class="card-header text-center bg-{{ bucket.color }}">
+          <h4>{{ bucket.name }}</h4>
+        </div>
+        <div class="card-body">
+          <!-- Tasks here -->
+          <div
+            cdkDropList
+            [id]="'list-' + bucket.id"
+            [cdkDropListConnectedTo]="getConnectedLists()"
+            [cdkDropListData]="
+              bucketTasks[getBucketPosition(bucket.id)].taskNames
+            "
+            class="example-list"
+            (cdkDropListDropped)="drop($event)"
+          >
+            <div
+              *ngFor="
+                let item of bucketTasks[getBucketPosition(bucket.id)].taskNames;
+                track
+              "
+            >
+              <div class="example-box" cdkDrag>
+                {{ item }}
+                <div class="btn-group btn-sm">
+                  <button class="btn btn-secondary btn-sm">
+                    <i class="fa fa-eye"></i>
+                  </button>
+                  <button class="btn btn-success btn-sm">
+                    <i class="fa fa-check"></i>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

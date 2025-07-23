@@ -1,0 +1,79 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Tasks</h1>
+      <p class="lead text-muted">Here you can manage all the ILP tasks</p>
+      <app-assign-task></app-assign-task>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Tasks list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Name</th>
+                  <th>Description</th>
+                  <th>Priority</th>
+                  <th>Start Date</th>
+                  <th>Due Date</th>
+                  <th>Bucket ID</th>
+                  <th>Created At</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let task of tasks">
+                  <td>{{ task.id }}</td>
+                  <td>{{ task.name }}</td>
+                  <td>{{ task.description }}</td>
+                  <td>
+                    <div *ngIf="getPriorityColor(task.priority) == 1">
+                      <span class="badge bg-danger">{{ task.priority }}</span>
+                    </div>
+                    <div *ngIf="getPriorityColor(task.priority) == 2">
+                      <span class="badge bg-warning">{{ task.priority }}</span>
+                    </div>
+                    <div *ngIf="getPriorityColor(task.priority) == 3">
+                      <span class="badge bg-success">{{ task.priority }}</span>
+                    </div>
+                  </td>
+                  <td>{{ task.startDate }}</td>
+                  <td>{{ task.dueDate }}</td>
+                  <td>{{ task.bucket.id }}</td>
+                  <td>{{ task.createdAt }}</td>
+                  <td>
+                    <div>
+                      <app-update-task-modal
+                        [task]="task"
+                      ></app-update-task-modal>
+                      <button
+                        class="btn btn-danger"
+                        (click)="
+                          confirmDelete(task.id, task.name, task.description)
+                        "
+                      >
+                        Delete
+                        <i class="fa fa-trash"></i>
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <!-- Create task modal -->
+          <app-add-task-modal></app-add-task-modal>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

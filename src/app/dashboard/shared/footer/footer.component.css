@@ -1,0 +1,21 @@
+/* Estilo para el cuerpo de la página */
+/* body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+} */
+
+/* Estilo para el contenido principal */
+.main-content {
+  margin-bottom: 100px; /* Ajusta el valor según sea necesario para dar espacio al footer */
+}
+
+/* Estilo para el footer */
+footer {
+  color: white;
+  padding: 8px 0;
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  width: 100%;
+}

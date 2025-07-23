@@ -1,0 +1,67 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Project</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="updateFormulario" (ngSubmit)="updateProject()">
+      <!-- name -->
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="project name"
+        />
+      </div>
+      <!-- description -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Description</b></label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="project description"
+          ></textarea>
+        </div>
+      </div>
+      <!-- start date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Start Date</b></label>
+          <input class="form-control" type="date" formControlName="startDate" />
+        </div>
+      </div>
+      <!-- due date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Due Date</b></label>
+          <input class="form-control" type="date" formControlName="dueDate" />
+        </div>
+      </div>
+      <!-- created at hidden -->
+      <div class="form-group" hidden>
+        <div class="form-group">
+          <label for="name"><b>Created At</b></label>
+          <input type="text" formControlName="createdAt" />
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary" (click)="updateProject()">
+        Update project
+        <i class="fa fa-check" style="margin-left: 4px"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-success" (click)="open(content)">
+  Update <i style="margin-left: 2px" class="fa fa-pen"></i>
+</button>

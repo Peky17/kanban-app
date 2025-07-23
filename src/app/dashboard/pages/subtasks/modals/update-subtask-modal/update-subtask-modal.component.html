@@ -1,0 +1,84 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Update Subtask</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="updateFormulario" (ngSubmit)="updateSubtask()">
+      <!-- name -->
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="SubTask name"
+        />
+      </div>
+      <!-- Priority -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Priority</b></label>
+          <select class="form-control" formControlName="priority">
+            <option selected value="-17" disabled>Select the priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <!-- start date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Start Date</b></label>
+          <input
+            class="form-control"
+            type="date"
+            formControlName="startdDate"
+          />
+        </div>
+      </div>
+      <!-- due date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Due Date</b></label>
+          <input class="form-control" type="date" formControlName="dueDate" />
+        </div>
+      </div>
+      <!-- Task associated -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Assigned Task</b></label>
+          <select class="form-control" formControlName="task">
+            <option disabled value="-17">Select the origin task</option>
+            <div *ngFor="let task of tasks">
+              <option value="{{ task.id }}">{{ task.name }}</option>
+            </div>
+          </select>
+        </div>
+      </div>
+      <!-- created at hidden -->
+      <div class="form-group" hidden>
+        <div class="form-group">
+          <label for="name"><b>Created At</b></label>
+          <input type="text" formControlName="createdAt" />
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">
+        Update subtask
+        <i class="fa fa-check" style="margin-left: 4px"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-success" (click)="open(content)">
+  Update Subtask <i style="margin-left: 2px" class="fa fa-pen"></i>
+</button>

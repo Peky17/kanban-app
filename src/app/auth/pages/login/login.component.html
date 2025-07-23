@@ -1,0 +1,66 @@
+<body>
+  <section class="ftco-section">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-12 col-lg-10">
+          <div class="wrap d-md-flex">
+            <div
+              class="img"
+              style="background-image: url(assets/kanban.avif)"
+            ></div>
+            <div class="login-wrap p-4 p-md-5">
+              <div class="d-flex">
+                <div class="w-100">
+                  <h3 class="mb-4">ILP Task Maneger Access</h3>
+                </div>
+              </div>
+              <form
+                (ngSubmit)="login()"
+                [formGroup]="miFormulario"
+                class="signin-form"
+              >
+                <div class="form-group mb-3">
+                  <label for="name">Email</label>
+                  <input
+                    formControlName="email"
+                    id="email"
+                    type="email"
+                    class="form-control"
+                    placeholder="User email"
+                    required
+                  />
+                </div>
+                <div class="form-group mb-3">
+                  <label for="password">Password</label>
+                  <input
+                    formControlName="password"
+                    id="password"
+                    class="form-control"
+                    pattern="(?=.*\d)(?=.*[a-záéíóúüñ]).*[A-ZÁÉÍÓÚÜÑ].*"
+                    title="Debe tener al menos una mayúscula, una minúscula y un dígito"
+                    maxlength="25"
+                    minlength="5"
+                    type="Password"
+                    placeholder="User Password"
+                    required=""
+                  />
+                </div>
+                <br />
+                <div class="form-group">
+                  <button
+                    type="submit"
+                    name="enviar"
+                    class="form-control btn btn-primary submit px-3"
+                  >
+                    Log In
+                    <i style="margin-left: 6px" class="fa fa-user-circle"></i>
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</body>

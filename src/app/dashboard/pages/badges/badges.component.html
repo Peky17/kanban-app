@@ -1,0 +1,54 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Bucket Badges</h1>
+      <p class="lead text-muted">
+        Here you can manage all the available badges for all the kanban boards.
+      </p>
+    </div>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card mb-4 box-shadow">
+        <div class="card-header text-center"><h5>Badges list</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Result</th>
+                  <th>Action</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let badge of badges">
+                  <td>{{ badge.id }}</td>
+                  <td>
+                    <span class="badge bg-{{ badge.color }}">{{
+                      badge.text
+                    }}</span>
+                  </td>
+                  <td>
+                    <button
+                      class="btn btn-danger"
+                      (click)="confirmDelete(badge.id, badge.text)"
+                    >
+                      Delete
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+        <div class="card-footer">
+          <app-add-badge-modal></app-add-badge-modal>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

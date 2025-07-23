@@ -1,0 +1,91 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">New Task</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addFormulario" (ngSubmit)="createTask()">
+      <!-- name -->
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Task name"
+        />
+      </div>
+      <!-- description -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Description</b></label>
+          <textarea
+            class="form-control"
+            formControlName="description"
+            placeholder="Task description"
+          ></textarea>
+        </div>
+      </div>
+      <!-- Priority -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Priority</b></label>
+          <select class="form-control" formControlName="priority">
+            <option selected value="-17" disabled>Select the priority</option>
+            <option value="High">High</option>
+            <option value="Medium">Medium</option>
+            <option value="Low">Low</option>
+          </select>
+        </div>
+      </div>
+      <!-- start date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Start Date</b></label>
+          <input class="form-control" type="date" formControlName="startDate" />
+        </div>
+      </div>
+      <!-- due date -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Due Date</b></label>
+          <input class="form-control" type="date" formControlName="dueDate" />
+        </div>
+      </div>
+      <!-- Bucket associated -->
+      <div class="form-group">
+        <div class="form-group">
+          <label for="name"><b>Assigned Bucket</b></label>
+          <select class="form-control" formControlName="bucket">
+            <option disabled value="-17">Select the origin bucket</option>
+            <div *ngFor="let bucket of buckets">
+              <option value="{{ bucket.id }}">{{ bucket.name }}</option>
+            </div>
+          </select>
+        </div>
+      </div>
+      <!-- created at hidden -->
+      <div class="form-group" hidden>
+        <div class="form-group">
+          <label for="name"><b>Created At</b></label>
+          <input type="text" formControlName="createdAt" />
+        </div>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">
+        Save task
+        <i class="fa fa-check" style="margin-left: 4px"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-primary" (click)="open(content)">
+  Create New Task <i style="margin-left: 2px" class="fa fa-tasks"></i>
+</button>

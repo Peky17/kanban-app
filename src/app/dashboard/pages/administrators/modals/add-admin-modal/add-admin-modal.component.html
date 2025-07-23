@@ -1,0 +1,72 @@
+<ng-template #content let-c="close" let-d="dismiss">
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Create New User</h4>
+    <button
+      type="button"
+      class="btn-close"
+      aria-label="Close"
+      (click)="d('Cross click')"
+    ></button>
+  </div>
+  <div class="modal-body">
+    <form [formGroup]="addFormulario" (ngSubmit)="addAdmin()">
+      <div class="form-group">
+        <label for="name"><b>Name</b></label>
+        <input
+          formControlName="name"
+          type="text"
+          class="form-control"
+          id="name"
+          placeholder="Administrator name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="email"><b>Email</b></label>
+        <input
+          formControlName="email"
+          type="email"
+          class="form-control"
+          id="email"
+          placeholder="Administrator email"
+        />
+      </div>
+      <div class="form-group">
+        <label for="cellphone"><b>Phone</b></label>
+        <input
+          formControlName="cellphone"
+          type="text"
+          class="form-control"
+          id="cellphone"
+          placeholder="Administrator phone"
+        />
+      </div>
+      <div class="form-group">
+        <label for="password"><b>Password</b></label>
+        <input
+          formControlName="password"
+          type="password"
+          class="form-control"
+          id="password"
+          placeholder="Administrator password"
+        />
+      </div>
+      <div class="form-group" formGroupName="role">
+        <label for="role"><b>Role</b></label>
+        <select class="form-control" formControlName="id">
+          <option value="1">Administrator</option>
+          <option value="2">Associate</option>
+          <option value="3">Manager</option>
+        </select>
+      </div>
+      <br />
+      <button type="submit" class="btn btn-primary">
+        Create Administrator
+        <i style="margin-left: 5px" class="fa fa-plus"></i>
+      </button>
+    </form>
+  </div>
+</ng-template>
+
+<button type="button" class="btn btn-primary" (click)="open(content)">
+  Create New User <i style="margin-left: 2px" class="fa fa-user"></i>
+</button>

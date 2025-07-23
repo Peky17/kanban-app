@@ -1,0 +1,56 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Mange Users</h1>
+      <p class="lead text-muted">
+        Here you can manage all the users. Here you can Add, Delete, Complete
+        and Update users
+      </p>
+    </div>
+    <app-add-admin-modal></app-add-admin-modal>
+  </section>
+  <br />
+  <section class="container">
+    <div class="col-md-12">
+      <div class="card border-dark mb-4 box-shadow">
+        <div class="card-header text-center"><h5>User List</h5></div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover bordered border-light">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Email</th>
+                  <th>Teléfono</th>
+                  <th>Acción</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let admin of administrators">
+                  <td>{{ admin.id }}</td>
+                  <td>{{ admin.name }}</td>
+                  <td>{{ admin.email }}</td>
+                  <td>{{ admin.cellphone }}</td>
+                  <td *ngIf="!isCurrentUserEmail(admin.email)">
+                    <button
+                      class="btn btn-danger"
+                      (click)="confirmDelete(admin.id, admin.name)"
+                    >
+                      Delete
+                      <i class="fa fa-trash"></i>
+                    </button>
+                  </td>
+                  <td *ngIf="isCurrentUserEmail(admin.email)">
+                    <a>Actions not allowed! <i class="fa fa-ban"></i></a>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
