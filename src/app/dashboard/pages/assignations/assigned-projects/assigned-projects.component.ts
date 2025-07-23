@@ -20,18 +20,12 @@ export class AssignedProjectsComponent {
   ) {}
 
   ngOnInit(): void {
-    this.getProjectsAssignation(this.getCurrentUserId());
-  }
-
-  getCurrentUserId(): number {
     this.authService.getUserRole().subscribe({
       next: (user: User) => {
         this.currentUser = user;
-        console.log(user);
+        this.getProjectsAssignation(user.id);
       },
     });
-
-    return this.currentUser.id;
   }
 
   getProjectsAssignation(currentUserId: number): void {
