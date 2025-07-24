@@ -26,12 +26,82 @@
               <div class="example-box" cdkDrag>
                 {{ task.name }}
                 <div class="btn-group btn-sm">
-                  <button class="btn btn-secondary btn-sm">
+                  <button
+                    class="btn btn-secondary btn-sm"
+                    data-bs-toggle="offcanvas"
+                    [attr.data-bs-target]="'#offcanvasExample' + task.id"
+                    aria-controls="offcanvasExample"
+                  >
                     <i class="fa fa-eye"></i>
                   </button>
-                  <button class="btn btn-success btn-sm">
+                  <button
+                    class="btn btn-success btn-sm"
+                    (click)="markTaskAsCompleted(task)"
+                  >
                     <i class="fa fa-check"></i>
                   </button>
+                </div>
+              </div>
+
+              <!-- Offcanvas for task details -->
+              <div
+                class="offcanvas offcanvas-start"
+                tabindex="-1"
+                [id]="'offcanvasExample' + task.id"
+                [attr.aria-labelledby]="'offcanvasExampleLabel' + task.id"
+              >
+                <!-- canvas header -->
+                <div class="offcanvas-header">
+                  <h3
+                    class="offcanvas-title"
+                    [id]="'offcanvasExampleLabel' + task.id"
+                  >
+                    {{ task.name }}
+                  </h3>
+                  <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="offcanvas"
+                    aria-label="Close"
+                  ></button>
+                </div>
+                <!-- canvas body -->
+                <div class="offcanvas-body" style="text-align: left">
+                  <p><b>Start Date:</b> {{ task.startDate }}</p>
+                  <p><b>Due Date:</b> {{ task.dueDate }}</p>
+                  <p><b>Created At:</b> {{ task.createdAt }}</p>
+                  <p><b>Priority:</b>
+                    <span
+                      class="badge"
+                      [class.bg-danger]="task.priority === 'High'"
+                      [class.bg-warning]="task.priority === 'Medium'"
+                      [class.bg-success]="task.priority === 'Low'"
+                    >
+                      {{ task.priority }}
+                    </span>
+                  </p>
+                  <br />
+                  <h5>Task description:</h5>
+                  <div>{{ task.description }}</div>
+                  <br />
+                  <!-- Actions -->
+                  <h5>Actions:</h5>
+                  <div class="btn-group">
+                    <button
+                      class="btn btn-secondary"
+                      (click)="redirectToBoard(task)"
+                      data-bs-dismiss="offcanvas"
+                    >
+                      View Board <i class="fa fa-eye"></i>
+                    </button>
+                    <button
+                      class="btn btn-success"
+                      (click)="markTaskAsCompleted(task)"
+                      data-bs-dismiss="offcanvas"
+                    >
+                      Mark as Done! <i class="fa fa-check"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>

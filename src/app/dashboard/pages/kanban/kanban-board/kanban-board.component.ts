@@ -9,14 +9,17 @@ import {
 } from '@angular/cdk/drag-drop';
 import { NgFor } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
 import { TaskService } from 'src/app/services/task.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
-import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
+import { TaskAssignation, UserTaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { User } from 'src/app/interfaces/user.interface';
+import { BoardService } from 'src/app/services/board.service';
+import { Board } from 'src/app/interfaces/board.interface';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-kanban-board',
@@ -34,10 +37,12 @@ export class KanbanBoardComponent implements OnInit {
 
   constructor(
     private route: ActivatedRoute,
+    private router: Router,
     private taskService: TaskService,
     private bucketService: BucketService,
     private authService: AuthService,
-    private taskAssignationService: TaskAssignationService
+    private taskAssignationService: TaskAssignationService,
+    private boardService: BoardService
   ) {}
 
   ngOnInit(): void {
@@ -167,5 +172,80 @@ export class KanbanBoardComponent implements OnInit {
         }
       });
     }
+  }
+
+  // Get UserTaskAssignation for a specific task
+  getUserTaskAssignationForTask(task: Task): UserTaskAssignation | null {
+    const assignation = this.userTaskAssignations.find(
+      (assignment: TaskAssignation) => assignment.task.id === task.id
+    );
+
+    if (assignation) {
+      return {
+        id: assignation.id,
+        task: task,
+        user: this.currentUser,
+        isCompleted: assignation.completed
+      };
+    }
+    return null;
+  }
+
+  // Mark task as completed
+  markTaskAsCompleted(task: Task): void {
+    const userTaskAssignation = this.getUserTaskAssignationForTask(task);
+
+    if (!userTaskAssignation) {
+      console.error('Task assignation not found');
+      return;
+    }
+
+    const taskAssignation: TaskAssignation = {
+      id: userTaskAssignation.id,
+      user: {
+        id: this.currentUser.id,
+      },
+      task: {
+        id: task.id,
+      },
+      completed: true,
+    };
+
+    this.taskAssignationService
+      .updateAssignation(userTaskAssignation.id, taskAssignation)
+      .subscribe({
+        next: (assignationUpdated: TaskAssignation) => {
+          Swal.fire('Task completed', 'Task completed successfully!', 'success');
+          // Remove the task from the UI
+          this.removeTaskFromBuckets(task.id);
+        },
+        error: (err) => {
+          console.error('Error marking task as completed:', err);
+          Swal.fire('Error', 'Failed to mark task as completed', 'error');
+        }
+      });
+  }
+
+  // Remove task from buckets array after completion
+  private removeTaskFromBuckets(taskId: number): void {
+    this.bucketTasks.forEach((bucketTask: BucketTask) => {
+      bucketTask.tasks = bucketTask.tasks.filter(task => task.id !== taskId);
+    });
+  }
+
+  // Redirect to board (for the view button functionality)
+  redirectToBoard(task: Task): void {
+    const bucketId: number = task.bucket.id;
+    this.bucketService.getBucketById(bucketId).subscribe({
+      next: (bucket: Bucket) => {
+        this.boardService.getBoardById(bucket.board.id).subscribe({
+          next: (board: Board) => {
+            this.router.navigate(['/dashboard/board', board]);
+          },
+          error: (err) => console.error('Error getting board:', err)
+        });
+      },
+      error: (err) => console.error('Error getting bucket:', err)
+    });
   }
 }
