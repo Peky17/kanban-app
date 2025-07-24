@@ -13,6 +13,10 @@ import { ActivatedRoute } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
 import { TaskService } from 'src/app/services/task.service';
+import { AuthService } from 'src/app/services/auth.service';
+import { TaskAssignationService } from 'src/app/services/task-assignation.service';
+import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
+import { User } from 'src/app/interfaces/user.interface';
 
 @Component({
   selector: 'app-kanban-board',
@@ -25,10 +29,15 @@ export class KanbanBoardComponent implements OnInit {
   board!: any;
   buckets: Bucket[] = [];
   bucketTasks: BucketTask[] = [];
+  currentUser!: User;
+  userTaskAssignations: TaskAssignation[] = [];
+
   constructor(
     private route: ActivatedRoute,
     private taskService: TaskService,
-    private bucketService: BucketService
+    private bucketService: BucketService,
+    private authService: AuthService,
+    private taskAssignationService: TaskAssignationService
   ) {}
 
   ngOnInit(): void {
@@ -37,17 +46,35 @@ export class KanbanBoardComponent implements OnInit {
       next: (value) => (this.board = value),
       error: (err) => console.error('Error:', err),
     });
-    // Get board buckets
-    this.bucketService.getBucketsByBoard(this.board.id).subscribe({
-      next: (bucketsObtained: Bucket[]) =>
-        this.initBucketsAndTasks(bucketsObtained),
-      error: (err) => console.error('Error:', err),
+
+    // Get current user and then initialize buckets and tasks
+    this.authService.getUserRole().subscribe({
+      next: (user: User) => {
+        this.currentUser = user;
+        this.getUserTaskAssignations();
+      },
+      error: (err) => console.error('Error getting user:', err),
+    });
+  }
+
+  getUserTaskAssignations(): void {
+    this.taskAssignationService.getTaskAssignationByUserId(this.currentUser.id).subscribe({
+      next: (assignedTasks: TaskAssignation[]) => {
+        this.userTaskAssignations = assignedTasks;
+        // Get board buckets after getting user assignations
+        this.bucketService.getBucketsByBoard(this.board.id).subscribe({
+          next: (bucketsObtained: Bucket[]) =>
+            this.initBucketsAndTasks(bucketsObtained),
+          error: (err) => console.error('Error:', err),
+        });
+      },
+      error: (err) => console.error('Error getting task assignations:', err),
     });
   }
 
   initBucketsAndTasks(bucketsObtained: Bucket[]): void {
     this.buckets = bucketsObtained;
-    // get tasks for each bucket and save
+    // get tasks for each bucket and save only the ones assigned to current user
     this.buckets.forEach((bucket: Bucket) => {
       let bucketTaskElement: BucketTask = this.getTasksByBucket(bucket.id);
       this.bucketTasks.push(bucketTaskElement);
@@ -57,9 +84,15 @@ export class KanbanBoardComponent implements OnInit {
   getTasksByBucket(bucketId: number): BucketTask {
     let taskNames: string[] = [];
     this.taskService.getTasksByBucket(bucketId).subscribe({
-      next(tasks: Task[]) {
+      next: (tasks: Task[]) => {
         tasks.forEach((task: Task) => {
-          taskNames.push(task.name);
+          // Check if this task is assigned to the current user
+          const isAssignedToUser = this.userTaskAssignations.some(
+            (assignation: TaskAssignation) => assignation.task.id === task.id
+          );
+          if (isAssignedToUser) {
+            taskNames.push(task.name);
+          }
         });
       },
     });
