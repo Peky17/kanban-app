@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Project } from 'src/app/interfaces/project.interface';
@@ -46,7 +46,8 @@ export class ProjectMembersComponent implements OnInit {
     private projectAssignationService: ProjectAssignationService,
     private taskAssignationService: TaskAssignationService,
     private administratorService: AdministratorService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private cdr: ChangeDetectorRef
   ) {}
 
   ngOnInit(): void {
@@ -55,34 +56,31 @@ export class ProjectMembersComponent implements OnInit {
 
   async loadProjectsWithProgress(): Promise<void> {
     this.loading = true;
+    this.projectsProgress = []; 
+    
+    this.cdr.detectChanges();
+    
     try {
-      // Get all projects
       this.projectService.getProjects().subscribe({
         next: async (projects: Project[]) => {
-          console.log('Loaded projects:', projects);
-
-          // Validate projects structure
-          const validProjects = projects.filter(project =>
-            project &&
-            project.id &&
-            typeof project.id === 'number' &&
-            project.name
-          );
-
-          if (validProjects.length !== projects.length) {
-            console.warn('Some projects have invalid structure:', projects);
+          if (!projects || projects.length === 0) {
+            this.loading = false;
+            this.cdr.detectChanges();
+            return;
           }
 
-          this.projects = validProjects;
-          this.projectsProgress = [];
-
-          for (const project of validProjects) {
+          for (let i = 0; i < projects.length; i++) {
+            const project = projects[i];
+            
             try {
               const projectProgress = await this.getProjectProgress(project);
               this.projectsProgress.push(projectProgress);
+              
+              this.cdr.markForCheck();
+              this.cdr.detectChanges();
+              
             } catch (error) {
-              console.error('Error processing project:', project.name, error);
-              // Add project with empty progress if there's an error
+              console.error(`Error processing project ${project.name}:`, error);
               this.projectsProgress.push({
                 project,
                 members: [],
@@ -90,45 +88,71 @@ export class ProjectMembersComponent implements OnInit {
                 totalCompletedTasks: 0,
                 overallProgress: 0
               });
+              this.cdr.detectChanges();
             }
           }
+          
           this.loading = false;
+          this.cdr.detectChanges();
+          
         },
         error: (err) => {
           console.error('Error loading projects:', err);
           this.loading = false;
+          this.cdr.detectChanges();
         }
       });
+      
     } catch (error) {
-      console.error('Error:', error);
+      console.error('Error in loadProjectsWithProgress:', error);
       this.loading = false;
+      this.cdr.detectChanges();
     }
   }
 
   private async getProjectProgress(project: Project): Promise<ProjectProgress> {
     return new Promise((resolve) => {
-      // Get project members
       this.projectAssignationService.getAssignationsByProjectId(project.id).subscribe({
         next: async (assignations: ProjectAssignation[]) => {
-          console.log('Project assignations for project', project.id, ':', assignations);
+          if (!assignations || assignations.length === 0) {
+            resolve({
+              project,
+              members: [],
+              totalProjectTasks: 0,
+              totalCompletedTasks: 0,
+              overallProgress: 0
+            });
+            return;
+          }
+          
           const members: ProjectMember[] = [];
           let totalProjectTasks = 0;
           let totalCompletedTasks = 0;
 
-          for (const assignation of assignations) {
-            // Validate assignation structure
-            if (!assignation || !assignation.user || !assignation.user.id) {
-              console.warn('Invalid assignation structure:', assignation);
+          for (let i = 0; i < assignations.length; i++) {
+            const assignation: any = assignations[i];
+            
+            let userId: number | null = null;
+            
+            if (assignation && assignation.user && assignation.user.id) {
+              userId = assignation.user.id;
+            } else if (assignation && assignation.id && assignation.name) {
+              userId = assignation.id;
+            } else {
+              continue;
+            }
+
+            if (!userId) {
               continue;
             }
 
             try {
-              const member = await this.getMemberProgress(assignation.user.id);
+              const member = await this.getMemberProgress(userId);
               members.push(member);
               totalProjectTasks += member.totalTasks;
               totalCompletedTasks += member.completedTasks;
             } catch (error) {
-              console.error('Error getting member progress for user:', assignation.user.id, error);
+              console.error('Error getting member progress for user:', userId, error);
             }
           }
 
@@ -136,16 +160,18 @@ export class ProjectMembersComponent implements OnInit {
             ? Math.round((totalCompletedTasks / totalProjectTasks) * 100)
             : 0;
 
-          resolve({
+          const finalProgress = {
             project,
             members,
             totalProjectTasks,
             totalCompletedTasks,
             overallProgress
-          });
+          };
+          
+          resolve(finalProgress);
         },
         error: (err) => {
-          console.error('Error getting project assignations:', err);
+          console.error(`Error getting project assignations for project: ${project.name}`, err);
           resolve({
             project,
             members: [],
@@ -160,9 +186,7 @@ export class ProjectMembersComponent implements OnInit {
 
   private async getMemberProgress(userId: number): Promise<ProjectMember> {
     return new Promise((resolve) => {
-      // Validate userId
       if (!userId || isNaN(userId)) {
-        console.error('Invalid userId:', userId);
         resolve({
           user: { id: 0, name: 'Invalid User' } as User,
           totalTasks: 0,
@@ -172,13 +196,11 @@ export class ProjectMembersComponent implements OnInit {
         return;
       }
 
-      // Get user details
       this.administratorService.getAdministratorById(userId.toString()).subscribe({
         next: (user: User) => {
           if (!user) {
-            console.error('User not found for id:', userId);
             resolve({
-              user: { id: userId, name: 'User Not Found' } as User,
+              user: { id: userId, name: 'User Not Found', email: '', role: { id: 0, name: 'Unknown' } } as User,
               totalTasks: 0,
               completedTasks: 0,
               progressPercentage: 0
@@ -186,7 +208,14 @@ export class ProjectMembersComponent implements OnInit {
             return;
           }
 
-          // Get user task assignations
+          const processedUser: User = {
+            ...user,
+            role: user.role ? {
+              id: user.role.id || 0,
+              name: user.role.name || 'User'
+            } : { id: 0, name: 'User' }
+          };
+
           this.taskAssignationService.getTaskAssignationByUserId(userId).subscribe({
             next: (taskAssignations: TaskAssignation[]) => {
               const validAssignations = taskAssignations.filter(ta => ta && typeof ta.completed === 'boolean');
@@ -197,7 +226,7 @@ export class ProjectMembersComponent implements OnInit {
                 : 0;
 
               resolve({
-                user,
+                user: processedUser,
                 totalTasks,
                 completedTasks,
                 progressPercentage
@@ -206,7 +235,7 @@ export class ProjectMembersComponent implements OnInit {
             error: (err) => {
               console.error('Error getting task assignations for user:', userId, err);
               resolve({
-                user,
+                user: processedUser,
                 totalTasks: 0,
                 completedTasks: 0,
                 progressPercentage: 0
@@ -217,7 +246,12 @@ export class ProjectMembersComponent implements OnInit {
         error: (err) => {
           console.error('Error getting user:', userId, err);
           resolve({
-            user: { id: userId, name: 'Unknown User' } as User,
+            user: {
+              id: userId,
+              name: 'Unknown User',
+              email: '',
+              role: { id: 0, name: 'User' }
+            } as User,
             totalTasks: 0,
             completedTasks: 0,
             progressPercentage: 0
@@ -247,5 +281,24 @@ export class ProjectMembersComponent implements OnInit {
     if (percentage >= 80) return 'Excellent';
     if (percentage >= 50) return 'In Progress';
     return 'Needs Attention';
+  }
+
+  getRoleName(user: User): string {
+    if (!user || !user.role) return 'User';
+    return user.role.name || 'User';
+  }
+
+  getUserInitial(user: User): string {
+    if (!user || !user.name) return '?';
+    return user.name.charAt(0).toUpperCase();
+  }
+
+  // Utility methods
+  trackByProjectId(index: number, item: ProjectProgress): number {
+    return item.project.id;
+  }
+
+  trackByMemberId(index: number, item: ProjectMember): number {
+    return item.user?.id || index;
   }
 }
