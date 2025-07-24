@@ -40,6 +40,7 @@
               class="form-select"
               id="taskSelect"
               [(ngModel)]="selectedTaskId"
+              (ngModelChange)="onTaskChange()"
               name="taskSelect"
               [disabled]="!selectedProjectId"
               required
@@ -92,12 +93,22 @@
           <!-- Assignment Summary -->
           <div *ngIf="selectedProjectId && selectedTaskId && projectMembers.length > 0" class="alert alert-info">
             <h6><i class="fa fa-info-circle"></i> Assignment Summary</h6>
-            <ul class="mb-0">
-              <li><strong>Project:</strong> {{ getSelectedProject()?.name }}</li>
-              <li><strong>Task:</strong> {{ getSelectedTask()?.name }}</li>
-              <li><strong>Team Members:</strong> {{ projectMembers.length }} members</li>
-              <li><strong>Action:</strong> The selected task will be assigned to all team members</li>
-            </ul>
+            <div class="row">
+              <div class="col-md-6">
+                <ul class="mb-0">
+                  <li><strong>Project:</strong> {{ getSelectedProject()?.name || 'Project not found' }}</li>
+                  <li><strong>Task:</strong> {{ getSelectedTask()?.name || 'Task not found' }}</li>
+                </ul>
+              </div>
+              <div class="col-md-6">
+                <ul class="mb-0">
+                  <li><strong>Team Members:</strong> {{ projectMembers.length }} members</li>
+                  <li><strong>Priority:</strong> {{ getSelectedTask()?.priority || 'N/A' }}</li>
+                </ul>
+              </div>
+            </div>
+            <hr class="my-2">
+            <p class="mb-0"><strong><i class="fa fa-check-circle"></i> Action:</strong> The selected task will be assigned to all {{ projectMembers.length }} team members.</p>
           </div>
         </form>
       </div>

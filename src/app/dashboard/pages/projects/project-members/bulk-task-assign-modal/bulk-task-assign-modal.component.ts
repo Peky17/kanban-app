@@ -57,12 +57,24 @@ export class BulkTaskAssignModalComponent implements OnInit {
 
   onProjectChange(): void {
     console.log('Project changed to:', this.selectedProjectId);
+    // Convert to number if it's a string
+    if (this.selectedProjectId && typeof this.selectedProjectId === 'string') {
+      this.selectedProjectId = parseInt(this.selectedProjectId);
+    }
+
     if (this.selectedProjectId) {
       this.loadProjectMembers();
     } else {
       this.projectMembers = [];
     }
     this.selectedTaskId = null;
+  }
+
+  onTaskChange(): void {
+    // Convert to number if it's a string
+    if (this.selectedTaskId && typeof this.selectedTaskId === 'string') {
+      this.selectedTaskId = parseInt(this.selectedTaskId);
+    }
   }
 
   loadProjectMembers(): void {
@@ -187,12 +199,18 @@ export class BulkTaskAssignModalComponent implements OnInit {
   }
 
   getSelectedProject(): Project | null {
+    console.log('Getting selected project. ID:', this.selectedProjectId, 'Projects:', this.projects);
     if (!this.selectedProjectId) return null;
-    return this.projects.find(p => p.id === this.selectedProjectId) || null;
+    const project = this.projects.find(p => p.id === Number(this.selectedProjectId)) || null;
+    console.log('Selected project found:', project);
+    return project;
   }
 
   getSelectedTask(): Task | null {
+    console.log('Getting selected task. ID:', this.selectedTaskId, 'Tasks:', this.availableTasks);
     if (!this.selectedTaskId) return null;
-    return this.availableTasks.find(t => t.id === this.selectedTaskId) || null;
+    const task = this.availableTasks.find(t => t.id === Number(this.selectedTaskId)) || null;
+    console.log('Selected task found:', task);
+    return task;
   }
 }
