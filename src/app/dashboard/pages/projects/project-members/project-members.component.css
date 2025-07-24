@@ -1,0 +1,131 @@
+.avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.progress {
+  background-color: #e9ecef;
+}
+
+.card {
+  transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th {
+  border-top: none;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.table td {
+  vertical-align: middle;
+}
+
+.badge {
+  font-size: 0.75rem;
+}
+
+.spinner-border {
+  width: 3rem;
+  height: 3rem;
+}
+
+.jumbotron-heading {
+  font-weight: 300;
+}
+
+.lead {
+  font-size: 1.125rem;
+}
+
+/* Progress bar animations */
+.progress-bar {
+  transition: width 0.6s ease;
+}
+
+/* Card hover effects */
+.card-body {
+  position: relative;
+}
+
+.card-title {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+/* Modal enhancements */
+.modal-xl {
+  max-width: 90%;
+}
+
+.modal-header {
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.modal-title {
+  color: #495057;
+  font-weight: 600;
+}
+
+/* Status indicators */
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-warning {
+  background-color: #ffc107 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Team member avatars */
+.avatar {
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Statistics cards */
+.card.bg-primary,
+.card.bg-info,
+.card.bg-success,
+.card.bg-warning {
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-xl {
+    max-width: 95%;
+  }
+
+  .table-responsive {
+    font-size: 0.875rem;
+  }
+
+  .jumbotron-heading {
+    font-size: 2rem;
+  }
+}
+
+/* Empty state styling */
+.alert-info {
+  border: 2px dashed #bee5eb;
+  background-color: #f8f9fa;
+}
+
+.alert-info .fa-info-circle {
+  color: #17a2b8;
+}

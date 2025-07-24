@@ -1,0 +1,121 @@
+<!-- Bulk Task Assignment Modal -->
+<div class="modal fade" id="bulkTaskAssignModal" tabindex="-1" aria-labelledby="bulkTaskAssignModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title" id="bulkTaskAssignModalLabel">
+          <i class="fa fa-tasks"></i> Assign Task to Project Team
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form>
+          <!-- Project Selection -->
+          <div class="mb-4">
+            <label for="projectSelect" class="form-label">
+              <i class="fa fa-project-diagram"></i> Select Project
+            </label>
+            <select
+              class="form-select"
+              id="projectSelect"
+              [(ngModel)]="selectedProjectId"
+              (ngModelChange)="onProjectChange()"
+              name="projectSelect"
+              required
+            >
+              <option value="">Choose a project...</option>
+              <option *ngFor="let project of projects" [value]="project.id">
+                {{ project.name }}
+              </option>
+            </select>
+            <div class="form-text">Select the project whose team members will receive the task.</div>
+          </div>
+
+          <!-- Task Selection -->
+          <div class="mb-4">
+            <label for="taskSelect" class="form-label">
+              <i class="fa fa-tasks"></i> Select Task
+            </label>
+            <select
+              class="form-select"
+              id="taskSelect"
+              [(ngModel)]="selectedTaskId"
+              name="taskSelect"
+              [disabled]="!selectedProjectId"
+              required
+            >
+              <option value="">Choose a task...</option>
+              <option *ngFor="let task of availableTasks" [value]="task.id">
+                {{ task.name }} - {{ task.priority }} Priority
+              </option>
+            </select>
+            <div class="form-text">Select the task to assign to all team members.</div>
+          </div>
+
+          <!-- Project Members Preview -->
+          <div *ngIf="selectedProjectId && projectMembers.length > 0" class="mb-4">
+            <h6><i class="fa fa-users"></i> Team Members ({{ projectMembers.length }})</h6>
+            <div class="card bg-light">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6 mb-2" *ngFor="let member of projectMembers">
+                    <div class="d-flex align-items-center">
+                      <div class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
+                           style="width: 28px; height: 28px; font-size: 12px;">
+                        {{ member.name.charAt(0).toUpperCase() }}
+                      </div>
+                      <div>
+                        <div class="fw-bold">{{ member.name }}</div>
+                        <small class="text-muted">{{ member.email }}</small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Loading indicator for members -->
+          <div *ngIf="loading && selectedProjectId" class="text-center mb-4">
+            <div class="spinner-border spinner-border-sm text-primary" role="status">
+              <span class="visually-hidden">Loading team members...</span>
+            </div>
+            <span class="ms-2">Loading team members...</span>
+          </div>
+
+          <!-- No members message -->
+          <div *ngIf="selectedProjectId && !loading && projectMembers.length === 0" class="alert alert-warning">
+            <i class="fa fa-exclamation-triangle"></i>
+            No team members found for this project.
+          </div>
+
+          <!-- Assignment Summary -->
+          <div *ngIf="selectedProjectId && selectedTaskId && projectMembers.length > 0" class="alert alert-info">
+            <h6><i class="fa fa-info-circle"></i> Assignment Summary</h6>
+            <ul class="mb-0">
+              <li><strong>Project:</strong> {{ getSelectedProject()?.name }}</li>
+              <li><strong>Task:</strong> {{ getSelectedTask()?.name }}</li>
+              <li><strong>Team Members:</strong> {{ projectMembers.length }} members</li>
+              <li><strong>Action:</strong> The selected task will be assigned to all team members</li>
+            </ul>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          <i class="fa fa-times"></i> Cancel
+        </button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          [disabled]="!selectedProjectId || !selectedTaskId || projectMembers.length === 0 || submitting"
+          (click)="assignTaskToAllMembers()"
+        >
+          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <i *ngIf="!submitting" class="fa fa-check"></i>
+          {{ submitting ? 'Assigning...' : 'Assign Task to Team' }}
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

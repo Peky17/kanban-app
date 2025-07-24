@@ -1,0 +1,258 @@
+<main class="jumbotron" role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">Project Members & Progress</h1>
+      <p class="lead text-muted">
+        Monitor team members and track progress for each project
+      </p>
+      <!-- Button to open bulk task assignment modal -->
+      <button
+        class="btn btn-primary btn-lg"
+        data-bs-toggle="modal"
+        data-bs-target="#bulkTaskAssignModal"
+      >
+        <i class="fa fa-plus"></i> Assign Task to Project Team
+      </button>
+    </div>
+  </section>
+
+  <!-- Loading indicator -->
+  <div *ngIf="loading" class="text-center mt-4">
+    <div class="spinner-border text-primary" role="status">
+      <span class="visually-hidden">Loading...</span>
+    </div>
+    <p class="mt-2">Loading project data...</p>
+  </div>
+
+  <!-- Projects Overview -->
+  <section class="container" *ngIf="!loading">
+    <div class="row">
+      <div class="col-12">
+        <div class="card border-dark mb-4">
+          <div class="card-header text-center">
+            <h4>Projects Overview</h4>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-lg-4 col-md-6 mb-4" *ngFor="let projectProgress of projectsProgress">
+                <div class="card border-light h-100">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ projectProgress.project.name }}</h5>
+                    <p class="card-text text-muted">{{ projectProgress.project.description }}</p>
+
+                    <!-- Overall Progress -->
+                    <div class="mb-3">
+                      <div class="d-flex justify-content-between align-items-center mb-1">
+                        <small class="text-muted">Overall Progress</small>
+                        <span [class]="getStatusBadgeClass(projectProgress.overallProgress)">
+                          {{ getStatusText(projectProgress.overallProgress) }}
+                        </span>
+                      </div>
+                      <div class="progress" style="height: 8px;">
+                        <div
+                          class="progress-bar"
+                          [class]="getProgressBarColor(projectProgress.overallProgress)"
+                          [style.width.%]="projectProgress.overallProgress"
+                          role="progressbar">
+                        </div>
+                      </div>
+                      <small class="text-muted">
+                        {{ projectProgress.totalCompletedTasks }} / {{ projectProgress.totalProjectTasks }} tasks completed
+                      </small>
+                    </div>
+
+                    <!-- Team Size -->
+                    <div class="mb-3">
+                      <i class="fa fa-users"></i>
+                      <span class="ms-2">{{ projectProgress.members.length }} team members</span>
+                    </div>
+
+                    <!-- Project Dates -->
+                    <div class="mb-3">
+                      <small class="text-muted">
+                        <i class="fa fa-calendar"></i>
+                        {{ projectProgress.project.startDate }} - {{ projectProgress.project.dueDate }}
+                      </small>
+                    </div>
+
+                    <button
+                      class="btn btn-primary btn-sm w-100"
+                      (click)="selectProject(projectProgress)"
+                      data-bs-toggle="modal"
+                      data-bs-target="#projectDetailsModal"
+                    >
+                      <i class="fa fa-eye"></i> View Details
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Empty state -->
+  <section class="container text-center" *ngIf="!loading && projectsProgress.length === 0">
+    <div class="alert alert-info">
+      <i class="fa fa-info-circle fa-2x mb-3"></i>
+      <h4>No Projects Found</h4>
+      <p>There are no projects available to display.</p>
+    </div>
+  </section>
+</main>
+
+<!-- Project Details Modal -->
+<div class="modal fade" id="projectDetailsModal" tabindex="-1" aria-labelledby="projectDetailsModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-xl">
+    <div class="modal-content" *ngIf="selectedProject">
+      <div class="modal-header">
+        <h5 class="modal-title" id="projectDetailsModalLabel">
+          <i class="fa fa-project-diagram"></i> {{ selectedProject.project.name }}
+        </h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <!-- Project Info -->
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <h6>Project Description</h6>
+            <p class="text-muted">{{ selectedProject.project.description }}</p>
+          </div>
+          <div class="col-md-4">
+            <div class="card bg-light">
+              <div class="card-body text-center">
+                <h3 [class]="getStatusBadgeClass(selectedProject.overallProgress)">
+                  {{ selectedProject.overallProgress }}%
+                </h3>
+                <small class="text-muted">Overall Progress</small>
+                <div class="progress mt-2" style="height: 6px;">
+                  <div
+                    class="progress-bar"
+                    [class]="getProgressBarColor(selectedProject.overallProgress)"
+                    [style.width.%]="selectedProject.overallProgress">
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Team Members Table -->
+        <h6><i class="fa fa-users"></i> Team Members Progress</h6>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead class="table-light">
+              <tr>
+                <th>Member</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Tasks</th>
+                <th>Progress</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let member of selectedProject.members">
+                <td>
+                  <div class="d-flex align-items-center">
+                    <div class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
+                         style="width: 32px; height: 32px; font-size: 14px;">
+                      {{ member.user.name.charAt(0).toUpperCase() }}
+                    </div>
+                    <strong>{{ member.user.name }}</strong>
+                  </div>
+                </td>
+                <td>
+                  <small class="text-muted">{{ member.user.email }}</small>
+                </td>
+                <td>
+                  <span class="badge bg-secondary">{{ member.user.role?.name || 'User' }}</span>
+                </td>
+                <td>
+                  <span class="badge bg-info">
+                    {{ member.completedTasks }} / {{ member.totalTasks }}
+                  </span>
+                </td>
+                <td>
+                  <div class="progress" style="height: 6px; width: 100px;">
+                    <div
+                      class="progress-bar"
+                      [class]="getProgressBarColor(member.progressPercentage)"
+                      [style.width.%]="member.progressPercentage">
+                    </div>
+                  </div>
+                  <small class="text-muted">{{ member.progressPercentage }}%</small>
+                </td>
+                <td>
+                  <span [class]="getStatusBadgeClass(member.progressPercentage)">
+                    {{ getStatusText(member.progressPercentage) }}
+                  </span>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Project Statistics -->
+        <div class="row mt-4">
+          <div class="col-md-3">
+            <div class="card bg-primary text-white text-center">
+              <div class="card-body">
+                <h4>{{ selectedProject.members.length }}</h4>
+                <small>Team Members</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-info text-white text-center">
+              <div class="card-body">
+                <h4>{{ selectedProject.totalProjectTasks }}</h4>
+                <small>Total Tasks</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-success text-white text-center">
+              <div class="card-body">
+                <h4>{{ selectedProject.totalCompletedTasks }}</h4>
+                <small>Completed</small>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3">
+            <div class="card bg-warning text-white text-center">
+              <div class="card-body">
+                <h4>{{ selectedProject.totalProjectTasks - selectedProject.totalCompletedTasks }}</h4>
+                <small>Pending</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button
+          type="button"
+          class="btn btn-primary"
+          data-bs-dismiss="modal"
+          data-bs-toggle="modal"
+          data-bs-target="#bulkTaskAssignModal"
+        >
+          <i class="fa fa-plus"></i> Assign New Task
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Bulk Task Assignment Modal -->
+<app-bulk-task-assign-modal
+  [projects]="projects"
+  (taskAssigned)="loadProjectsWithProgress()">
+</app-bulk-task-assign-modal>
+
+<!-- Espacio adicional al final del contenido -->
+<div class="mb-5"></div>

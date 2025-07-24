@@ -1,0 +1,101 @@
+.avatar {
+  width: 28px;
+  height: 28px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.modal-header.bg-primary {
+  border-bottom: none;
+}
+
+.form-label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.form-select:disabled {
+  background-color: #f8f9fa;
+  opacity: 0.7;
+}
+
+.card.bg-light {
+  border: 1px solid #e9ecef;
+}
+
+.alert {
+  border-left: 4px solid;
+}
+
+.alert-info {
+  border-left-color: #17a2b8;
+}
+
+.alert-warning {
+  border-left-color: #ffc107;
+}
+
+.spinner-border-sm {
+  width: 1rem;
+  height: 1rem;
+}
+
+.btn-close-white {
+  filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+/* Form styling enhancements */
+.form-select {
+  border: 1px solid #ced4da;
+  border-radius: 0.375rem;
+  transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.form-select:focus {
+  border-color: #80bdff;
+  outline: 0;
+  box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}
+
+.form-text {
+  font-size: 0.875rem;
+  color: #6c757d;
+}
+
+/* Team members grid */
+.card-body {
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* Button styling */
+.btn {
+  border-radius: 0.375rem;
+  font-weight: 500;
+}
+
+.btn:disabled {
+  opacity: 0.65;
+}
+
+/* Modal enhancements */
+.modal-dialog {
+  margin: 1.75rem auto;
+}
+
+.modal-content {
+  border: none;
+  border-radius: 0.5rem;
+  box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, 0.15);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .modal-lg {
+    max-width: 95%;
+  }
+
+  .modal-dialog {
+    margin: 0.5rem;
+  }
+}

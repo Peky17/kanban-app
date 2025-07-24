@@ -16,6 +16,7 @@ import { KanbanBoardComponent } from './pages/kanban/kanban-board/kanban-board.c
 import { AssignedProjectsComponent } from './pages/assignations/assigned-projects/assigned-projects.component';
 import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assigned-tasks.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
+import { ProjectMembersComponent } from './pages/projects/project-members/project-members.component';
 
 const routes: Routes = [
   {
@@ -37,6 +38,12 @@ const routes: Routes = [
       {
         path: 'projects',
         component: ProjectsComponent,
+        canActivate: [AuthGuard, RoleGuard],
+        canLoad: [AuthGuard, RoleGuard],
+      },
+      {
+        path: 'project-members',
+        component: ProjectMembersComponent,
         canActivate: [AuthGuard, RoleGuard],
         canLoad: [AuthGuard, RoleGuard],
       },
