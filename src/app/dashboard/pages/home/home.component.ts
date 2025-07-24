@@ -72,7 +72,7 @@ export class HomeComponent {
       description: 'Here you can manage your profile data',
       icon: 'fa fa-user',
       roleAccess: ['Administrator', 'Manager', 'Associate'],
-      redirection: '/dashboard/administrators',
+      redirection: '/dashboard/my-profile',
     },
   ];
   // access modules

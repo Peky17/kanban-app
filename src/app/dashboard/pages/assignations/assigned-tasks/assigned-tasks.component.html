@@ -1,1 +1,65 @@
-<p>assigned-tasks works!</p>
+<main role="main">
+  <!-- Info section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <h1 class="jumbotron-heading">My Tasks</h1>
+      <ul class="nav nav-pills mb-3" id="pills-tab" role="tablist">
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link active"
+            id="pills-home-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-home"
+            type="button"
+            role="tab"
+            aria-controls="pills-home"
+            aria-selected="true"
+          >
+            Incompleted tasks
+          </button>
+        </li>
+        <li class="nav-item" role="presentation">
+          <button
+            class="nav-link"
+            id="pills-profile-tab"
+            data-bs-toggle="pill"
+            data-bs-target="#pills-profile"
+            type="button"
+            role="tab"
+            aria-controls="pills-profile"
+            aria-selected="false"
+          >
+            Completed tasks
+          </button>
+        </li>
+      </ul>
+    </div>
+  </section>
+  <!-- content section -->
+  <section class="jumbotron text-center">
+    <div class="container">
+      <div class="row">
+        <div class="tab-content" id="pills-tabContent">
+          <div
+            class="tab-pane fade show active"
+            id="pills-home"
+            role="tabpanel"
+            aria-labelledby="pills-home-tab"
+          >
+            <!-- incompleted tasks -->
+            <app-my-incopleted-tasks></app-my-incopleted-tasks>
+          </div>
+          <div
+            class="tab-pane fade"
+            id="pills-profile"
+            role="tabpanel"
+            aria-labelledby="pills-profile-tab"
+          >
+            <!-- completed tasks -->
+            <app-my-completed-tasks></app-my-completed-tasks>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>

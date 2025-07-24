@@ -34,6 +34,10 @@ import { AssignUserComponent } from './pages/kanban/modals/assign-user/assign-us
 import { AssignTaskComponent } from './pages/tasks/modals/assign-task/assign-task.component';
 import { AssignedProjectsComponent } from './pages/assignations/assigned-projects/assigned-projects.component';
 import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assigned-tasks.component';
+import { MyProfileComponent } from './pages/my-profile/my-profile.component';
+import { MyCompletedTasksComponent } from './pages/assignations/assigned-tasks/my-completed-tasks/my-completed-tasks.component';
+import { MyIncopletedTasksComponent } from './pages/assignations/assigned-tasks/my-incopleted-tasks/my-incopleted-tasks.component';
+import { TaskInfoComponent } from './pages/tasks/task-info/task-info.component';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -66,6 +70,10 @@ import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assi
     AssignTaskComponent,
     AssignedProjectsComponent,
     AssignedTasksComponent,
+    MyProfileComponent,
+    MyCompletedTasksComponent,
+    MyIncopletedTasksComponent,
+    TaskInfoComponent,
   ],
   imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],

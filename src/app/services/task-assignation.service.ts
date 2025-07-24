@@ -31,6 +31,15 @@ export class TaskAssignationService {
     });
   }
 
+  getTaskAssignationByUserId(id: number): Observable<TaskAssignation[]> {
+    return this.httpClient.get<TaskAssignation[]>(
+      this.baseUrl + '/getAssociationsByUserId/' + id,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
   getAssignationsByTaskId(taskId: number): Observable<TaskAssignation[]> {
     return this.httpClient.get<TaskAssignation[]>(
       this.baseUrl + '/users/' + taskId,
@@ -63,11 +72,11 @@ export class TaskAssignationService {
 
   updateAssignation(
     id: number,
-    projectAssignation: TaskAssignation
+    taskAssignation: TaskAssignation
   ): Observable<TaskAssignation> {
     return this.httpClient.put<TaskAssignation>(
       this.baseUrl + '/' + id,
-      projectAssignation,
+      taskAssignation,
       {
         headers: this.getAuthHeaders(),
       }

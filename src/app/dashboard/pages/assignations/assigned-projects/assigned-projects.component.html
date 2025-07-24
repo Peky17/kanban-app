@@ -12,7 +12,7 @@
   <section class="container">
     <div class="col-md-12">
       <div class="card mb-4 box-shadow">
-        <div class="card-header text-center"><h5>Project list</h5></div>
+        <div class="card-header text-center"><h5>My projects</h5></div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-hover bordered border-light">
@@ -37,7 +37,10 @@
                   <td>{{ project.createdAt }}</td>
                   <td>
                     <div>
-                      <button class="btn btn-secondary">
+                      <button
+                        class="btn btn-secondary"
+                        (click)="redirectToProjectBoards(project)"
+                      >
                         View Boards
                         <i class="fa fa-eye"></i>
                       </button>

@@ -15,6 +15,7 @@ import { ProjectBoardsComponent } from './pages/projects/project-boards/project-
 import { KanbanBoardComponent } from './pages/kanban/kanban-board/kanban-board.component';
 import { AssignedProjectsComponent } from './pages/assignations/assigned-projects/assigned-projects.component';
 import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assigned-tasks.component';
+import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 
 const routes: Routes = [
   {
@@ -90,6 +91,12 @@ const routes: Routes = [
       {
         path: 'my-tasks',
         component: AssignedTasksComponent,
+        canActivate: [AuthGuard, RoleGuard],
+        canLoad: [AuthGuard, RoleGuard],
+      },
+      {
+        path: 'my-profile',
+        component: MyProfileComponent,
         canActivate: [AuthGuard, RoleGuard],
         canLoad: [AuthGuard, RoleGuard],
       },

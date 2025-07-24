@@ -3,6 +3,7 @@ import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectAssignation } from '../interfaces/projectAssignation.interface';
+import { Project } from '../interfaces/project.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -42,8 +43,8 @@ export class ProjectAssignationService {
     );
   }
 
-  getAssignationsByUserId(userId: number): Observable<ProjectAssignation[]> {
-    return this.httpClient.get<ProjectAssignation[]>(
+  getAssignationsByUserId(userId: number): Observable<Project[]> {
+    return this.httpClient.get<Project[]>(
       this.baseUrl + '/projects/' + userId,
       {
         headers: this.getAuthHeaders(),

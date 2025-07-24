@@ -1,0 +1,55 @@
+<!-- Button trigger -->
+<a
+  class="btn btn-ligth"
+  data-bs-toggle="offcanvas"
+  href="#offcanvasExample{{ userTaskAssignation.task.id }}"
+  role="button"
+  aria-controls="offcanvasExample"
+>
+  View
+  <i style="margin-left: 5px" class="fa fa-eye"></i>
+</a>
+
+<div
+  class="offcanvas offcanvas-start"
+  tabindex="-1"
+  id="offcanvasExample{{ userTaskAssignation.task.id }}"
+  aria-labelledby="offcanvasExampleLabel"
+>
+  <!-- canvas header -->
+  <div class="offcanvas-header">
+    <h3
+      class="offcanvas-title"
+      id="offcanvasExampleLabel{{ userTaskAssignation.task.id }}"
+    >
+      {{ userTaskAssignation.task.name }}
+    </h3>
+    <button
+      type="button"
+      class="btn-close"
+      data-bs-dismiss="offcanvas"
+      aria-label="Close"
+    ></button>
+  </div>
+  <!-- canvas body -->
+  <div class="offcanvas-body" style="text-align: left">
+    <p><b>Start Date:</b> {{ userTaskAssignation.task.startDate }}</p>
+    <p><b>Due Date:</b> {{ userTaskAssignation.task.dueDate }}</p>
+    <p><b>Created At:</b> {{ userTaskAssignation.task.createdAt }}</p>
+    <br />
+    <h5>Task description:</h5>
+    <div>{{ userTaskAssignation.task.description }}</div>
+    <br />
+    <!-- subtasks -->
+    <h5>Actions:</h5>
+    <!-- buttons -->
+    <div class="btn-group">
+      <a class="btn btn-secondary" (click)="redirectToBoard()"
+        >View Board <i class="fa fa-eye"></i
+      ></a>
+      <a class="btn btn-success" (click)="markAsDone()"
+        >Mark as Done! <i class="fa fa-check"></i
+      ></a>
+    </div>
+  </div>
+</div>

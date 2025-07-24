@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { Project } from 'src/app/interfaces/project.interface';
 import { ProjectAssignation } from 'src/app/interfaces/projectAssignation.interface';
 import { User } from 'src/app/interfaces/user.interface';
@@ -13,8 +14,8 @@ import { ProjectAssignationService } from 'src/app/services/project-assignation.
 export class AssignedProjectsComponent {
   currentUser!: User;
   projects: Project[] = [];
-  projectAssignation: ProjectAssignation[] = [];
   constructor(
+    private router: Router,
     private authService: AuthService,
     private projectAssignationService: ProjectAssignationService
   ) {}
@@ -31,9 +32,13 @@ export class AssignedProjectsComponent {
   getProjectsAssignation(currentUserId: number): void {
     this.projectAssignationService
       .getAssignationsByUserId(currentUserId)
-      .subscribe((projectAssignation: ProjectAssignation[]) => {
-        this.projectAssignation = projectAssignation;
-        console.log(this.projectAssignation);
+      .subscribe((projects: Project[]) => {
+        this.projects = projects;
       });
+  }
+
+  redirectToProjectBoards(project: Project): void {
+    // Send data an redirect
+    this.router.navigate(['/dashboard/project-boards', project]);
   }
 }
