@@ -1,3 +1,9 @@
+/* Estilo para el contenido principal */
+.main-content {
+  margin-bottom: 20px; /* Espacio reducido para separar del footer */
+  min-height: calc(100vh - 150px); /* Altura mínima ajustada para empujar el footer abajo */
+}
+
 .card-container {
   display: flex;
   flex-wrap: wrap;
