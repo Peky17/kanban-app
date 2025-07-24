@@ -12,19 +12,19 @@
             [id]="'list-' + bucket.id"
             [cdkDropListConnectedTo]="getConnectedLists()"
             [cdkDropListData]="
-              bucketTasks[getBucketPosition(bucket.id)].taskNames
+              bucketTasks[getBucketPosition(bucket.id)].tasks
             "
             class="example-list"
             (cdkDropListDropped)="drop($event)"
           >
             <div
               *ngFor="
-                let item of bucketTasks[getBucketPosition(bucket.id)].taskNames;
+                let task of bucketTasks[getBucketPosition(bucket.id)].tasks;
                 track
               "
             >
               <div class="example-box" cdkDrag>
-                {{ item }}
+                {{ task.name }}
                 <div class="btn-group btn-sm">
                   <button class="btn btn-secondary btn-sm">
                     <i class="fa fa-eye"></i>

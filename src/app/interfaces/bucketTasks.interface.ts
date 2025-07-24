@@ -1,4 +1,6 @@
+import { Task } from './task.interface';
+
 export interface BucketTask {
   id: number;
-  taskNames: string[];
+  tasks: Task[];
 }

@@ -82,22 +82,22 @@ export class KanbanBoardComponent implements OnInit {
   }
 
   getTasksByBucket(bucketId: number): BucketTask {
-    let taskNames: string[] = [];
+    let tasks: Task[] = [];
     this.taskService.getTasksByBucket(bucketId).subscribe({
-      next: (tasks: Task[]) => {
-        tasks.forEach((task: Task) => {
+      next: (bucketTasks: Task[]) => {
+        bucketTasks.forEach((task: Task) => {
           // Check if this task is assigned to the current user
           const isAssignedToUser = this.userTaskAssignations.some(
             (assignation: TaskAssignation) => assignation.task.id === task.id
           );
           if (isAssignedToUser) {
-            taskNames.push(task.name);
+            tasks.push(task);
           }
         });
       },
     });
     // set the obtained values
-    let bucketData: BucketTask = { id: bucketId, taskNames: taskNames };
+    let bucketData: BucketTask = { id: bucketId, tasks: tasks };
     return bucketData;
   }
 
@@ -119,7 +119,7 @@ export class KanbanBoardComponent implements OnInit {
     return connectedListIds;
   }
 
-  drop(event: CdkDragDrop<string[]>) {
+  drop(event: CdkDragDrop<Task[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -127,12 +127,45 @@ export class KanbanBoardComponent implements OnInit {
         event.currentIndex
       );
     } else {
+      // Get the task that was moved
+      const movedTask = event.previousContainer.data[event.previousIndex];
+
+      // Extract bucket ID from the container ID (format: "list-{bucketId}")
+      const newBucketId = parseInt(event.container.id.replace('list-', ''));
+
+      // Update the task's bucket ID locally first
+      const updatedTask: Task = {
+        ...movedTask,
+        bucket: {
+          ...movedTask.bucket,
+          id: newBucketId
+        }
+      };
+
+      // Move the item in the UI
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
+
+      // Update the task in the backend
+      this.taskService.updateTask(movedTask.id, updatedTask).subscribe({
+        next: (response: Task) => {
+          console.log('Task updated successfully:', response);
+        },
+        error: (err) => {
+          console.error('Error updating task:', err);
+          // Revert the change if the backend update fails
+          transferArrayItem(
+            event.container.data,
+            event.previousContainer.data,
+            event.currentIndex,
+            event.previousIndex
+          );
+        }
+      });
     }
   }
 }
