@@ -56,13 +56,16 @@ export class ProjectMembersComponent implements OnInit {
 
   async loadProjectsWithProgress(): Promise<void> {
     this.loading = true;
-    this.projectsProgress = []; 
-    
+    this.projectsProgress = [];
+
     this.cdr.detectChanges();
-    
+
     try {
       this.projectService.getProjects().subscribe({
         next: async (projects: Project[]) => {
+          // Store projects for the modal
+          this.projects = projects;
+
           if (!projects || projects.length === 0) {
             this.loading = false;
             this.cdr.detectChanges();
@@ -71,14 +74,14 @@ export class ProjectMembersComponent implements OnInit {
 
           for (let i = 0; i < projects.length; i++) {
             const project = projects[i];
-            
+
             try {
               const projectProgress = await this.getProjectProgress(project);
               this.projectsProgress.push(projectProgress);
-              
+
               this.cdr.markForCheck();
               this.cdr.detectChanges();
-              
+
             } catch (error) {
               console.error(`Error processing project ${project.name}:`, error);
               this.projectsProgress.push({
@@ -91,10 +94,10 @@ export class ProjectMembersComponent implements OnInit {
               this.cdr.detectChanges();
             }
           }
-          
+
           this.loading = false;
           this.cdr.detectChanges();
-          
+
         },
         error: (err) => {
           console.error('Error loading projects:', err);
@@ -102,7 +105,7 @@ export class ProjectMembersComponent implements OnInit {
           this.cdr.detectChanges();
         }
       });
-      
+
     } catch (error) {
       console.error('Error in loadProjectsWithProgress:', error);
       this.loading = false;
@@ -124,16 +127,16 @@ export class ProjectMembersComponent implements OnInit {
             });
             return;
           }
-          
+
           const members: ProjectMember[] = [];
           let totalProjectTasks = 0;
           let totalCompletedTasks = 0;
 
           for (let i = 0; i < assignations.length; i++) {
             const assignation: any = assignations[i];
-            
+
             let userId: number | null = null;
-            
+
             if (assignation && assignation.user && assignation.user.id) {
               userId = assignation.user.id;
             } else if (assignation && assignation.id && assignation.name) {
@@ -167,7 +170,7 @@ export class ProjectMembersComponent implements OnInit {
             totalCompletedTasks,
             overallProgress
           };
-          
+
           resolve(finalProgress);
         },
         error: (err) => {

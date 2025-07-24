@@ -38,12 +38,15 @@ export class BulkTaskAssignModalComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    console.log('Modal initialized with projects:', this.projects);
     this.loadAllTasks();
   }
 
   loadAllTasks(): void {
+    console.log('Loading all tasks...');
     this.taskService.getTasks().subscribe({
       next: (tasks: Task[]) => {
+        console.log('Tasks loaded:', tasks);
         this.availableTasks = tasks;
       },
       error: (err) => {
@@ -53,6 +56,7 @@ export class BulkTaskAssignModalComponent implements OnInit {
   }
 
   onProjectChange(): void {
+    console.log('Project changed to:', this.selectedProjectId);
     if (this.selectedProjectId) {
       this.loadProjectMembers();
     } else {
@@ -64,19 +68,38 @@ export class BulkTaskAssignModalComponent implements OnInit {
   loadProjectMembers(): void {
     if (!this.selectedProjectId) return;
 
+    console.log('Loading members for project ID:', this.selectedProjectId);
     this.loading = true;
     this.projectAssignationService.getAssignationsByProjectId(this.selectedProjectId).subscribe({
       next: async (assignations: ProjectAssignation[]) => {
+        console.log('Received assignations:', assignations);
         this.projectMembers = [];
 
         for (const assignation of assignations) {
           try {
-            const user = await this.getUserById(assignation.user.id);
-            this.projectMembers.push(user);
+            let userId: number | null = null;
+
+            // Handle different assignation structures
+            if ((assignation as any).user && (assignation as any).user.id) {
+              // Standard format: {id: X, user: {id: Y}}
+              userId = (assignation as any).user.id;
+              console.log('Standard format - User ID:', userId);
+            } else if ((assignation as any).id && (assignation as any).name) {
+              // Direct user format: {id: X, name: Y, email: Z, ...}
+              userId = (assignation as any).id;
+              console.log('Direct format - User ID:', userId, 'Name:', (assignation as any).name);
+            }
+
+            if (userId) {
+              const user = await this.getUserById(userId);
+              console.log('User loaded:', user);
+              this.projectMembers.push(user);
+            }
           } catch (error) {
             console.error('Error loading user:', error);
           }
         }
+        console.log('Final project members:', this.projectMembers);
         this.loading = false;
       },
       error: (err) => {
