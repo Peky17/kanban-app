@@ -36,6 +36,8 @@ export class AddAdminModalComponent implements OnInit {
         ],
       ],
       password: ['', [Validators.required]],
+      won: ['', [Validators.required]],
+      employeeNumber: ['', [Validators.required]],
       role: this.fb.group({
         id: [1, Validators.required],
       }),

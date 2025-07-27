@@ -24,6 +24,8 @@
                   <th>Nombre</th>
                   <th>Email</th>
                   <th>Teléfono</th>
+                  <th>WON</th>
+                  <th>Employee Number</th>
                   <th>Acción</th>
                 </tr>
               </thead>
@@ -33,6 +35,8 @@
                   <td>{{ admin.name }}</td>
                   <td>{{ admin.email }}</td>
                   <td>{{ admin.cellphone }}</td>
+                  <td>{{ admin.won }}</td>
+                  <td>{{ admin.employeeNumber }}</td>
                   <td *ngIf="!isCurrentUserEmail(admin.email)">
                     <button
                       class="btn btn-danger"

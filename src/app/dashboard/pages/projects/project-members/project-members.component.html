@@ -200,6 +200,8 @@
               <tr>
                 <th>Member</th>
                 <th>Email</th>
+                <th>WON</th>
+                <th>Employee Number</th>
                 <th>Role</th>
                 <th>Tasks</th>
                 <th>Progress</th>
@@ -227,6 +229,16 @@
                 <td>
                   <small class="text-muted">{{
                     member.user.email || "No email"
+                  }}</small>
+                </td>
+                <td>
+                  <small class="text-muted">{{
+                    member.user.won || "No WON"
+                  }}</small>
+                </td>
+                <td>
+                  <small class="text-muted">{{
+                    member.user.employeeNumber || "No employee number"
                   }}</small>
                 </td>
                 <td>
