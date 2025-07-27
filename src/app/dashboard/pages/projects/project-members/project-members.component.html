@@ -8,15 +8,15 @@
       </p>
       <!-- Button to open bulk task assignment modal -->
       <button
-        class="btn btn-primary btn-lg"
+        class="btn btn-warning btn-lg"
         data-bs-toggle="modal"
         data-bs-target="#bulkTaskAssignModal"
       >
-        <i class="fa fa-plus"></i> Assign Task to Project Team
+        <i class="fa fa-link"></i> Assign Task to Project Team
       </button>
     </div>
   </section>
-
+  <br />
   <!-- Loading indicator -->
   <div *ngIf="loading" class="text-center mt-4">
     <div class="spinner-border text-primary" role="status">
@@ -38,49 +38,74 @@
             <div *ngIf="projectsProgress.length === 0" class="text-center py-5">
               <i class="fa fa-folder-open fa-3x text-muted mb-3"></i>
               <h5 class="text-muted">No projects found</h5>
-              <p class="text-muted">There are no projects available or you don't have access to any projects.</p>
+              <p class="text-muted">
+                There are no projects available or you don't have access to any
+                projects.
+              </p>
             </div>
 
             <!-- Projects list -->
             <div class="row" *ngIf="projectsProgress.length > 0">
-              <div class="col-lg-4 col-md-6 mb-4" *ngFor="let projectProgress of projectsProgress; trackBy: trackByProjectId">
+              <div
+                class="col-lg-4 col-md-6 mb-4"
+                *ngFor="
+                  let projectProgress of projectsProgress;
+                  trackBy: trackByProjectId
+                "
+              >
                 <div class="card border-light h-100">
                   <div class="card-body">
-                    <h5 class="card-title">{{ projectProgress.project.name }}</h5>
-                    <p class="card-text text-muted">{{ projectProgress.project.description }}</p>
+                    <h5 class="card-title">
+                      {{ projectProgress.project.name }}
+                    </h5>
+                    <p class="card-text text-muted">
+                      {{ projectProgress.project.description }}
+                    </p>
 
                     <!-- Overall Progress -->
                     <div class="mb-3">
-                      <div class="d-flex justify-content-between align-items-center mb-1">
+                      <div
+                        class="d-flex justify-content-between align-items-center mb-1"
+                      >
                         <small class="text-muted">Overall Progress</small>
-                        <span [class]="getStatusBadgeClass(projectProgress.overallProgress)">
+                        <span
+                          [class]="
+                            getStatusBadgeClass(projectProgress.overallProgress)
+                          "
+                        >
                           {{ getStatusText(projectProgress.overallProgress) }}
                         </span>
                       </div>
-                      <div class="progress" style="height: 8px;">
+                      <div class="progress" style="height: 8px">
                         <div
                           class="progress-bar"
-                          [class]="getProgressBarColor(projectProgress.overallProgress)"
+                          [class]="
+                            getProgressBarColor(projectProgress.overallProgress)
+                          "
                           [style.width.%]="projectProgress.overallProgress"
-                          role="progressbar">
-                        </div>
+                          role="progressbar"
+                        ></div>
                       </div>
                       <small class="text-muted">
-                        {{ projectProgress.totalCompletedTasks }} / {{ projectProgress.totalProjectTasks }} tasks completed
+                        {{ projectProgress.totalCompletedTasks }} /
+                        {{ projectProgress.totalProjectTasks }} tasks completed
                       </small>
                     </div>
 
                     <!-- Team Size -->
                     <div class="mb-3">
                       <i class="fa fa-users"></i>
-                      <span class="ms-2">{{ projectProgress.members.length }} team members</span>
+                      <span class="ms-2"
+                        >{{ projectProgress.members.length }} team members</span
+                      >
                     </div>
 
                     <!-- Project Dates -->
                     <div class="mb-3">
                       <small class="text-muted">
                         <i class="fa fa-calendar"></i>
-                        {{ projectProgress.project.startDate }} - {{ projectProgress.project.dueDate }}
+                        {{ projectProgress.project.startDate }} -
+                        {{ projectProgress.project.dueDate }}
                       </small>
                     </div>
 
@@ -103,7 +128,10 @@
   </section>
 
   <!-- Empty state -->
-  <section class="container text-center" *ngIf="!loading && projectsProgress.length === 0">
+  <section
+    class="container text-center"
+    *ngIf="!loading && projectsProgress.length === 0"
+  >
     <div class="alert alert-info">
       <i class="fa fa-info-circle fa-2x mb-3"></i>
       <h4>No Projects Found</h4>
@@ -113,14 +141,26 @@
 </main>
 
 <!-- Project Details Modal -->
-<div class="modal fade" id="projectDetailsModal" tabindex="-1" aria-labelledby="projectDetailsModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="projectDetailsModal"
+  tabindex="-1"
+  aria-labelledby="projectDetailsModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-xl">
     <div class="modal-content" *ngIf="selectedProject">
       <div class="modal-header">
         <h5 class="modal-title" id="projectDetailsModalLabel">
-          <i class="fa fa-project-diagram"></i> {{ selectedProject.project.name }}
+          <i class="fa fa-project-diagram"></i>
+          {{ selectedProject.project.name }}
         </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <!-- Project Info -->
@@ -132,16 +172,20 @@
           <div class="col-md-4">
             <div class="card bg-light">
               <div class="card-body text-center">
-                <h3 [class]="getStatusBadgeClass(selectedProject.overallProgress)">
+                <h3
+                  [class]="getStatusBadgeClass(selectedProject.overallProgress)"
+                >
                   {{ selectedProject.overallProgress }}%
                 </h3>
                 <small class="text-muted">Overall Progress</small>
-                <div class="progress mt-2" style="height: 6px;">
+                <div class="progress mt-2" style="height: 6px">
                   <div
                     class="progress-bar"
-                    [class]="getProgressBarColor(selectedProject.overallProgress)"
-                    [style.width.%]="selectedProject.overallProgress">
-                  </div>
+                    [class]="
+                      getProgressBarColor(selectedProject.overallProgress)
+                    "
+                    [style.width.%]="selectedProject.overallProgress"
+                  ></div>
                 </div>
               </div>
             </div>
@@ -163,21 +207,32 @@
               </tr>
             </thead>
             <tbody>
-              <tr *ngFor="let member of selectedProject.members; trackBy: trackByMemberId">
+              <tr
+                *ngFor="
+                  let member of selectedProject.members;
+                  trackBy: trackByMemberId
+                "
+              >
                 <td>
                   <div class="d-flex align-items-center">
-                    <div class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
-                         style="width: 32px; height: 32px; font-size: 14px;">
+                    <div
+                      class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
+                      style="width: 32px; height: 32px; font-size: 14px"
+                    >
                       {{ getUserInitial(member.user) }}
                     </div>
-                    <strong>{{ member.user.name || 'Unknown User' }}</strong>
+                    <strong>{{ member.user.name || "Unknown User" }}</strong>
                   </div>
                 </td>
                 <td>
-                  <small class="text-muted">{{ member.user.email || 'No email' }}</small>
+                  <small class="text-muted">{{
+                    member.user.email || "No email"
+                  }}</small>
                 </td>
                 <td>
-                  <span class="badge bg-secondary">{{ getRoleName(member.user) }}</span>
+                  <span class="badge bg-secondary">{{
+                    getRoleName(member.user)
+                  }}</span>
                 </td>
                 <td>
                   <span class="badge bg-info">
@@ -185,17 +240,21 @@
                   </span>
                 </td>
                 <td>
-                  <div class="progress" style="height: 6px; width: 100px;">
+                  <div class="progress" style="height: 6px; width: 100px">
                     <div
                       class="progress-bar"
                       [class]="getProgressBarColor(member.progressPercentage)"
-                      [style.width.%]="member.progressPercentage">
-                    </div>
+                      [style.width.%]="member.progressPercentage"
+                    ></div>
                   </div>
-                  <small class="text-muted">{{ member.progressPercentage }}%</small>
+                  <small class="text-muted"
+                    >{{ member.progressPercentage }}%</small
+                  >
                 </td>
                 <td>
-                  <span [class]="getStatusBadgeClass(member.progressPercentage)">
+                  <span
+                    [class]="getStatusBadgeClass(member.progressPercentage)"
+                  >
                     {{ getStatusText(member.progressPercentage) }}
                   </span>
                 </td>
@@ -233,7 +292,12 @@
           <div class="col-md-3">
             <div class="card bg-warning text-white text-center">
               <div class="card-body">
-                <h4>{{ selectedProject.totalProjectTasks - selectedProject.totalCompletedTasks }}</h4>
+                <h4>
+                  {{
+                    selectedProject.totalProjectTasks -
+                      selectedProject.totalCompletedTasks
+                  }}
+                </h4>
                 <small>Pending</small>
               </div>
             </div>
@@ -241,7 +305,9 @@
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+          Close
+        </button>
         <button
           type="button"
           class="btn btn-primary"
@@ -259,7 +325,8 @@
 <!-- Bulk Task Assignment Modal -->
 <app-bulk-task-assign-modal
   [projects]="projects"
-  (taskAssigned)="loadProjectsWithProgress()">
+  (taskAssigned)="loadProjectsWithProgress()"
+>
 </app-bulk-task-assign-modal>
 
 <!-- Espacio adicional al final del contenido -->

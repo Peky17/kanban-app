@@ -4,12 +4,14 @@ import { Observable, catchError, map, of, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { User } from './../interfaces/user.interface';
 import Swal from 'sweetalert2';
+import { AccessRole } from '../dashboard/shared/utils/access-role';
+import { MenuItem } from '../interfaces/menuItem.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient, private accessRole: AccessRole) {}
 
   private baseUrl = environment.baseUrl;
 
@@ -91,7 +93,7 @@ export class AuthService {
   }
 
   // Validate the admin role user
-  validateAdministratorRole(): Observable<boolean> {
+  validateUserRole(): Observable<boolean> {
     const token = JSON.parse(localStorage.getItem('token')!);
     if (token) {
       const headers = { Authorization: `Bearer ${token}` };
@@ -107,6 +109,51 @@ export class AuthService {
             )
               return true;
             else return false;
+          }),
+          catchError((err) => {
+            if (
+              err.status === 400 ||
+              err.status === 401 ||
+              err.status === 403
+            ) {
+              Swal.fire({
+                title: 'Access Denied',
+                text: 'You do not have access in this module',
+                icon: 'error',
+                confirmButtonText: 'Ok',
+              });
+              this.logOutAlert();
+              return of(false);
+            }
+            this.logOutAlert();
+            return of(false);
+          })
+        );
+    } else {
+      this.logOutAlert();
+      return of(false);
+    }
+  }
+
+  havePermission(path: string): Observable<boolean> {
+    const token = JSON.parse(localStorage.getItem('token')!);
+    if (token) {
+      const headers = { Authorization: `Bearer ${token}` };
+      return this.httpClient
+        .get<any>(this.baseUrl + '/auth/me', { headers })
+        .pipe(
+          map((user: User) => {
+            let accessItems: MenuItem[] = this.accessRole.getAccessItems();
+            let currentRole: string = user.role.name;
+            let itemFound = accessItems.find(
+              (item) => item.redirection == path
+            );
+            let canAccess = false;
+            itemFound!.roleAccess.forEach((role: string) => {
+              if (role === currentRole) canAccess = true;
+              console.log(role);
+            });
+            return canAccess;
           }),
           catchError((err) => {
             if (

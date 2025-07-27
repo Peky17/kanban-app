@@ -17,6 +17,7 @@ import { AssignedProjectsComponent } from './pages/assignations/assigned-project
 import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assigned-tasks.component';
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ProjectMembersComponent } from './pages/projects/project-members/project-members.component';
+import { AccessGuard } from '../guards/access.guard';
 
 const routes: Routes = [
   {
@@ -32,14 +33,14 @@ const routes: Routes = [
       {
         path: 'administrators',
         component: AdministratorsComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        canLoad: [AuthGuard, RoleGuard],
+        canActivate: [AuthGuard, RoleGuard, AccessGuard],
+        canLoad: [AuthGuard, RoleGuard, AccessGuard],
       },
       {
         path: 'projects',
         component: ProjectsComponent,
-        canActivate: [AuthGuard, RoleGuard],
-        canLoad: [AuthGuard, RoleGuard],
+        canActivate: [AuthGuard, RoleGuard, AccessGuard],
+        canLoad: [AuthGuard, RoleGuard, AccessGuard],
       },
       {
         path: 'project-members',

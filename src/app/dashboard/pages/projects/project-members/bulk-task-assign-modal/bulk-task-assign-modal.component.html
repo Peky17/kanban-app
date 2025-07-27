@@ -1,12 +1,23 @@
 <!-- Bulk Task Assignment Modal -->
-<div class="modal fade" id="bulkTaskAssignModal" tabindex="-1" aria-labelledby="bulkTaskAssignModalLabel" aria-hidden="true">
+<div
+  class="modal fade"
+  id="bulkTaskAssignModal"
+  tabindex="-1"
+  aria-labelledby="bulkTaskAssignModalLabel"
+  aria-hidden="true"
+>
   <div class="modal-dialog modal-lg">
     <div class="modal-content">
-      <div class="modal-header bg-primary text-white">
+      <div class="modal-header bg-light">
         <h5 class="modal-title" id="bulkTaskAssignModalLabel">
           <i class="fa fa-tasks"></i> Assign Task to Project Team
         </h5>
-        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+        <button
+          type="button"
+          class="btn-close btn-close"
+          data-bs-dismiss="modal"
+          aria-label="Close"
+        ></button>
       </div>
       <div class="modal-body">
         <form>
@@ -16,7 +27,7 @@
               <i class="fa fa-project-diagram"></i> Select Project
             </label>
             <select
-              class="form-select"
+              class="form-control"
               id="projectSelect"
               [(ngModel)]="selectedProjectId"
               (ngModelChange)="onProjectChange()"
@@ -28,7 +39,9 @@
                 {{ project.name }}
               </option>
             </select>
-            <div class="form-text">Select the project whose team members will receive the task.</div>
+            <div class="form-text">
+              Select the project whose team members will receive the task.
+            </div>
           </div>
 
           <!-- Task Selection -->
@@ -37,7 +50,7 @@
               <i class="fa fa-tasks"></i> Select Task
             </label>
             <select
-              class="form-select"
+              class="form-control"
               id="taskSelect"
               [(ngModel)]="selectedTaskId"
               (ngModelChange)="onTaskChange()"
@@ -50,19 +63,33 @@
                 {{ task.name }} - {{ task.priority }} Priority
               </option>
             </select>
-            <div class="form-text">Select the task to assign to all team members.</div>
+            <div class="form-text">
+              Select the task to assign to all team members.
+            </div>
           </div>
 
           <!-- Project Members Preview -->
-          <div *ngIf="selectedProjectId && projectMembers.length > 0" class="mb-4">
-            <h6><i class="fa fa-users"></i> Team Members ({{ projectMembers.length }})</h6>
+          <div
+            *ngIf="selectedProjectId && projectMembers.length > 0"
+            class="mb-4"
+          >
+            <h6>
+              <i class="fa fa-users"></i> Team Members ({{
+                projectMembers.length
+              }})
+            </h6>
             <div class="card bg-light">
               <div class="card-body">
                 <div class="row">
-                  <div class="col-md-6 mb-2" *ngFor="let member of projectMembers">
+                  <div
+                    class="col-md-6 mb-2"
+                    *ngFor="let member of projectMembers"
+                  >
                     <div class="d-flex align-items-center">
-                      <div class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
-                           style="width: 28px; height: 28px; font-size: 12px;">
+                      <div
+                        class="avatar bg-primary text-white rounded-circle me-2 d-flex align-items-center justify-content-center"
+                        style="width: 28px; height: 28px; font-size: 12px"
+                      >
                         {{ member.name.charAt(0).toUpperCase() }}
                       </div>
                       <div>
@@ -78,37 +105,64 @@
 
           <!-- Loading indicator for members -->
           <div *ngIf="loading && selectedProjectId" class="text-center mb-4">
-            <div class="spinner-border spinner-border-sm text-primary" role="status">
+            <div
+              class="spinner-border spinner-border-sm text-primary"
+              role="status"
+            >
               <span class="visually-hidden">Loading team members...</span>
             </div>
             <span class="ms-2">Loading team members...</span>
           </div>
 
           <!-- No members message -->
-          <div *ngIf="selectedProjectId && !loading && projectMembers.length === 0" class="alert alert-warning">
+          <div
+            *ngIf="selectedProjectId && !loading && projectMembers.length === 0"
+            class="alert alert-warning"
+          >
             <i class="fa fa-exclamation-triangle"></i>
             No team members found for this project.
           </div>
 
           <!-- Assignment Summary -->
-          <div *ngIf="selectedProjectId && selectedTaskId && projectMembers.length > 0" class="alert alert-info">
+          <div
+            *ngIf="
+              selectedProjectId && selectedTaskId && projectMembers.length > 0
+            "
+            class="alert alert-info"
+          >
             <h6><i class="fa fa-info-circle"></i> Assignment Summary</h6>
             <div class="row">
               <div class="col-md-6">
                 <ul class="mb-0">
-                  <li><strong>Project:</strong> {{ getSelectedProject()?.name || 'Project not found' }}</li>
-                  <li><strong>Task:</strong> {{ getSelectedTask()?.name || 'Task not found' }}</li>
+                  <li>
+                    <strong>Project:</strong>
+                    {{ getSelectedProject()?.name || "Project not found" }}
+                  </li>
+                  <li>
+                    <strong>Task:</strong>
+                    {{ getSelectedTask()?.name || "Task not found" }}
+                  </li>
                 </ul>
               </div>
               <div class="col-md-6">
                 <ul class="mb-0">
-                  <li><strong>Team Members:</strong> {{ projectMembers.length }} members</li>
-                  <li><strong>Priority:</strong> {{ getSelectedTask()?.priority || 'N/A' }}</li>
+                  <li>
+                    <strong>Team Members:</strong>
+                    {{ projectMembers.length }} members
+                  </li>
+                  <li>
+                    <strong>Priority:</strong>
+                    {{ getSelectedTask()?.priority || "N/A" }}
+                  </li>
                 </ul>
               </div>
             </div>
-            <hr class="my-2">
-            <p class="mb-0"><strong><i class="fa fa-check-circle"></i> Action:</strong> The selected task will be assigned to all {{ projectMembers.length }} team members.</p>
+            <hr class="my-2" />
+            <p class="mb-0">
+              <strong><i class="fa fa-check-circle"></i> Action:</strong> The
+              selected task will be assigned to all
+              {{ projectMembers.length }} team members.
+            </p>
           </div>
         </form>
       </div>
@@ -119,12 +173,21 @@
         <button
           type="button"
           class="btn btn-primary"
-          [disabled]="!selectedProjectId || !selectedTaskId || projectMembers.length === 0 || submitting"
+          [disabled]="
+            !selectedProjectId ||
+            !selectedTaskId ||
+            projectMembers.length === 0 ||
+            submitting
+          "
           (click)="assignTaskToAllMembers()"
         >
-          <span *ngIf="submitting" class="spinner-border spinner-border-sm me-2" role="status"></span>
+          <span
+            *ngIf="submitting"
+            class="spinner-border spinner-border-sm me-2"
+            role="status"
+          ></span>
           <i *ngIf="!submitting" class="fa fa-check"></i>
-          {{ submitting ? 'Assigning...' : 'Assign Task to Team' }}
+          {{ submitting ? "Assigning..." : "Assign Task to Team" }}
         </button>
       </div>
     </div>

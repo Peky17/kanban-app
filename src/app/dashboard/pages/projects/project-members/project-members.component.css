@@ -39,10 +39,6 @@
   height: 3rem;
 }
 
-.jumbotron-heading {
-  font-weight: 300;
-}
-
 .lead {
   font-size: 1.125rem;
 }
@@ -77,19 +73,6 @@
   font-weight: 600;
 }
 
-/* Status indicators */
-.bg-success {
-  background-color: #28a745 !important;
-}
-
-.bg-warning {
-  background-color: #ffc107 !important;
-}
-
-.bg-danger {
-  background-color: #dc3545 !important;
-}
-
 /* Team member avatars */
 .avatar {
   font-size: 12px;
@@ -118,14 +101,4 @@
   .jumbotron-heading {
     font-size: 2rem;
   }
-}
-
-/* Empty state styling */
-.alert-info {
-  border: 2px dashed #bee5eb;
-  background-color: #f8f9fa;
-}
-
-.alert-info .fa-info-circle {
-  color: #17a2b8;
 }

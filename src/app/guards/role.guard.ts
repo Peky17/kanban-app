@@ -10,14 +10,14 @@ export class RoleGuard {
   constructor(private authService: AuthService, private router: Router) {}
 
   canActivate(): Observable<boolean> | boolean {
-    return this.validateAdminRole();
+    return this.validateUserRole();
   }
   canLoad(): Observable<boolean> | boolean {
-    return this.validateAdminRole();
+    return this.validateUserRole();
   }
 
-  validateAdminRole(): Observable<boolean> | boolean {
-    return this.authService.validateAdministratorRole().pipe(
+  validateUserRole(): Observable<boolean> | boolean {
+    return this.authService.validateUserRole().pipe(
       tap((valid) => {
         if (!valid) {
           this.router.navigateByUrl('/dashboard/home');
