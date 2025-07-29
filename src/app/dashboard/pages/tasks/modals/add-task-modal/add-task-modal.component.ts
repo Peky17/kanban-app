@@ -99,7 +99,7 @@ export class AddTaskModalComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'Task saved successfully',
             icon: 'success',
           }).then(() => {

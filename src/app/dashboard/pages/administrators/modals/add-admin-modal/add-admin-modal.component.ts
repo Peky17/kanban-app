@@ -74,8 +74,8 @@ export class AddAdminModalComponent implements OnInit {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
-            text: 'Profesor registrado con éxito',
+            title: 'SUCCESS',
+            text: 'User created successfully',
             icon: 'success',
           }).then(() => {
             location.reload();

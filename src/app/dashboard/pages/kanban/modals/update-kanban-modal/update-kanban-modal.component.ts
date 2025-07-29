@@ -104,7 +104,7 @@ export class UpdateKanbanModalComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'Board created successfully',
             icon: 'success',
           }).then(() => {

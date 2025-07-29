@@ -79,7 +79,7 @@ export class UpdateSubtaskModalComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'Subtask updated successfully',
             icon: 'success',
           }).then(() => {

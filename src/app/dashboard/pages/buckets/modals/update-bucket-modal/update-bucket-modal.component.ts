@@ -85,7 +85,7 @@ export class UpdateBucketModalComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'Bucket updated successfully',
             icon: 'success',
           }).then(() => {

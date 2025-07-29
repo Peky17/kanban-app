@@ -60,7 +60,7 @@ export class AddBadgeModalComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'Badge created successfully',
             icon: 'success',
           }).then(() => {

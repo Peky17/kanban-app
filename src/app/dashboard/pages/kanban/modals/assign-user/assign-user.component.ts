@@ -74,7 +74,7 @@ export class AssignUserComponent {
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
-            title: 'OPERACIÓN EXITOSA',
+            title: 'SUCCESS',
             text: 'user assigned successfully',
             icon: 'success',
           }).then(() => {
