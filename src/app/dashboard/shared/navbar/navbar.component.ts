@@ -10,10 +10,10 @@ import Swal from 'sweetalert2';
 export class NavbarComponent {
   constructor(private router: Router) {}
 
-  // Cerrar sesión
+  // Log out
   logOut() {
     Swal.fire({
-      title: '¿Do you want to exit?',
+      title: 'Do you want to exit?',
       text: 'The application erase your session',
       icon: 'warning',
       showCancelButton: true,

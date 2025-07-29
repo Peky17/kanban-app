@@ -36,7 +36,7 @@ export class AuthService {
           return res;
         }
 
-        return 'Error al iniciar sesión';
+        return 'Login error';
       }),
       catchError((err) => {
         return of(err.error.message);
@@ -74,8 +74,8 @@ export class AuthService {
               err.status === 403
             ) {
               Swal.fire({
-                title: 'Sesión caducada',
-                text: 'Por favor inicia sesión de nuevo',
+                title: 'Session expired',
+                text: 'Please log in again',
                 icon: 'warning',
                 confirmButtonText: 'Ok',
               });
@@ -182,8 +182,8 @@ export class AuthService {
 
   logOutAlert() {
     Swal.fire({
-      title: 'Sesión caducada',
-      text: 'Por favor inicia sesión de nuevo',
+      title: 'Session expired',
+      text: 'Please log in again',
       icon: 'warning',
       confirmButtonText: 'Ok',
     });
