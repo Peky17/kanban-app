@@ -78,7 +78,7 @@ export class AddProjectComponent {
           this.modalService.dismissAll();
           Swal.fire({
             title: 'SUCCESS',
-            text: 'Profesor registrado con éxito',
+            text: 'Project saved successfully',
             icon: 'success',
           }).then(() => {
             location.reload();
