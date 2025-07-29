@@ -38,6 +38,7 @@ import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { MyCompletedTasksComponent } from './pages/assignations/assigned-tasks/my-completed-tasks/my-completed-tasks.component';
 import { MyIncopletedTasksComponent } from './pages/assignations/assigned-tasks/my-incopleted-tasks/my-incopleted-tasks.component';
 import { TaskInfoComponent } from './pages/tasks/task-info/task-info.component';
+import { ProjectTeamTableComponent } from './pages/projects/project-team-table/project-team-table.component';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -74,6 +75,7 @@ import { TaskInfoComponent } from './pages/tasks/task-info/task-info.component';
     MyCompletedTasksComponent,
     MyIncopletedTasksComponent,
     TaskInfoComponent,
+    ProjectTeamTableComponent,
   ],
   imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],

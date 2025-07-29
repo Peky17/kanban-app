@@ -38,8 +38,24 @@
     <div>{{ project.description }}</div>
     <br />
     <!-- <h5>Project Options:</h5> -->
-    <a class="btn btn-secondary" (click)="redirectToProjectBoards()"
-      >View Boards <i class="fa fa-eye"></i
-    ></a>
+    <div class="btn-group">
+      <a class="btn btn-secondary" (click)="redirectToProjectBoards()"
+        >View Boards <i class="fa fa-eye"></i
+      ></a>
+      <a
+        class="btn btn-secondary"
+        data-bs-toggle="collapse"
+        href="#teamMembersTable{{ project.id }}"
+        role="button"
+        aria-expanded="false"
+      >
+        View team members <i class="fa fa-users"></i>
+      </a>
+    </div>
+    <div class="collapse mt-3" id="teamMembersTable{{ project.id }}">
+      <app-project-team-table
+        [projectId]="project.id"
+      ></app-project-team-table>
+    </div>
   </div>
 </div>
