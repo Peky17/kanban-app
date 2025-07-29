@@ -78,20 +78,20 @@ export class ProjectTeamTableComponent implements OnInit, OnChanges {
 
   removeMember(member: any) {
     Swal.fire({
-      title: '¿Eliminar asignación?',
-      text: `¿Seguro que deseas eliminar a ${member.name} del proyecto?`,
+      title: 'Remove assignment?',
+      text: `Are you sure you want to remove ${member.name} from the project?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, remove',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         this.assignationService
           .deleteAssignationById(member.assignationId)
           .subscribe(() => {
             Swal.fire(
-              'Eliminado',
-              'El usuario fue eliminado del proyecto',
+              'Removed',
+              'The user was removed from the project',
               'success'
             );
             this.members = this.members.filter(
