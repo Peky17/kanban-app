@@ -50,7 +50,7 @@ export class BucketsComponent {
         window.location.reload();
       },
       (error) => {
-        Swal.fire('Error', 'Hubo un problema al eliminar bucket.', 'error');
+        Swal.fire('Error', 'There was a problem deleting the bucket.', 'error');
       }
     );
   }

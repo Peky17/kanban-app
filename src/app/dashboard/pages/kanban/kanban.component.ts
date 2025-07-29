@@ -51,7 +51,7 @@ export class KanbanComponent {
         window.location.reload();
       },
       (error) => {
-        Swal.fire('Error', 'Hubo un problema al eliminar board.', 'error');
+        Swal.fire('Error', 'There was a problem deleting the board.', 'error');
       }
     );
   }

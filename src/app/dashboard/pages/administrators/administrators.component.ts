@@ -35,12 +35,12 @@ export class AdministratorsComponent implements OnInit {
 
   confirmDelete(id: string, name: string): void {
     Swal.fire({
-      title: '¿Estás seguro de eliminar del registro?',
-      text: `Administrador: ${name}`,
+      title: 'Are you sure you want to delete this record?',
+      text: `Administrator: ${name}`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'No, cancelar',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'No, cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         this.deleteAdministrator(id);
@@ -52,8 +52,8 @@ export class AdministratorsComponent implements OnInit {
     this.administratorService.deleteAdministrator(id).subscribe(
       () => {
         Swal.fire(
-          'Eliminado',
-          'El administrador ha sido eliminado.',
+          'Deleted',
+          'The administrator has been deleted.',
           'success'
         );
         this.getAdministrators();
@@ -61,7 +61,7 @@ export class AdministratorsComponent implements OnInit {
       (error) => {
         Swal.fire(
           'Error',
-          'Hubo un problema al eliminar el administrador.',
+          'There was a problem deleting the administrator.',
           'error'
         );
       }
