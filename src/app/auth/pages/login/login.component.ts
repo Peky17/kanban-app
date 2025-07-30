@@ -11,9 +11,9 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent {
   miFormulario: FormGroup = this.fb.group({
-    email: ['kike17@gmail.com', [Validators.required, Validators.email]],
+    email: ['', [Validators.required, Validators.email]],
     password: [
-      'peky20011',
+      '',
       [Validators.required, Validators.minLength(6), Validators.maxLength(12)],
     ],
   });
