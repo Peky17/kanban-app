@@ -15,6 +15,9 @@ import Swal from 'sweetalert2';
   styleUrls: ['./login.component.css'],
 })
 export class LoginComponent implements OnInit {
+  typewriterTextMain = 'Agile task tracking';
+  typewriterTextBlue = 'for trainees';
+
   deferredPrompt: BeforeInstallPromptEvent | null = null;
   showInstallButton = false;
 
@@ -24,6 +27,44 @@ export class LoginComponent implements OnInit {
       this.deferredPrompt = event as BeforeInstallPromptEvent;
       this.showInstallButton = true;
     });
+
+    // Typewriter effect
+    this.startTypewriter();
+  }
+
+  startTypewriter() {
+    const elMain = document.getElementById('typewriter-text-main');
+    const elBlue = document.getElementById('typewriter-text-blue');
+    const typewriterSpan = document.querySelector('.typewriter');
+    if (!elMain || !elBlue || !typewriterSpan) return;
+    elMain.textContent = '';
+    elBlue.textContent = '';
+    typewriterSpan.classList.remove('finished');
+    let i = 0;
+    const textMain = this.typewriterTextMain;
+    const textBlue = this.typewriterTextBlue;
+    const typingMain = () => {
+      if (i <= textMain.length) {
+        elMain.textContent = textMain.substring(0, i);
+        i++;
+        setTimeout(typingMain, 60);
+      } else {
+        // Iniciar animación de la segunda línea azul
+        let j = 0;
+        const typingBlue = () => {
+          if (j <= textBlue.length) {
+            elBlue.textContent = textBlue.substring(0, j);
+            j++;
+            setTimeout(typingBlue, 60);
+          } else {
+            // Quitar el cursor al terminar
+            typewriterSpan.classList.add('finished');
+          }
+        };
+        typingBlue();
+      }
+    };
+    typingMain();
   }
 
   installPWA() {

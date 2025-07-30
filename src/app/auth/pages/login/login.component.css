@@ -1,3 +1,17 @@
+/* Typewriter effect styles */
+.typewriter {
+  display: inline-block;
+  border-right: 2px solid #007bff;
+  white-space: nowrap;
+  overflow: hidden;
+  font-family: inherit;
+  color: inherit;
+  transition: border-right-color 0.2s;
+}
+
+.typewriter.finished {
+  border-right: none !important;
+}
 body {
   height: 100vh;
   margin: 0;
