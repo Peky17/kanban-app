@@ -5,17 +5,31 @@
     <div>
       <div class="container">
         <div class="row gx-lg-5 align-items-center">
-          <div class="col-lg-6 mb-5 mb-lg-0">
-            <h1 class="my-5 display-3 fw-bold ls-tight">
-              Agile task tracking <br />
-              <span class="text-primary">for trainees</span>
-            </h1>
-            <p style="color: hsl(217, 10%, 50.8%)">
-              Our Kanban-based app lets you track task status individually and
-              as a team. Easily assign tasks, visualize progress and boost
-              collaboration with intuitive UI. Simplify your workflow and
-              optimize your productivity.
-            </p>
+          <div
+            class="col-lg-6 mb-5 mb-lg-0 d-flex flex-column align-items-start justify-content-center"
+          >
+            <div class="w-100">
+              <h1 class="my-5 display-3 fw-bold ls-tight">
+                Agile task tracking <br />
+                <span class="text-primary">for trainees</span>
+              </h1>
+              <p style="color: hsl(217, 10%, 50.8%)">
+                Our Kanban-based app lets you track task status individually and
+                as a team. Easily assign tasks, visualize progress and boost
+                collaboration with intuitive UI. Simplify your workflow and
+                optimize your productivity.
+              </p>
+              <div *ngIf="showInstallButton" class="mt-3">
+                <button
+                  type="button"
+                  class="btn btn-success btn-sm"
+                  (click)="installPWA()"
+                >
+                  Install app
+                  <i style="margin-left: 6px" class="fa fa-download"></i>
+                </button>
+              </div>
+            </div>
           </div>
 
           <div class="col-lg-6 mb-5 mb-lg-0">
