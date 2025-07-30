@@ -1,6 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
+import { throwError } from 'rxjs';
 import { environment } from '../environments/environment';
 import { User } from './../interfaces/user.interface';
 import Swal from 'sweetalert2';
@@ -35,11 +36,11 @@ export class AuthService {
         if (res.token) {
           return res;
         }
-
-        return 'Login error';
+        throw new Error('Login error');
       }),
       catchError((err) => {
-        return of(err.error.message);
+        // Propaga el error para que lo capture el bloque error del subscribe
+        return throwError(() => err);
       })
     );
   }

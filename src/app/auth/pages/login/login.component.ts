@@ -53,22 +53,34 @@ export class LoginComponent implements OnInit {
   ) {}
 
   login() {
-    this.authService.login(this.miFormulario.value).subscribe((res) => {
-      // Guardar token en localStorage
-      localStorage.setItem('token', JSON.stringify(res.token));
-      // Guardar usuario en localStorage
-      localStorage.setItem(
-        'email',
-        JSON.stringify(this.miFormulario.value.email)
-      );
-      // Mostrar mensaje de éxito
-      Swal.fire({
-        title: 'SESIÓN INICIADA CON ÉXITO',
-        text: 'Bienvenido ' + this.miFormulario.value.email,
-        icon: 'success',
-      });
-      // Redireccionar
-      this.router.navigateByUrl('/dashboard');
+    this.authService.login(this.miFormulario.value).subscribe({
+      next: (res) => {
+        // Guardar token en localStorage
+        localStorage.setItem('token', JSON.stringify(res.token));
+        // Guardar usuario en localStorage
+        localStorage.setItem(
+          'email',
+          JSON.stringify(this.miFormulario.value.email)
+        );
+        // Mostrar mensaje de éxito
+        Swal.fire({
+          title: 'LOGIN SUCCESSFUL',
+          text: 'Welcome ' + this.miFormulario.value.email,
+          icon: 'success',
+        });
+        // Redireccionar
+        this.router.navigateByUrl('/dashboard');
+      },
+      error: (err) => {
+        if (err.status === 401 || err.status === 403) {
+          Swal.fire({
+            title: 'Invalid credentials',
+            text: 'The email or password is incorrect.',
+            icon: 'error',
+            confirmButtonText: 'Ok',
+          });
+        }
+      }
     });
   }
 }
