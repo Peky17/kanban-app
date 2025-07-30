@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { NgbModule, NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 
 import { TaskRoutingModule } from './task-routing.module';
@@ -77,7 +77,7 @@ import { ProjectTeamTableComponent } from './pages/projects/project-team-table/p
     TaskInfoComponent,
     ProjectTeamTableComponent,
   ],
-  imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule],
+  imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],
 })
 export class TaskModule {}

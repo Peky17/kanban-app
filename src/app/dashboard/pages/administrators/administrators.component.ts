@@ -13,6 +13,9 @@ export class AdministratorsComponent implements OnInit {
   administrators: any[] = [];
   paginator: Paginator<any> = new Paginator([], 5);
 
+  searchTerm: string = '';
+  filteredAdministrators: any[] = [];
+
   constructor(
     private administratorService: AdministratorService,
     private modalService: NgbModal
@@ -25,8 +28,23 @@ export class AdministratorsComponent implements OnInit {
   getAdministrators(): void {
     this.administratorService.getAdministrators().subscribe((data) => {
       this.administrators = data;
-      this.paginator.setItems(data);
+      this.filterData();
     });
+  }
+
+  filterData(): void {
+    if (!this.searchTerm) {
+      this.filteredAdministrators = this.administrators;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredAdministrators = this.administrators.filter(admin =>
+        Object.values(admin).some(val =>
+          val && val.toString().toLowerCase().includes(term)
+        )
+      );
+    }
+    this.paginator.setItems(this.filteredAdministrators);
+    this.paginator.goToPage(1);
   }
 
   onPageChange(page: number) {

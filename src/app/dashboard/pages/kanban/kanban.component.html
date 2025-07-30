@@ -15,6 +15,18 @@
       <div class="card mb-4 box-shadow">
         <div class="card-header text-center"><h5>Kanban boards list</h5></div>
         <div class="card-body">
+          <!-- Search bar -->
+          <div class="row mb-3">
+            <div class="col-md-4">
+              <input
+                type="text"
+                class="form-control"
+                placeholder="Search..."
+                [(ngModel)]="searchTerm"
+                (ngModelChange)="filterData()"
+              />
+            </div>
+          </div>
           <div class="table-responsive">
             <table class="table table-hover bordered border-light">
               <thead>

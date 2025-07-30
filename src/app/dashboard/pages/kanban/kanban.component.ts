@@ -12,7 +12,9 @@ import { Paginator } from 'src/app/shared/utils/paginator';
 })
 export class KanbanComponent {
   boards: Board[] = [];
+  filteredBoards: Board[] = [];
   paginator: Paginator<Board> = new Paginator([], 5);
+  searchTerm: string = '';
 
   constructor(private router: Router, private boardService: BoardService) {}
 
@@ -20,6 +22,7 @@ export class KanbanComponent {
     this.boardService.getBoards().subscribe({
       next: (data) => {
         this.boards = data;
+        this.filteredBoards = data;
         this.paginator.setItems(data);
       },
       error: (error) => {
@@ -30,6 +33,21 @@ export class KanbanComponent {
 
   onPageChange(page: number) {
     this.paginator.goToPage(page);
+  }
+
+  filterData() {
+    if (!this.searchTerm) {
+      this.filteredBoards = this.boards;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredBoards = this.boards.filter(board =>
+        board.name.toLowerCase().includes(term) ||
+        board.id.toString().includes(term) ||
+        board.project.id.toString().includes(term) ||
+        (board.createdAt && board.createdAt.toLowerCase().includes(term))
+      );
+    }
+    this.paginator.setItems(this.filteredBoards);
   }
 
   confirmDelete(id: number, name: string): void {

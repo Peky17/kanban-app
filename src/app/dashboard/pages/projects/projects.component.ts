@@ -13,6 +13,9 @@ export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
   paginator: Paginator<Project> = new Paginator([], 5);
 
+  searchTerm: string = '';
+  filteredProjects: Project[] = [];
+
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
@@ -22,8 +25,23 @@ export class ProjectsComponent implements OnInit {
   getProjects(): void {
     this.projectService.getProjects().subscribe((projects) => {
       this.projects = projects;
-      this.paginator.setItems(projects);
+      this.filterData();
     });
+  }
+
+  filterData(): void {
+    if (!this.searchTerm) {
+      this.filteredProjects = this.projects;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredProjects = this.projects.filter(project =>
+        Object.values(project).some(val =>
+          val && val.toString().toLowerCase().includes(term)
+        )
+      );
+    }
+    this.paginator.setItems(this.filteredProjects);
+    this.paginator.goToPage(1);
   }
 
   onPageChange(page: number) {

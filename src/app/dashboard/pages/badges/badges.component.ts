@@ -11,7 +11,9 @@ import { Paginator } from 'src/app/shared/utils/paginator';
 })
 export class BadgesComponent {
   badges: Badge[] = [];
+  filteredBadges: Badge[] = [];
   paginator: Paginator<Badge> = new Paginator([], 5);
+  searchTerm: string = '';
 
   constructor(private badgeService: BadgeService) {}
 
@@ -19,12 +21,26 @@ export class BadgesComponent {
     this.badgeService.getBadges().subscribe({
       next: (data) => {
         this.badges = data;
+        this.filteredBadges = data;
         this.paginator.setItems(data);
       },
       error: (error) => {
         console.error('Error al obtener datos:', error);
       },
     });
+  }
+  filterData() {
+    if (!this.searchTerm) {
+      this.filteredBadges = this.badges;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredBadges = this.badges.filter(badge =>
+        badge.text.toLowerCase().includes(term) ||
+        badge.id.toString().includes(term) ||
+        (badge.color && badge.color.toLowerCase().includes(term))
+      );
+    }
+    this.paginator.setItems(this.filteredBadges);
   }
 
   onPageChange(page: number) {

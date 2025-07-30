@@ -11,7 +11,9 @@ import { Paginator } from 'src/app/shared/utils/paginator';
 })
 export class BucketsComponent {
   buckets: Bucket[] = [];
+  filteredBuckets: Bucket[] = [];
   paginator: Paginator<Bucket> = new Paginator([], 5);
+  searchTerm: string = '';
 
   constructor(private bucketService: BucketService) {}
 
@@ -19,12 +21,28 @@ export class BucketsComponent {
     this.bucketService.getBuckets().subscribe({
       next: (data) => {
         this.buckets = data;
+        this.filteredBuckets = data;
         this.paginator.setItems(data);
       },
       error: (error) => {
         console.error('Error al obtener datos:', error);
       },
     });
+  }
+  filterData() {
+    if (!this.searchTerm) {
+      this.filteredBuckets = this.buckets;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredBuckets = this.buckets.filter(bucket =>
+        bucket.name.toLowerCase().includes(term) ||
+        bucket.id.toString().includes(term) ||
+        (bucket.description && bucket.description.toLowerCase().includes(term)) ||
+        (bucket.createdAt && bucket.createdAt.toLowerCase().includes(term)) ||
+        bucket.board.id.toString().includes(term)
+      );
+    }
+    this.paginator.setItems(this.filteredBuckets);
   }
 
   onPageChange(page: number) {

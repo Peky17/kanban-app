@@ -13,13 +13,31 @@ export class SubtasksComponent {
   subtasks: Subtask[] = [];
   paginator: Paginator<Subtask> = new Paginator([], 5);
 
+  searchTerm: string = '';
+  filteredSubtasks: Subtask[] = [];
+
   constructor(private subtaskService: SubtaskService) {}
 
   getSubtasks(): void {
     this.subtaskService.getSubtasks().subscribe((subtasks) => {
       this.subtasks = subtasks;
-      this.paginator.setItems(subtasks);
+      this.filterData();
     });
+  }
+
+  filterData(): void {
+    if (!this.searchTerm) {
+      this.filteredSubtasks = this.subtasks;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredSubtasks = this.subtasks.filter(subtask =>
+        Object.values(subtask).some(val =>
+          val && val.toString().toLowerCase().includes(term)
+        )
+      );
+    }
+    this.paginator.setItems(this.filteredSubtasks);
+    this.paginator.goToPage(1);
   }
 
   onPageChange(page: number) {

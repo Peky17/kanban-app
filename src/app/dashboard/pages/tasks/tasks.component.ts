@@ -13,6 +13,9 @@ export class TasksComponent {
   tasks: Task[] = [];
   paginator: Paginator<Task> = new Paginator([], 5);
 
+  searchTerm: string = '';
+  filteredTasks: Task[] = [];
+
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
@@ -22,8 +25,23 @@ export class TasksComponent {
   getTasks(): void {
     this.taskService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
-      this.paginator.setItems(tasks);
+      this.filterData();
     });
+  }
+
+  filterData(): void {
+    if (!this.searchTerm) {
+      this.filteredTasks = this.tasks;
+    } else {
+      const term = this.searchTerm.toLowerCase();
+      this.filteredTasks = this.tasks.filter(task =>
+        Object.values(task).some(val =>
+          val && val.toString().toLowerCase().includes(term)
+        )
+      );
+    }
+    this.paginator.setItems(this.filteredTasks);
+    this.paginator.goToPage(1);
   }
 
   onPageChange(page: number) {
