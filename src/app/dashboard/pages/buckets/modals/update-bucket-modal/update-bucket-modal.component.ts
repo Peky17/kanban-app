@@ -72,8 +72,8 @@ export class UpdateBucketModalComponent {
     if (this.updateFormulario.invalid || boardId == -17) {
       Swal.fire({
         toast: true,
-        title: 'OPERACIÓN DENEGADA',
-        text: 'Por favor, complete todos los campos',
+        title: 'FAILED ACTION!',
+        text: 'Please complete all the fields',
         icon: 'error',
         position: 'top-right',
         timer: 2000,
@@ -94,7 +94,7 @@ export class UpdateBucketModalComponent {
         },
         (err) => {
           Swal.fire({
-            title: 'OPERACIÓN DENEGADA',
+            title: 'FAILED ACTION!',
             text: err.error.message,
             icon: 'error',
           });

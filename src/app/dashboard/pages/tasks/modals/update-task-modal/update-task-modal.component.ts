@@ -85,8 +85,8 @@ export class UpdateTaskModalComponent {
     if (this.updateFormulario.invalid) {
       Swal.fire({
         toast: true,
-        title: 'OPERACIÓN DENEGADA',
-        text: 'Por favor, complete todos los campos',
+        title: 'FAILED ACTION!',
+        text: 'Please complete all the fields',
         icon: 'error',
         position: 'top-right',
         timer: 2000,
@@ -107,7 +107,7 @@ export class UpdateTaskModalComponent {
         },
         (err) => {
           Swal.fire({
-            title: 'OPERACIÓN DENEGADA',
+            title: 'FAILED ACTION!',
             text: err.error.message,
             icon: 'error',
           });
