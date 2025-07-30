@@ -2,6 +2,7 @@ import { ProjectService } from './../../../services/project.service';
 import { Component, OnInit } from '@angular/core';
 import { Project } from 'src/app/interfaces/project.interface';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-projects',
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class ProjectsComponent implements OnInit {
   projects: Project[] = [];
+  paginator: Paginator<Project> = new Paginator([], 5);
 
   constructor(private projectService: ProjectService) {}
 
@@ -20,7 +22,12 @@ export class ProjectsComponent implements OnInit {
   getProjects(): void {
     this.projectService.getProjects().subscribe((projects) => {
       this.projects = projects;
+      this.paginator.setItems(projects);
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   confirmDelete(id: string, name: string, description: string): void {

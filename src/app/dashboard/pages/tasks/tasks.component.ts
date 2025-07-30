@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Task } from 'src/app/interfaces/task.interface';
 import { TaskService } from 'src/app/services/task.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-tasks',
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class TasksComponent {
   tasks: Task[] = [];
+  paginator: Paginator<Task> = new Paginator([], 5);
 
   constructor(private taskService: TaskService) {}
 
@@ -20,7 +22,12 @@ export class TasksComponent {
   getTasks(): void {
     this.taskService.getTasks().subscribe((tasks) => {
       this.tasks = tasks;
+      this.paginator.setItems(tasks);
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   confirmDelete(id: number, name: string, description: string): void {

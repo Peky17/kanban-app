@@ -24,7 +24,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr *ngFor="let badge of badges">
+                <tr *ngFor="let badge of paginator.pagedItems">
                   <td>{{ badge.id }}</td>
                   <td>
                     <span class="badge bg-{{ badge.color }}">{{
@@ -43,6 +43,22 @@
                 </tr>
               </tbody>
             </table>
+          </div>
+        </div>
+        <!-- Paginador Bootstrap -->
+        <div class="d-flex justify-content-end mt-3">
+          <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            <div class="btn-group me-2" role="group" aria-label="Page group">
+              <button
+                *ngFor="let page of [].constructor(paginator.totalPages); let i = index"
+                type="button"
+                class="btn btn-secondary"
+                [class.active]="paginator.currentPage === i + 1"
+                (click)="onPageChange(i + 1)"
+              >
+                {{ i + 1 }}
+              </button>
+            </div>
           </div>
         </div>
         <div class="card-footer">

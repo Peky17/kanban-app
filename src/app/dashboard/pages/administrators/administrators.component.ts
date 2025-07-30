@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { AdministratorService } from 'src/app/services/administrator.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-administrators',
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class AdministratorsComponent implements OnInit {
   administrators: any[] = [];
+  paginator: Paginator<any> = new Paginator([], 5);
 
   constructor(
     private administratorService: AdministratorService,
@@ -23,7 +25,12 @@ export class AdministratorsComponent implements OnInit {
   getAdministrators(): void {
     this.administratorService.getAdministrators().subscribe((data) => {
       this.administrators = data;
+      this.paginator.setItems(data);
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   isCurrentUserEmail(userEmail: string): boolean {

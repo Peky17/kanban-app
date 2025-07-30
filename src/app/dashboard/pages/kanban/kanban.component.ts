@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { Board } from 'src/app/interfaces/board.interface';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-kanban',
@@ -11,6 +12,7 @@ import Swal from 'sweetalert2';
 })
 export class KanbanComponent {
   boards: Board[] = [];
+  paginator: Paginator<Board> = new Paginator([], 5);
 
   constructor(private router: Router, private boardService: BoardService) {}
 
@@ -18,11 +20,16 @@ export class KanbanComponent {
     this.boardService.getBoards().subscribe({
       next: (data) => {
         this.boards = data;
+        this.paginator.setItems(data);
       },
       error: (error) => {
         console.error('Error al obtener datos:', error);
       },
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   confirmDelete(id: number, name: string): void {
@@ -57,7 +64,7 @@ export class KanbanComponent {
   }
 
   redirectToBoard(board: Board): void {
-    // Send data an redirect
+    // Send data and redirect
     this.router.navigate(['/dashboard/board', board]);
   }
 }

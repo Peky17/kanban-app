@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-buckets',
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class BucketsComponent {
   buckets: Bucket[] = [];
+  paginator: Paginator<Bucket> = new Paginator([], 5);
 
   constructor(private bucketService: BucketService) {}
 
@@ -17,11 +19,16 @@ export class BucketsComponent {
     this.bucketService.getBuckets().subscribe({
       next: (data) => {
         this.buckets = data;
+        this.paginator.setItems(data);
       },
       error: (error) => {
         console.error('Error al obtener datos:', error);
       },
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   confirmDelete(id: number, name: string): void {

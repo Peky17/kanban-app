@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Badge } from 'src/app/interfaces/badge.interface';
 import { BadgeService } from 'src/app/services/badge.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-badges',
@@ -10,6 +11,7 @@ import Swal from 'sweetalert2';
 })
 export class BadgesComponent {
   badges: Badge[] = [];
+  paginator: Paginator<Badge> = new Paginator([], 5);
 
   constructor(private badgeService: BadgeService) {}
 
@@ -17,11 +19,16 @@ export class BadgesComponent {
     this.badgeService.getBadges().subscribe({
       next: (data) => {
         this.badges = data;
+        this.paginator.setItems(data);
       },
       error: (error) => {
         console.error('Error al obtener datos:', error);
       },
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   confirmDelete(id: number, name: string): void {

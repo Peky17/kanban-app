@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Subtask } from 'src/app/interfaces/subtask.interface';
 import { SubtaskService } from 'src/app/services/subtask.service';
 import Swal from 'sweetalert2';
+import { Paginator } from 'src/app/shared/utils/paginator';
 
 @Component({
   selector: 'app-subtasks',
@@ -10,13 +11,19 @@ import Swal from 'sweetalert2';
 })
 export class SubtasksComponent {
   subtasks: Subtask[] = [];
+  paginator: Paginator<Subtask> = new Paginator([], 5);
 
   constructor(private subtaskService: SubtaskService) {}
 
   getSubtasks(): void {
     this.subtaskService.getSubtasks().subscribe((subtasks) => {
       this.subtasks = subtasks;
+      this.paginator.setItems(subtasks);
     });
+  }
+
+  onPageChange(page: number) {
+    this.paginator.goToPage(page);
   }
 
   ngOnInit(): void {
