@@ -18,6 +18,7 @@ export class MyIncopletedTasksComponent {
   taskCounter: number = 0;
   userTaskAssignations: UserTaskAssignation[] = [];
   currentUser!: User;
+  isLoading: boolean = true; // Bootstrap loader state
 
   constructor(
     private taskAssignationService: TaskAssignationService,
@@ -31,6 +32,9 @@ export class MyIncopletedTasksComponent {
         this.currentUser = user;
         this.getTasksAssigned(user.id);
       },
+      error: () => {
+        this.isLoading = false; // Stop loader on error
+      },
     });
   }
 
@@ -38,6 +42,10 @@ export class MyIncopletedTasksComponent {
     this.taskAssignationService.getTaskAssignationByUserId(id).subscribe({
       next: (assignedTasks: TaskAssignation[]) => {
         this.saveTaskAssigned(assignedTasks);
+        this.isLoading = false; // Stop loader after data is loaded
+      },
+      error: () => {
+        this.isLoading = false; // Stop loader on error
       },
     });
   }

@@ -1,38 +1,46 @@
-<!-- cards -->
-<div class="row">
-  <div class="col-md-3" *ngFor="let taskAssignation of userTaskAssignations">
-    <div class="card">
-      <div class="card-body">
-        <!-- Badge indicator -->
-        <div class="row">
-          <div class="col-md-8"></div>
-          <div class="col-md-4">
-            <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 1">
-              <span class="badge bg-danger">{{
-                taskAssignation.task.priority
-              }}</span>
-            </div>
-            <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 2">
-              <span class="badge bg-warning">{{
-                taskAssignation.task.priority
-              }}</span>
-            </div>
-            <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 3">
-              <span class="badge bg-success">{{
-                taskAssignation.task.priority
-              }}</span>
+<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+  <div class="spinner-border text-primary" role="status">
+    <span class="visually-hidden">Loading...</span>
+  </div>
+</div>
+
+<div *ngIf="!isLoading">
+  <!-- cards -->
+  <div class="row">
+    <div class="col-md-3" *ngFor="let taskAssignation of userTaskAssignations">
+      <div class="card">
+        <div class="card-body">
+          <!-- Badge indicator -->
+          <div class="row">
+            <div class="col-md-8"></div>
+            <div class="col-md-4">
+              <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 1">
+                <span class="badge bg-danger">{{
+                  taskAssignation.task.priority
+                }}</span>
+              </div>
+              <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 2">
+                <span class="badge bg-warning">{{
+                  taskAssignation.task.priority
+                }}</span>
+              </div>
+              <div *ngIf="getPriorityColor(taskAssignation.task.priority) == 3">
+                <span class="badge bg-success">{{
+                  taskAssignation.task.priority
+                }}</span>
+              </div>
             </div>
           </div>
+          <br />
+          <h4 class="card-title">{{ taskAssignation.task.name }}</h4>
+          <p class="card-text">{{ taskAssignation.task.description }}</p>
+          <p class="card-text">
+            <b>{{ taskAssignation.task.dueDate }}</b>
+          </p>
+          <br />
+          <!-- Buttons -->
+          <app-task-info [userTaskAssignation]="taskAssignation"></app-task-info>
         </div>
-        <br />
-        <h4 class="card-title">{{ taskAssignation.task.name }}</h4>
-        <p class="card-text">{{ taskAssignation.task.description }}</p>
-        <p class="card-text">
-          <b>{{ taskAssignation.task.dueDate }}</b>
-        </p>
-        <br />
-        <!-- Buttons -->
-        <app-task-info [userTaskAssignation]="taskAssignation"></app-task-info>
       </div>
     </div>
   </div>
