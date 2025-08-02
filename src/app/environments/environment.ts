@@ -1,4 +1,5 @@
 export const environment = {
   production: false,
-  baseUrl: "http://192.168.1.36:8080/api/v1"
-}
+  baseUrl:
+    'https://api-activity-tracker-b6edf6bdd2c2emcw.mexicocentral-01.azurewebsites.net/api/v1',
+};
