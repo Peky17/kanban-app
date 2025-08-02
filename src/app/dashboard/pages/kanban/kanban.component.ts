@@ -19,16 +19,31 @@ export class KanbanComponent {
   constructor(private router: Router, private boardService: BoardService) {}
 
   ngOnInit(): void {
-    this.boardService.getBoards().subscribe({
-      next: (data) => {
+    this.getBoards();
+  }
+
+  getBoards(): void {
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the boards.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
+    this.boardService.getBoards().subscribe(
+      (data) => {
         this.boards = data;
         this.filteredBoards = data;
         this.paginator.setItems(data);
+        setTimeout(() => Swal.close(), 500); // Add delay before closing
       },
-      error: (error) => {
+      (error) => {
         console.error('Error al obtener datos:', error);
-      },
-    });
+        Swal.fire('Error', 'Failed to load boards.', 'error');
+      }
+    );
   }
 
   onPageChange(page: number) {

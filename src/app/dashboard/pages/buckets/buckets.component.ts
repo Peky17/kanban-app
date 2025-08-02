@@ -18,14 +18,24 @@ export class BucketsComponent {
   constructor(private bucketService: BucketService) {}
 
   ngOnInit(): void {
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the buckets.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     this.bucketService.getBuckets().subscribe({
       next: (data) => {
         this.buckets = data;
         this.filteredBuckets = data;
         this.paginator.setItems(data);
+        Swal.close(); // Close the loader
       },
       error: (error) => {
-        console.error('Error al obtener datos:', error);
+        Swal.fire('Error', 'Failed to load buckets.', 'error');
       },
     });
   }

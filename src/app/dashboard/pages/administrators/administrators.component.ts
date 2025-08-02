@@ -26,10 +26,25 @@ export class AdministratorsComponent implements OnInit {
   }
 
   getAdministrators(): void {
-    this.administratorService.getAdministrators().subscribe((data) => {
-      this.administrators = data;
-      this.filterData();
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the administrators.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
+
+    this.administratorService.getAdministrators().subscribe(
+      (data) => {
+        this.administrators = data;
+        this.filterData();
+        Swal.close(); // Close the loader
+      },
+      (error) => {
+        Swal.fire('Error', 'Failed to load administrators.', 'error');
+      }
+    );
   }
 
   filterData(): void {
@@ -37,8 +52,8 @@ export class AdministratorsComponent implements OnInit {
       this.filteredAdministrators = this.administrators;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredAdministrators = this.administrators.filter(admin =>
-        Object.values(admin).some(val =>
+      this.filteredAdministrators = this.administrators.filter((admin) =>
+        Object.values(admin).some((val) =>
           val && val.toString().toLowerCase().includes(term)
         )
       );

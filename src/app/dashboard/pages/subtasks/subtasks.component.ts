@@ -19,10 +19,25 @@ export class SubtasksComponent {
   constructor(private subtaskService: SubtaskService) {}
 
   getSubtasks(): void {
-    this.subtaskService.getSubtasks().subscribe((subtasks) => {
-      this.subtasks = subtasks;
-      this.filterData();
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the subtasks.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
+
+    this.subtaskService.getSubtasks().subscribe(
+      (subtasks) => {
+        this.subtasks = subtasks;
+        this.filterData();
+        Swal.close(); // Close the loader
+      },
+      (error) => {
+        Swal.fire('Error', 'Failed to load subtasks.', 'error');
+      }
+    );
   }
 
   filterData(): void {

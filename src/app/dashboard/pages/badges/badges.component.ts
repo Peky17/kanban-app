@@ -18,14 +18,24 @@ export class BadgesComponent {
   constructor(private badgeService: BadgeService) {}
 
   ngOnInit(): void {
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the badges.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
+    });
+
     this.badgeService.getBadges().subscribe({
       next: (data) => {
         this.badges = data;
         this.filteredBadges = data;
         this.paginator.setItems(data);
+        Swal.close(); // Close the loader
       },
       error: (error) => {
-        console.error('Error al obtener datos:', error);
+        Swal.fire('Error', 'Failed to load badges.', 'error');
       },
     });
   }

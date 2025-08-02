@@ -16,6 +16,8 @@ export class TasksComponent {
   searchTerm: string = '';
   filteredTasks: Task[] = [];
 
+  isLoading: boolean = false; // Added loader state
+
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
@@ -23,10 +25,25 @@ export class TasksComponent {
   }
 
   getTasks(): void {
-    this.taskService.getTasks().subscribe((tasks) => {
-      this.tasks = tasks;
-      this.filterData();
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the tasks.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
+
+    this.taskService.getTasks().subscribe(
+      (tasks) => {
+        this.tasks = tasks;
+        this.filterData();
+        Swal.close(); // Close the loader
+      },
+      (error) => {
+        Swal.fire('Error', 'Failed to load tasks.', 'error');
+      }
+    );
   }
 
   filterData(): void {
@@ -34,8 +51,8 @@ export class TasksComponent {
       this.filteredTasks = this.tasks;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredTasks = this.tasks.filter(task =>
-        Object.values(task).some(val =>
+      this.filteredTasks = this.tasks.filter((task) =>
+        Object.values(task).some((val) =>
           val && val.toString().toLowerCase().includes(term)
         )
       );

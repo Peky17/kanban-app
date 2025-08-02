@@ -23,10 +23,25 @@ export class ProjectsComponent implements OnInit {
   }
 
   getProjects(): void {
-    this.projectService.getProjects().subscribe((projects) => {
-      this.projects = projects;
-      this.filterData();
+    Swal.fire({
+      title: 'Loading...',
+      html: 'Please wait while we fetch the projects.',
+      allowOutsideClick: false,
+      didOpen: () => {
+        Swal.showLoading();
+      },
     });
+
+    this.projectService.getProjects().subscribe(
+      (projects) => {
+        this.projects = projects;
+        this.filterData();
+        Swal.close(); // Close the loader after data is loaded
+      },
+      (error) => {
+        Swal.fire('Error', 'Failed to load projects.', 'error');
+      }
+    );
   }
 
   filterData(): void {
@@ -34,8 +49,8 @@ export class ProjectsComponent implements OnInit {
       this.filteredProjects = this.projects;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredProjects = this.projects.filter(project =>
-        Object.values(project).some(val =>
+      this.filteredProjects = this.projects.filter((project) =>
+        Object.values(project).some((val) =>
           val && val.toString().toLowerCase().includes(term)
         )
       );
