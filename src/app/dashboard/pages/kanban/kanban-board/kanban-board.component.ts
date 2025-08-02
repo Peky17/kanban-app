@@ -7,7 +7,7 @@ import {
   moveItemInArray,
   transferArrayItem,
 } from '@angular/cdk/drag-drop';
-import { NgFor } from '@angular/common';
+import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
@@ -18,6 +18,7 @@ import { TaskAssignationService } from 'src/app/services/task-assignation.servic
 import { TaskAssignation, UserTaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { User } from 'src/app/interfaces/user.interface';
 import { BoardService } from 'src/app/services/board.service';
+import { LoaderComponent } from 'src/app/shared/loader/loader.component';
 import { Board } from 'src/app/interfaces/board.interface';
 import Swal from 'sweetalert2';
 
@@ -26,14 +27,20 @@ import Swal from 'sweetalert2';
   templateUrl: './kanban-board.component.html',
   styleUrls: ['./kanban-board.component.css'],
   standalone: true,
-  imports: [CdkDropList, CdkDrag, NgFor],
+  imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent],
 })
+
 export class KanbanBoardComponent implements OnInit {
+  // trackBy para mejorar el rendimiento del ngFor de tareas
+  trackByTaskId(index: number, task: any): number {
+    return task.id;
+  }
   board!: any;
   buckets: Bucket[] = [];
   bucketTasks: BucketTask[] = [];
   currentUser!: User;
   userTaskAssignations: TaskAssignation[] = [];
+  isLoading: boolean = true;
 
   constructor(
     private route: ActivatedRoute,
@@ -58,7 +65,10 @@ export class KanbanBoardComponent implements OnInit {
         this.currentUser = user;
         this.getUserTaskAssignations();
       },
-      error: (err) => console.error('Error getting user:', err),
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error getting user:', err);
+      },
     });
   }
 
@@ -68,18 +78,28 @@ export class KanbanBoardComponent implements OnInit {
         this.userTaskAssignations = assignedTasks;
         // Get board buckets after getting user assignations
         this.bucketService.getBucketsByBoard(this.board.id).subscribe({
-          next: (bucketsObtained: Bucket[]) =>
-            this.initBucketsAndTasks(bucketsObtained),
-          error: (err) => console.error('Error:', err),
+          next: (bucketsObtained: Bucket[]) => {
+            this.initBucketsAndTasks(bucketsObtained);
+            this.isLoading = false;
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error('Error:', err);
+          },
         });
       },
-      error: (err) => console.error('Error getting task assignations:', err),
+      error: (err) => {
+        this.isLoading = false;
+        console.error('Error getting task assignations:', err);
+      },
     });
   }
 
   initBucketsAndTasks(bucketsObtained: Bucket[]): void {
-    this.buckets = bucketsObtained;
-    // get tasks for each bucket and save only the ones assigned to current user
+    // Ordenar los buckets por id de menor a mayor
+    this.buckets = bucketsObtained.sort((a, b) => a.id - b.id);
+    this.bucketTasks = [];
+    // get tasks for each bucket y guardar solo los asignados al usuario actual
     this.buckets.forEach((bucket: Bucket) => {
       let bucketTaskElement: BucketTask = this.getTasksByBucket(bucket.id);
       this.bucketTasks.push(bucketTaskElement);

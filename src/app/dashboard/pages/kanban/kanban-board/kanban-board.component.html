@@ -1,5 +1,16 @@
 <div class="container overflow-auto">
-  <div class="row">
+  <!-- Loader -->
+  <app-loader *ngIf="isLoading"></app-loader>
+
+  <!-- Alerta de validación si no hay buckets y no está cargando -->
+  <div *ngIf="!isLoading && buckets.length === 0" class="d-flex justify-content-center align-items-center mt-4">
+    <div class="alert alert-warning text-center w-50" role="alert">
+      <strong>Warning!</strong> There are no buckets to display on this board.
+    </div>
+  </div>
+
+  <!-- Buckets -->
+  <div class="row" *ngIf="!isLoading && buckets.length > 0">
     <div class="col" *ngFor="let bucket of buckets">
       <div class="card mb-3" style="max-width: 20rem">
         <div class="card-header text-center bg-{{ bucket.color }}">
@@ -11,17 +22,12 @@
             cdkDropList
             [id]="'list-' + bucket.id"
             [cdkDropListConnectedTo]="getConnectedLists()"
-            [cdkDropListData]="
-              bucketTasks[getBucketPosition(bucket.id)].tasks
-            "
+            [cdkDropListData]="bucketTasks[getBucketPosition(bucket.id)].tasks"
             class="example-list"
             (cdkDropListDropped)="drop($event)"
           >
             <div
-              *ngFor="
-                let task of bucketTasks[getBucketPosition(bucket.id)].tasks;
-                track
-              "
+              *ngFor="let task of bucketTasks[getBucketPosition(bucket.id)].tasks; trackBy: trackByTaskId"
             >
               <div class="example-box" cdkDrag>
                 {{ task.name }}
