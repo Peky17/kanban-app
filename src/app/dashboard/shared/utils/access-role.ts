@@ -64,6 +64,13 @@ export class AccessRole {
     },
     // Associate components
     {
+      title: 'My Performance',
+      description: 'View my performance metrics',
+      icon: 'fa fa-line-chart',
+      roleAccess: ['Associate', 'Administrator', 'Manager'],
+      redirection: '/dashboard/my-performance',
+    },
+    {
       title: 'My Tasks',
       description: 'View my assigned tasks',
       icon: 'fa fa-tasks',

@@ -18,6 +18,7 @@ import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assi
 import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ProjectMembersComponent } from './pages/projects/project-members/project-members.component';
 import { AccessGuard } from '../guards/access.guard';
+import { MyPerformanceComponent } from './pages/assignations/my-performance/my-performance.component';
 
 const routes: Routes = [
   {
@@ -107,6 +108,12 @@ const routes: Routes = [
         component: MyProfileComponent,
         canActivate: [AuthGuard],
         canLoad: [AuthGuard],
+      },
+      {
+        path: 'my-performance',
+        component: MyPerformanceComponent,
+        canActivate: [AuthGuard, AccessGuard],
+        canLoad: [AuthGuard, AccessGuard],
       },
       {
         path: '**',

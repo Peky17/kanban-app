@@ -39,6 +39,8 @@ import { MyCompletedTasksComponent } from './pages/assignations/assigned-tasks/m
 import { MyIncopletedTasksComponent } from './pages/assignations/assigned-tasks/my-incopleted-tasks/my-incopleted-tasks.component';
 import { TaskInfoComponent } from './pages/tasks/task-info/task-info.component';
 import { ProjectTeamTableComponent } from './pages/projects/project-team-table/project-team-table.component';
+import { MyPerformanceComponent } from './pages/assignations/my-performance/my-performance.component';
+import { NgChartsModule } from 'ng2-charts';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -76,8 +78,9 @@ import { ProjectTeamTableComponent } from './pages/projects/project-team-table/p
     MyIncopletedTasksComponent,
     TaskInfoComponent,
     ProjectTeamTableComponent,
+    MyPerformanceComponent,
   ],
-  imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule],
+  imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule, NgChartsModule],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],
 })
 export class TaskModule {}
