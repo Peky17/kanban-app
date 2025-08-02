@@ -1,10 +1,30 @@
-<div *ngIf="isLoading" class="d-flex justify-content-center align-items-center" style="height: 100vh;">
+<div
+  *ngIf="isLoading"
+  class="d-flex justify-content-center align-items-center"
+  style="height: 100vh"
+>
   <div class="spinner-border text-primary" role="status">
     <span class="visually-hidden">Loading...</span>
   </div>
 </div>
 
 <div *ngIf="!isLoading">
+  <div
+    *ngIf="userTaskAssignations.length === 0"
+    class="alert alert-dismissible alert-secondary d-flex justify-content-center align-items-center"
+    style="
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: auto;
+    "
+    role="alert"
+  >
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    <strong>Oh snap!</strong>
+    <a class="alert-link">No tasks available to display.</a>
+  </div>
   <!-- cards -->
   <div class="row">
     <div class="col-md-3" *ngFor="let taskAssignation of userTaskAssignations">
@@ -39,7 +59,9 @@
           </p>
           <br />
           <!-- Buttons -->
-          <app-task-info [userTaskAssignation]="taskAssignation"></app-task-info>
+          <app-task-info
+            [userTaskAssignation]="taskAssignation"
+          ></app-task-info>
         </div>
       </div>
     </div>
