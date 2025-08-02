@@ -51,8 +51,8 @@ const routes: Routes = [
       {
         path: 'tasks',
         component: TasksComponent,
-        canActivate: [AuthGuard],
-        canLoad: [AuthGuard],
+        canActivate: [AuthGuard, AccessGuard],
+        canLoad: [AuthGuard, AccessGuard],
       },
       {
         path: 'subtasks',
@@ -63,8 +63,8 @@ const routes: Routes = [
       {
         path: 'kanban',
         component: KanbanComponent,
-        canActivate: [AuthGuard],
-        canLoad: [AuthGuard],
+        canActivate: [AuthGuard, AccessGuard],
+        canLoad: [AuthGuard, AccessGuard],
       },
       {
         path: 'buckets',
@@ -87,8 +87,8 @@ const routes: Routes = [
       {
         path: 'board',
         component: KanbanBoardComponent,
-        canActivate: [AuthGuard, AccessGuard],
-        canLoad: [AuthGuard, AccessGuard],
+        canActivate: [AuthGuard],
+        canLoad: [AuthGuard],
       },
       {
         path: 'my-projects',
