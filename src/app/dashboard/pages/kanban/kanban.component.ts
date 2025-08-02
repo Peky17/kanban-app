@@ -19,10 +19,6 @@ export class KanbanComponent {
   constructor(private router: Router, private boardService: BoardService) {}
 
   ngOnInit(): void {
-    this.getBoards();
-  }
-
-  getBoards(): void {
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the boards.',
@@ -31,19 +27,18 @@ export class KanbanComponent {
         Swal.showLoading();
       },
     });
-
-    this.boardService.getBoards().subscribe(
-      (data) => {
+    this.boardService.getBoards().subscribe({
+      next: (data) => {
         this.boards = data;
         this.filteredBoards = data;
         this.paginator.setItems(data);
-        setTimeout(() => Swal.close(), 500); // Add delay before closing
+        setTimeout(() => Swal.close(), 500);
       },
-      (error) => {
+      error: (error) => {
         console.error('Error al obtener datos:', error);
         Swal.fire('Error', 'Failed to load boards.', 'error');
       }
-    );
+    });
   }
 
   onPageChange(page: number) {
@@ -88,7 +83,7 @@ export class KanbanComponent {
           'The board has been deleted successfully',
           'success'
         );
-        window.location.reload();
+        // Ya no es necesario recargar la página, la lista se actualiza automáticamente
       },
       (error) => {
         Swal.fire('Error', 'There was a problem deleting the board.', 'error');

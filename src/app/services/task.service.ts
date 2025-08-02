@@ -1,16 +1,21 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
 import { Task } from '../interfaces/task.interface';
 
 @Injectable({
   providedIn: 'root',
 })
+
 export class TaskService {
   private baseUrl = environment.baseUrl + '/tasks';
+  private tasksSubject = new BehaviorSubject<Task[]>([]);
+  public tasks$ = this.tasksSubject.asObservable();
 
-  constructor(private httpClient: HttpClient) {}
+  constructor(private httpClient: HttpClient) {
+    this.loadTasks();
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = JSON.parse(localStorage.getItem('token')!);
@@ -20,8 +25,15 @@ export class TaskService {
   }
 
   getTasks(): Observable<Task[]> {
-    return this.httpClient.get<Task[]>(this.baseUrl, {
+    return this.tasks$;
+  }
+
+  private loadTasks(): void {
+    this.httpClient.get<Task[]>(this.baseUrl, {
       headers: this.getAuthHeaders(),
+    }).subscribe({
+      next: (tasks) => this.tasksSubject.next(tasks),
+      error: () => this.tasksSubject.next([])
     });
   }
 
@@ -38,20 +50,48 @@ export class TaskService {
   }
 
   createTask(task: Task): Observable<Task> {
-    return this.httpClient.post<Task>(this.baseUrl, task, {
-      headers: this.getAuthHeaders(),
+    return new Observable(observer => {
+      this.httpClient.post<Task>(this.baseUrl, task, {
+        headers: this.getAuthHeaders(),
+      }).subscribe({
+        next: (res) => {
+          this.loadTasks();
+          observer.next(res);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
     });
   }
 
   updateTask(id: number, task: Task): Observable<Task> {
-    return this.httpClient.put<Task>(this.baseUrl + '/' + id, task, {
-      headers: this.getAuthHeaders(),
+    return new Observable(observer => {
+      this.httpClient.put<Task>(this.baseUrl + '/' + id, task, {
+        headers: this.getAuthHeaders(),
+      }).subscribe({
+        next: (res) => {
+          this.loadTasks();
+          observer.next(res);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
+  deleteTaskById(id: number): Observable<Task> {
+    return new Observable(observer => {
+      this.httpClient.delete<Task>(this.baseUrl + '/' + id, {
+        headers: this.getAuthHeaders(),
+      }).subscribe({
+        next: (res) => {
+          this.loadTasks();
+          observer.next(res);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
     });
   }
 
-  deleteTaskById(id: number): Observable<Task> {
-    return this.httpClient.delete<Task>(this.baseUrl + '/' + id, {
-      headers: this.getAuthHeaders(),
-    });
-  }
+  // Versión duplicada eliminada, solo queda la versión reactiva
 }

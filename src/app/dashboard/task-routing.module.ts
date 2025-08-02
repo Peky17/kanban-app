@@ -81,8 +81,8 @@ const routes: Routes = [
       {
         path: 'project-boards',
         component: ProjectBoardsComponent,
-        canActivate: [AuthGuard, AccessGuard],
-        canLoad: [AuthGuard, AccessGuard],
+        canActivate: [AuthGuard],
+        canLoad: [AuthGuard],
       },
       {
         path: 'board',

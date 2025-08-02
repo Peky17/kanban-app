@@ -82,8 +82,6 @@ export class UpdateSubtaskModalComponent {
             title: 'SUCCESS',
             text: 'Subtask updated successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

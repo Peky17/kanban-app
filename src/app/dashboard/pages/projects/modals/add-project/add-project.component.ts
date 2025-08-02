@@ -80,9 +80,8 @@ export class AddProjectComponent {
             title: 'SUCCESS',
             text: 'Project saved successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
+
         },
         (err) => {
           Swal.fire({

@@ -26,13 +26,12 @@ export class BadgesComponent {
         Swal.showLoading();
       },
     });
-
     this.badgeService.getBadges().subscribe({
       next: (data) => {
         this.badges = data;
         this.filteredBadges = data;
         this.paginator.setItems(data);
-        Swal.close(); // Close the loader
+        setTimeout(() => Swal.close(), 500);
       },
       error: (error) => {
         Swal.fire('Error', 'Failed to load badges.', 'error');

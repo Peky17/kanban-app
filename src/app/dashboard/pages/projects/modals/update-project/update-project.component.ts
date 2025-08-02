@@ -82,8 +82,6 @@ export class UpdateProjectComponent {
             title: 'SUCCESS',
             text: 'Project saved successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

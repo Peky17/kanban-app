@@ -26,13 +26,12 @@ export class BucketsComponent {
         Swal.showLoading();
       },
     });
-
     this.bucketService.getBuckets().subscribe({
       next: (data) => {
         this.buckets = data;
         this.filteredBuckets = data;
         this.paginator.setItems(data);
-        Swal.close(); // Close the loader
+        setTimeout(() => Swal.close(), 500);
       },
       error: (error) => {
         Swal.fire('Error', 'Failed to load buckets.', 'error');

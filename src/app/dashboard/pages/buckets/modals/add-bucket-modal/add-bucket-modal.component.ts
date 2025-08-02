@@ -88,8 +88,6 @@ export class AddBucketModalComponent {
             title: 'SUCCESS',
             text: 'Board created successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

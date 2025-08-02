@@ -18,7 +18,7 @@ export class SubtasksComponent {
 
   constructor(private subtaskService: SubtaskService) {}
 
-  getSubtasks(): void {
+  ngOnInit(): void {
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the subtasks.',
@@ -27,17 +27,16 @@ export class SubtasksComponent {
         Swal.showLoading();
       },
     });
-
-    this.subtaskService.getSubtasks().subscribe(
-      (subtasks) => {
+    this.subtaskService.getSubtasks().subscribe({
+      next: (subtasks) => {
         this.subtasks = subtasks;
         this.filterData();
-        Swal.close(); // Close the loader
+        setTimeout(() => Swal.close(), 500);
       },
-      (error) => {
+      error: () => {
         Swal.fire('Error', 'Failed to load subtasks.', 'error');
       }
-    );
+    });
   }
 
   filterData(): void {
@@ -59,9 +58,7 @@ export class SubtasksComponent {
     this.paginator.goToPage(page);
   }
 
-  ngOnInit(): void {
-    this.getSubtasks();
-  }
+  // ngOnInit eliminado, la carga inicial se hace en el nuevo ngOnInit reactivo
 
   confirmDelete(id: number, name: string): void {
     Swal.fire({
@@ -82,10 +79,10 @@ export class SubtasksComponent {
     this.subtaskService.deleteSubtaskById(id).subscribe(
       () => {
         Swal.fire('Deleted', 'Subtask deleted!', 'success');
-        this.getSubtasks();
+        // Ya no es necesario llamar a getSubtasks(); la lista se actualiza automáticamente
       },
       (error) => {
-        Swal.fire('Error', 'An error has occurred', 'error');
+        Swal.fire('Error', 'An error has ocurrido', 'error');
         console.log(error);
       }
     );

@@ -79,8 +79,6 @@ export class AddSubtaskModalComponent {
             title: 'SUCCESS',
             text: 'Subtask saved successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

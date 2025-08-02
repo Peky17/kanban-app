@@ -22,10 +22,6 @@ export class AdministratorsComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.getAdministrators();
-  }
-
-  getAdministrators(): void {
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the administrators.',
@@ -34,18 +30,19 @@ export class AdministratorsComponent implements OnInit {
         Swal.showLoading();
       },
     });
-
-    this.administratorService.getAdministrators().subscribe(
-      (data) => {
+    this.administratorService.getAdministrators().subscribe({
+      next: (data) => {
         this.administrators = data;
         this.filterData();
-        Swal.close(); // Close the loader
+        setTimeout(() => Swal.close(), 500);
       },
-      (error) => {
+      error: () => {
         Swal.fire('Error', 'Failed to load administrators.', 'error');
       }
-    );
+    });
   }
+
+  // getAdministrators eliminado, ya no es necesario
 
   filterData(): void {
     if (!this.searchTerm) {
@@ -96,7 +93,7 @@ export class AdministratorsComponent implements OnInit {
           'The administrator has been deleted.',
           'success'
         );
-        this.getAdministrators();
+        // Ya no es necesario llamar a getAdministrators(), el servicio lo actualiza automáticamente
       },
       (error) => {
         Swal.fire(

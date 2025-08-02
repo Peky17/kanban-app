@@ -102,8 +102,6 @@ export class AddTaskModalComponent {
             title: 'SUCCESS',
             text: 'Task saved successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

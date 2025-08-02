@@ -21,10 +21,6 @@ export class TasksComponent {
   constructor(private taskService: TaskService) {}
 
   ngOnInit(): void {
-    this.getTasks();
-  }
-
-  getTasks(): void {
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the tasks.',
@@ -33,17 +29,16 @@ export class TasksComponent {
         Swal.showLoading();
       },
     });
-
-    this.taskService.getTasks().subscribe(
-      (tasks) => {
+    this.taskService.getTasks().subscribe({
+      next: (tasks) => {
         this.tasks = tasks;
         this.filterData();
-        Swal.close(); // Close the loader
+        setTimeout(() => Swal.close(), 500);
       },
-      (error) => {
+      error: () => {
         Swal.fire('Error', 'Failed to load tasks.', 'error');
       }
-    );
+    });
   }
 
   filterData(): void {
@@ -84,7 +79,7 @@ export class TasksComponent {
     this.taskService.deleteTaskById(id).subscribe(
       () => {
         Swal.fire('Deleted', 'Task deleted!', 'success');
-        this.getTasks();
+        // Ya no es necesario llamar a getTasks(); la lista se actualiza automáticamente
       },
       (error) => {
         Swal.fire('Error', 'An error has occurred', 'error');

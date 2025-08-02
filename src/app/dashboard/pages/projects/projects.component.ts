@@ -19,10 +19,6 @@ export class ProjectsComponent implements OnInit {
   constructor(private projectService: ProjectService) {}
 
   ngOnInit(): void {
-    this.getProjects();
-  }
-
-  getProjects(): void {
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the projects.',
@@ -31,17 +27,16 @@ export class ProjectsComponent implements OnInit {
         Swal.showLoading();
       },
     });
-
-    this.projectService.getProjects().subscribe(
-      (projects) => {
+    this.projectService.getProjects().subscribe({
+      next: (projects) => {
         this.projects = projects;
         this.filterData();
-        Swal.close(); // Close the loader after data is loaded
+        setTimeout(() => Swal.close(), 500);
       },
-      (error) => {
+      error: () => {
         Swal.fire('Error', 'Failed to load projects.', 'error');
       }
-    );
+    });
   }
 
   filterData(): void {
@@ -82,7 +77,7 @@ export class ProjectsComponent implements OnInit {
     this.projectService.deleteProjectById(id).subscribe(
       () => {
         Swal.fire('Deleted', 'Project deleted', 'success');
-        this.getProjects();
+        // Ya no es necesario llamar a getProjects(); la lista se actualiza automáticamente
       },
       (error) => {
         Swal.fire('Error', 'An error has occurred', 'error');

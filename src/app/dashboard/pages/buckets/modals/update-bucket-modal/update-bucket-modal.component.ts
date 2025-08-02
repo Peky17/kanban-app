@@ -88,8 +88,6 @@ export class UpdateBucketModalComponent {
             title: 'SUCCESS',
             text: 'Bucket updated successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

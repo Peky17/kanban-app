@@ -77,8 +77,6 @@ export class AddAdminModalComponent implements OnInit {
             title: 'SUCCESS',
             text: 'User created successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

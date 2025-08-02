@@ -63,8 +63,6 @@ export class AddBadgeModalComponent {
             title: 'SUCCESS',
             text: 'Badge created successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

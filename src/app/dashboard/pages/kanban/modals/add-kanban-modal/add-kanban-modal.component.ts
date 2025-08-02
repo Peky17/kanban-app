@@ -97,8 +97,6 @@ export class AddKanbanModalComponent {
             title: 'SUCCESS',
             text: 'Board created successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {
