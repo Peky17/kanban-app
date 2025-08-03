@@ -1,0 +1,91 @@
+{
+  "configVersion": 1,
+  "timestamp": 1754249878843,
+  "index": "/kanban-app/index.html",
+  "assetGroups": [
+    {
+      "name": "app",
+      "installMode": "prefetch",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/kanban-app/310.5102a9874dc80a04.js",
+        "/kanban-app/859.c7735adbf60bffeb.js",
+        "/kanban-app/favicon.ico",
+        "/kanban-app/index.html",
+        "/kanban-app/main.4c65843cd8fe7d76.js",
+        "/kanban-app/manifest.webmanifest",
+        "/kanban-app/polyfills.fdb067da079bc31d.js",
+        "/kanban-app/runtime.4f7de3b011cb4a48.js",
+        "/kanban-app/scripts.2f66b6135d2ecb21.js",
+        "/kanban-app/styles.db14d88aecffa4bd.css"
+      ],
+      "patterns": []
+    },
+    {
+      "name": "assets",
+      "installMode": "lazy",
+      "updateMode": "prefetch",
+      "cacheQueryOptions": {
+        "ignoreVary": true
+      },
+      "urls": [
+        "/kanban-app/assets/icons/icon-128x128.png",
+        "/kanban-app/assets/icons/icon-144x144.png",
+        "/kanban-app/assets/icons/icon-152x152.png",
+        "/kanban-app/assets/icons/icon-192x192.png",
+        "/kanban-app/assets/icons/icon-384x384.png",
+        "/kanban-app/assets/icons/icon-512x512.png",
+        "/kanban-app/assets/icons/icon-72x72.png",
+        "/kanban-app/assets/icons/icon-96x96.png",
+        "/kanban-app/assets/tata-logo.png",
+        "/kanban-app/assets/user.png"
+      ],
+      "patterns": []
+    }
+  ],
+  "dataGroups": [],
+  "hashTable": {
+    "/kanban-app/310.5102a9874dc80a04.js": "11e999cb3fc4ba249858b00123376a279d43ecbd",
+    "/kanban-app/859.c7735adbf60bffeb.js": "455e4936afe435e4c3c9c650f9f164a15f90c26e",
+    "/kanban-app/assets/icons/icon-128x128.png": "b1f06c7d714abb4a0cc4d1f7c954feb26826e4c4",
+    "/kanban-app/assets/icons/icon-144x144.png": "96a0d629765c1bc85d9263c6bc83094ca776d267",
+    "/kanban-app/assets/icons/icon-152x152.png": "b1fbbee3902eb96a7658e3bb006f31f78ca5a44c",
+    "/kanban-app/assets/icons/icon-192x192.png": "e4211163bf0911688fbfb80278d8ff4d2f77691d",
+    "/kanban-app/assets/icons/icon-384x384.png": "329749cd6393768d3131ed6304c136b1ca05f2fd",
+    "/kanban-app/assets/icons/icon-512x512.png": "559d9c4318b45a1f2b10596bbb4c960fe521dbcc",
+    "/kanban-app/assets/icons/icon-72x72.png": "279825a1ac4377032ae996a1832c641e33ccf1b6",
+    "/kanban-app/assets/icons/icon-96x96.png": "592885efcbfee27e5e20be4fa3043589390d2740",
+    "/kanban-app/assets/tata-logo.png": "66e77444be58311b11e3ca767dd437eed9c8b4cd",
+    "/kanban-app/assets/user.png": "9485b24e7b93f6f63c57e7e568f98c79671af7f5",
+    "/kanban-app/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
+    "/kanban-app/index.html": "d7e21059697b7c384b6d55671943ea6d26f5f98e",
+    "/kanban-app/main.4c65843cd8fe7d76.js": "98209d3f5d33fde6e5023d5862bf9fb8876c5f86",
+    "/kanban-app/manifest.webmanifest": "46240769f33dad99778eed3f73c9756b0d976248",
+    "/kanban-app/polyfills.fdb067da079bc31d.js": "eafc80419ee03a2b8cf26061d35e6e802889d88e",
+    "/kanban-app/runtime.4f7de3b011cb4a48.js": "956017dc7f2e8d43272997d287206051a1a75553",
+    "/kanban-app/scripts.2f66b6135d2ecb21.js": "7221c3103eaf0809d5d18620fc77819699a3a860",
+    "/kanban-app/styles.db14d88aecffa4bd.css": "69723aee77c549a9dfd37e5d426f947603c7c8f5"
+  },
+  "navigationUrls": [
+    {
+      "positive": true,
+      "regex": "^\\/.*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*\\.[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*$"
+    },
+    {
+      "positive": false,
+      "regex": "^\\/(?:.+\\/)?[^/]*__[^/]*\\/.*$"
+    }
+  ],
+  "navigationRequestStrategy": "performance"
+}
