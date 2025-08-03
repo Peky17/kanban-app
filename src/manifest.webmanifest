@@ -1,6 +1,6 @@
 {
   "name": "ILP Task Manager",
-  "short_name": "ILP TaskMgr",
+  "short_name": "ILP Tasks",
   "theme_color": "#1976d2",
   "background_color": "#fafafa",
   "display": "standalone",
@@ -20,13 +20,13 @@
       "purpose": "maskable any"
     },
     {
-      "src": "assets/icons/favicon-96x96.png",
-      "sizes": "96x96",
+      "src": "assets/icons/apple-touch-icon.png",
+      "sizes": "180x180",
       "type": "image/png"
     },
     {
-      "src": "assets/icons/apple-touch-icon.png",
-      "sizes": "180x180",
+      "src": "assets/icons/favicon-96x96.png",
+      "sizes": "96x96",
       "type": "image/png"
     }
   ]
