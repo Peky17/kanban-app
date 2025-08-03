@@ -1,6 +1,6 @@
 {
   "configVersion": 1,
-  "timestamp": 1754249878843,
+  "timestamp": 1754250235181,
   "index": "/kanban-app/index.html",
   "assetGroups": [
     {
@@ -61,7 +61,7 @@
     "/kanban-app/assets/tata-logo.png": "66e77444be58311b11e3ca767dd437eed9c8b4cd",
     "/kanban-app/assets/user.png": "9485b24e7b93f6f63c57e7e568f98c79671af7f5",
     "/kanban-app/favicon.ico": "22f6a4a3bcaafafb0254e0f2fa4ceb89e505e8b2",
-    "/kanban-app/index.html": "d7e21059697b7c384b6d55671943ea6d26f5f98e",
+    "/kanban-app/index.html": "fb8039b3cc5bea472e378e149dcbbf1c2a249263",
     "/kanban-app/main.4c65843cd8fe7d76.js": "98209d3f5d33fde6e5023d5862bf9fb8876c5f86",
     "/kanban-app/manifest.webmanifest": "46240769f33dad99778eed3f73c9756b0d976248",
     "/kanban-app/polyfills.fdb067da079bc31d.js": "eafc80419ee03a2b8cf26061d35e6e802889d88e",
