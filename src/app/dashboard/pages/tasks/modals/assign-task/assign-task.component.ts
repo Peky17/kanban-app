@@ -80,8 +80,6 @@ export class AssignTaskComponent {
             title: 'SUCCESS',
             text: 'user assigned successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {

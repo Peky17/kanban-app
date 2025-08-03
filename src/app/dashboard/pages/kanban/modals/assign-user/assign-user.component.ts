@@ -77,8 +77,6 @@ export class AssignUserComponent {
             title: 'SUCCESS',
             text: 'user assigned successfully',
             icon: 'success',
-          }).then(() => {
-            location.reload();
           });
         },
         (err) => {
