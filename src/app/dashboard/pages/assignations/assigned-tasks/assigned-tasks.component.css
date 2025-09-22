@@ -1,3 +1,14 @@
+/* Overlay para fade detrás del chatbot */
+.chatbot-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(33, 37, 41, 0.5);
+  z-index: 1099;
+  transition: opacity 0.3s;
+}
 /* Estilos para animación de barra de chat tipo Messenger */
 .chatbot-slide-in {
   position: fixed;
