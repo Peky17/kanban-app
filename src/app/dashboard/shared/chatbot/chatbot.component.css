@@ -1,6 +1,7 @@
 /* Estilos para el chatbot Bootstrap */
 .chatbot-container {
-	max-width: 400px;
+	max-width: 600px;
+	width: 95vw;
 	margin: auto;
 	position: fixed;
 	bottom: 20px;
