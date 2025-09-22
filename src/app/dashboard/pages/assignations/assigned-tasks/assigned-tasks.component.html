@@ -59,17 +59,13 @@
             <app-my-completed-tasks></app-my-completed-tasks>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Botón flotante para abrir/cerrar el chatbot -->
+        <!-- Botón flotante para abrir/cerrar el chatbot -->
   <button
     class="chatbot-toggle-btn btn btn-primary rounded-circle shadow"
     (click)="showChatbot = !showChatbot"
     style="
       position: fixed;
-      bottom: 24px;
+      bottom: 54px;
       right: 24px;
       z-index: 1100;
       width: 56px;
@@ -83,4 +79,7 @@
   <div *ngIf="showChatbot" class="chatbot-slide-in">
     <app-chatbot (close)="showChatbot = false"></app-chatbot>
   </div>
+      </div>
+    </div>
+  </section>
 </main>
