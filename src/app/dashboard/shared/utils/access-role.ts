@@ -91,13 +91,6 @@ export class AccessRole {
       roleAccess: ['Associate'],
       redirection: '/dashboard/my-profile',
     },
-    {
-      title: 'My Progress',
-      description: 'View my work progress',
-      icon: 'fa fa-pie-chart',
-      roleAccess: ['Associate'],
-      redirection: '/dashboard/my-progress',
-    },
   ];
 
   // Get all the access items
