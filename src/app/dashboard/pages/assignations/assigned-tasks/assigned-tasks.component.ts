@@ -6,4 +6,6 @@ import Swal from 'sweetalert2';
   templateUrl: './assigned-tasks.component.html',
   styleUrls: ['./assigned-tasks.component.css'],
 })
-export class AssignedTasksComponent {}
+export class AssignedTasksComponent {
+  showChatbot: boolean = false;
+}

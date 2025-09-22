@@ -1,0 +1,12 @@
+/* Estilos para el chatbot Bootstrap */
+.chatbot-container {
+	max-width: 400px;
+	margin: auto;
+	position: fixed;
+	bottom: 20px;
+	right: 20px;
+	z-index: 1050;
+}
+.chatbot-messages {
+	font-size: 0.95rem;
+}
