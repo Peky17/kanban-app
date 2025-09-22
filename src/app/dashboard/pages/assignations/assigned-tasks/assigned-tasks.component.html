@@ -60,17 +60,27 @@
           </div>
         </div>
       </div>
-      <!-- Botón flotante para abrir/cerrar el chatbot -->
-<button class="chatbot-toggle-btn btn btn-primary rounded-circle shadow"
-        (click)="showChatbot = !showChatbot"
-        style="position: fixed; bottom: 24px; right: 24px; z-index: 1100; width: 56px; height: 56px;">
-  <i class="fa fa-comments"></i>
-</button>
-
-<!-- Barra de chat plegable tipo Messenger -->
-<div *ngIf="showChatbot" class="chatbot-slide-in">
-  <app-chatbot></app-chatbot>
-</div>
     </div>
   </section>
+
+  <!-- Botón flotante para abrir/cerrar el chatbot -->
+  <button
+    class="chatbot-toggle-btn btn btn-primary rounded-circle shadow"
+    (click)="showChatbot = !showChatbot"
+    style="
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 1100;
+      width: 56px;
+      height: 56px;
+    "
+  >
+    <i class="fa fa-comments"></i>
+  </button>
+
+  <!-- Chatbot modal/flotante fuera del container -->
+  <div *ngIf="showChatbot" class="chatbot-slide-in">
+    <app-chatbot (close)="showChatbot = false"></app-chatbot>
+  </div>
 </main>

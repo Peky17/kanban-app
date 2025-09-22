@@ -1,5 +1,5 @@
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 import { ChatbotResponse } from 'src/app/interfaces/chatbot.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
@@ -10,6 +10,7 @@ import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
   styleUrls: ['./chatbot.component.css'],
 })
 export class ChatbotComponent {
+  @Output() close = new EventEmitter<void>();
   messages: Array<{
     from: 'user' | 'bot';
     text: string;
@@ -18,6 +19,11 @@ export class ChatbotComponent {
   userInput: string = '';
   loading: boolean = false;
 
+  expanded: boolean = false;
+
+  closeChatbot() {
+    this.close.emit();
+  }
   constructor(
     private chatbotService: ChatbotService,
     private taskAssignationService: TaskAssignationService
@@ -39,13 +45,16 @@ export class ChatbotComponent {
             > = [];
             let pending = res.tasks.length;
             res.tasks.forEach((task) => {
+              if (!task || typeof task.id === 'undefined') {
+                pending--;
+                return;
+              }
               this.taskAssignationService
                 .getAssignationsByTaskId(task.id)
                 .subscribe(
                   (assignations: TaskAssignation[]) => {
-                    // Buscar la asignación para el usuario actual (ejemplo: userId=1)
                     const assignation = assignations.find(
-                      (a) => a.task.id === task.id && a.user.id === 1
+                      (a) => a.task && typeof a.task.id !== 'undefined' && a.task.id === task.id && a.user && typeof a.user.id !== 'undefined' && a.user.id === 1
                     );
                     tasksWithAssignation.push({
                       id: assignation ? assignation.id : 0,
