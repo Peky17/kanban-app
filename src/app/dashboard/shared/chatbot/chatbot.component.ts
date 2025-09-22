@@ -10,6 +10,10 @@ import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
   styleUrls: ['./chatbot.component.css'],
 })
 export class ChatbotComponent {
+  // Drag and drop
+  dragging = false;
+  dragOffset = { x: 0, y: 0 };
+  chatbotPosition = { x: null as number | null, y: null as number | null };
   @Output() close = new EventEmitter<void>();
   messages: Array<{
     from: 'user' | 'bot';
@@ -23,6 +27,42 @@ export class ChatbotComponent {
 
   closeChatbot() {
     this.close.emit();
+  }
+
+  // Métodos drag and drop
+  onDragStart(event: MouseEvent) {
+    this.dragging = true;
+    const container = (event.target as HTMLElement).closest(
+      '.chatbot-container'
+    ) as HTMLElement;
+    const rect = container.getBoundingClientRect();
+    this.dragOffset = {
+      x: event.clientX - rect.left,
+      y: event.clientY - rect.top,
+    };
+    event.preventDefault();
+  }
+
+  onDragMove(event: MouseEvent) {
+    if (!this.dragging) return;
+    this.chatbotPosition = {
+      x: event.clientX - this.dragOffset.x,
+      y: event.clientY - this.dragOffset.y,
+    };
+  }
+
+  onDragEnd() {
+    this.dragging = false;
+  }
+
+  ngOnInit() {
+    window.addEventListener('mousemove', this.onDragMove.bind(this));
+    window.addEventListener('mouseup', this.onDragEnd.bind(this));
+  }
+
+  ngOnDestroy() {
+    window.removeEventListener('mousemove', this.onDragMove.bind(this));
+    window.removeEventListener('mouseup', this.onDragEnd.bind(this));
   }
   constructor(
     private chatbotService: ChatbotService,
@@ -54,7 +94,13 @@ export class ChatbotComponent {
                 .subscribe(
                   (assignations: TaskAssignation[]) => {
                     const assignation = assignations.find(
-                      (a) => a.task && typeof a.task.id !== 'undefined' && a.task.id === task.id && a.user && typeof a.user.id !== 'undefined' && a.user.id === 1
+                      (a) =>
+                        a.task &&
+                        typeof a.task.id !== 'undefined' &&
+                        a.task.id === task.id &&
+                        a.user &&
+                        typeof a.user.id !== 'undefined' &&
+                        a.user.id === 1
                     );
                     tasksWithAssignation.push({
                       id: assignation ? assignation.id : 0,
@@ -67,7 +113,7 @@ export class ChatbotComponent {
                     if (pending === 0) {
                       this.messages.push({
                         from: 'bot',
-                        text: 'Tareas relacionadas:',
+                        text: 'Related tasks:',
                         tasks: tasksWithAssignation,
                       });
                       this.loading = false;
@@ -85,7 +131,7 @@ export class ChatbotComponent {
                     if (pending === 0) {
                       this.messages.push({
                         from: 'bot',
-                        text: 'Tareas relacionadas:',
+                        text: 'Related tasks:',
                         tasks: tasksWithAssignation,
                       });
                       this.loading = false;
