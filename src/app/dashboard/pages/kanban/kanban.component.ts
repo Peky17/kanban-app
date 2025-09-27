@@ -1,3 +1,5 @@
+import { User } from 'src/app/interfaces/user.interface';
+import { AdministratorService } from 'src/app/services/administrator.service';
 import { BoardService } from './../../../services/board.service';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
@@ -15,10 +17,18 @@ export class KanbanComponent {
   filteredBoards: Board[] = [];
   paginator: Paginator<Board> = new Paginator([], 5);
   searchTerm: string = '';
+  users: User[] = [];
 
-  constructor(private router: Router, private boardService: BoardService) {}
+  constructor(
+    private router: Router,
+    private boardService: BoardService,
+    private administratorService: AdministratorService
+  ) {}
 
   ngOnInit(): void {
+    this.administratorService.getAdministrators().subscribe(users => {
+      this.users = users;
+    });
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the boards.',
@@ -39,6 +49,10 @@ export class KanbanComponent {
         Swal.fire('Error', 'Failed to load boards.', 'error');
       }
     });
+  }
+
+  getUserById(id: number): User | undefined {
+    return this.users.find(u => u.id === id);
   }
 
   onPageChange(page: number) {

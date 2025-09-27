@@ -50,7 +50,7 @@
           <label for="name"><b>CreatedAt</b></label>
           <input
             formControlName="createdAt"
-            value="1"
+            [value]="updateFormulario.get('createdAt')?.value | date:'yyyy-MM-dd'"
             class="form-control"
             type="date"
           />

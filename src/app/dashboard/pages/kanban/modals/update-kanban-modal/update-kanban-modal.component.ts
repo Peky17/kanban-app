@@ -28,12 +28,12 @@ export class UpdateKanbanModalComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private boardService: BoardService,
-  private administratorService: AdministratorService
+    private administratorService: AdministratorService
   ) {}
 
   ngOnInit(): void {
     // get all projects
-      this.getAllUsers();
+    this.getAllUsers();
     // init reactive form
     this.updateFormulario = this.fb.group({
       name: [
@@ -49,18 +49,11 @@ export class UpdateKanbanModalComponent {
         [
           Validators.required,
           Validators.minLength(4),
-          Validators.maxLength(40),
+          Validators.maxLength(100),
         ],
       ],
-      createdAt: [
-        this.board.createdAt,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(10),
-        ],
-      ],
-    createdBy: [this.board.createdBy?.id, [Validators.required]],
+      createdAt: [this.board.createdAt, [Validators.required]],
+      createdBy: [this.board.createdBy?.id, [Validators.required]],
     });
   }
 
