@@ -24,6 +24,23 @@ export class SubtaskService {
     });
   }
 
+
+  /**
+   * Obtiene las subtareas asociadas a una tarea específica
+   */
+  getSubtasksByTaskId(taskId: number): Observable<Subtask[]> {
+    return new Observable(observer => {
+      this.getSubtasks().subscribe({
+        next: (subtasks) => {
+          const filtered = subtasks.filter(subtask => subtask.task && subtask.task.id === taskId);
+          observer.next(filtered);
+          observer.complete();
+        },
+        error: (err) => observer.error(err)
+      });
+    });
+  }
+
   getSubtasks(): Observable<Subtask[]> {
     return this.subtasks$;
   }

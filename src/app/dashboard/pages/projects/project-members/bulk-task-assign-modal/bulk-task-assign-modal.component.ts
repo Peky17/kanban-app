@@ -7,8 +7,10 @@ import { User } from 'src/app/interfaces/user.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { ProjectAssignation } from 'src/app/interfaces/projectAssignation.interface';
 import { TaskService } from 'src/app/services/task.service';
+import { SubtaskService } from 'src/app/services/subtask.service';
 import { ProjectAssignationService } from 'src/app/services/project-assignation.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
+import { UserSubtaskAssign } from 'src/app/interfaces/userSubtaskAssign.interface';
 import { AdministratorService } from 'src/app/services/administrator.service';
 import Swal from 'sweetalert2';
 
@@ -32,6 +34,7 @@ export class BulkTaskAssignModalComponent implements OnInit {
 
   constructor(
     private taskService: TaskService,
+    private subtaskService: SubtaskService,
     private projectAssignationService: ProjectAssignationService,
     private taskAssignationService: TaskAssignationService,
     private administratorService: AdministratorService
@@ -155,7 +158,6 @@ export class BulkTaskAssignModalComponent implements OnInit {
         },
         completed: false
       };
-
       return new Promise<void>((resolve, reject) => {
         this.taskAssignationService.createAssignation(taskAssignation).subscribe({
           next: () => resolve(),
@@ -166,20 +168,49 @@ export class BulkTaskAssignModalComponent implements OnInit {
 
     Promise.all(assignmentPromises)
       .then(() => {
-        this.submitting = false;
-        Swal.fire(
-          'Success!',
-          `Task assigned to ${this.projectMembers.length} team members successfully!`,
-          'success'
-        );
-        this.resetForm();
-        this.taskAssigned.emit();
-        // Close modal programmatically
-        const modalElement = document.getElementById('bulkTaskAssignModal');
-        if (modalElement) {
-          const modal = (window as any).bootstrap?.Modal?.getInstance(modalElement);
-          modal?.hide();
-        }
+        // Después de asignar tareas, asignar subtareas si corresponde
+        // Aquí deberías obtener las subtareas relacionadas con la tarea seleccionada
+        // Suponiendo que tienes un método para obtener subtareas por tarea
+        this.subtaskService.getSubtasksByTaskId(this.selectedTaskId!).subscribe({
+          next: (subtasks: any[]) => {
+            console.log('Subtasks asociadas a la tarea:', subtasks);
+            if (!subtasks || subtasks.length === 0) {
+              this.finalizeBulkAssignSuccess();
+              return;
+            }
+            // Crear asignaciones de subtareas para cada usuario
+            const subtaskAssignments: UserSubtaskAssign[] = [];
+            this.projectMembers.forEach(member => {
+              subtasks.forEach(subtask => {
+                subtaskAssignments.push({
+                  userId: member.id.toString(),
+                  subtaskId: subtask.id.toString()
+                });
+              });
+            });
+            console.log('Payload para asignar subtasks:', subtaskAssignments);
+            if (subtaskAssignments.length > 0) {
+              this.taskAssignationService.assignUserSubtasks(subtaskAssignments).subscribe({
+                next: (response) => {
+                  console.log('Respuesta del backend al asignar subtasks:', response);
+                  this.finalizeBulkAssignSuccess();
+                },
+                error: (err) => {
+                  this.submitting = false;
+                  console.error('Error assigning subtasks:', err);
+                  Swal.fire('Error', 'Failed to assign subtasks. Please try again.', 'error');
+                }
+              });
+            } else {
+              this.finalizeBulkAssignSuccess();
+            }
+          },
+          error: (err) => {
+            this.submitting = false;
+            console.error('Error loading subtasks:', err);
+            Swal.fire('Error', 'Failed to load subtasks. Please try again.', 'error');
+          }
+        });
       })
       .catch((error) => {
         this.submitting = false;
@@ -190,6 +221,27 @@ export class BulkTaskAssignModalComponent implements OnInit {
           'error'
         );
       });
+
+  }
+
+  /**
+   * Finaliza el proceso de asignación masiva mostrando éxito y cerrando el modal
+   */
+  private finalizeBulkAssignSuccess(): void {
+    this.submitting = false;
+    Swal.fire(
+      'Success!',
+      `Task and subtasks assigned to ${this.projectMembers.length} team members successfully!`,
+      'success'
+    );
+    this.resetForm();
+    this.taskAssigned.emit();
+    // Close modal programmatically
+    const modalElement = document.getElementById('bulkTaskAssignModal');
+    if (modalElement) {
+      const modal = (window as any).bootstrap?.Modal?.getInstance(modalElement);
+      modal?.hide();
+    }
   }
 
   resetForm(): void {
@@ -201,7 +253,7 @@ export class BulkTaskAssignModalComponent implements OnInit {
   getSelectedProject(): Project | null {
     console.log('Getting selected project. ID:', this.selectedProjectId, 'Projects:', this.projects);
     if (!this.selectedProjectId) return null;
-    const project = this.projects.find(p => p.id === Number(this.selectedProjectId)) || null;
+    const project = this.projects.find((p: any) => p.id === Number(this.selectedProjectId)) || null;
     console.log('Selected project found:', project);
     return project;
   }
@@ -209,7 +261,7 @@ export class BulkTaskAssignModalComponent implements OnInit {
   getSelectedTask(): Task | null {
     console.log('Getting selected task. ID:', this.selectedTaskId, 'Tasks:', this.availableTasks);
     if (!this.selectedTaskId) return null;
-    const task = this.availableTasks.find(t => t.id === Number(this.selectedTaskId)) || null;
+    const task = this.availableTasks.find((t: any) => t.id === Number(this.selectedTaskId)) || null;
     console.log('Selected task found:', task);
     return task;
   }

@@ -24,6 +24,16 @@ export class TaskService {
     });
   }
 
+
+  /**
+   * Obtiene las subtareas de una tarea específica
+   */
+  getSubtasksByTaskId(taskId: number): Observable<any[]> {
+    return this.httpClient.get<any[]>(`${environment.baseUrl}/subtasks/task/${taskId}`, {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
   getTasks(): Observable<Task[]> {
     return this.tasks$;
   }

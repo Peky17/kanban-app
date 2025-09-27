@@ -58,18 +58,6 @@
           <input class="form-control" type="date" formControlName="dueDate" />
         </div>
       </div>
-      <!-- Bucket associated -->
-      <div class="form-group">
-        <div class="form-group">
-          <label for="name"><b>Assigned Bucket</b></label>
-          <select class="form-control" formControlName="bucket">
-            <option disabled value="-17">Select the origin bucket</option>
-            <div *ngFor="let bucket of buckets">
-              <option value="{{ bucket.id }}">{{ bucket.name }}</option>
-            </div>
-          </select>
-        </div>
-      </div>
       <!-- created at hidden -->
       <div class="form-group" hidden>
         <div class="form-group">

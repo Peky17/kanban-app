@@ -3,12 +3,14 @@ import { environment } from '../environments/environment';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { TaskAssignation } from '../interfaces/taskAssignation';
+import { UserSubtaskAssign } from '../interfaces/userSubtaskAssign.interface';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskAssignationService {
   private baseUrl = environment.baseUrl + '/user-tasks';
+  private subtaskAssignUrl = environment.baseUrl + '/user-subtasks';
 
   constructor(private httpClient: HttpClient) {}
 
@@ -87,5 +89,16 @@ export class TaskAssignationService {
     return this.httpClient.delete<TaskAssignation>(this.baseUrl + '/' + id, {
       headers: this.getAuthHeaders(),
     });
+  }
+
+  /**
+   * Asigna subtareas a usuarios llamando a /api/user-subtasks/assign
+   */
+  assignUserSubtasks(assignments: UserSubtaskAssign[]): Observable<any> {
+    return this.httpClient.post<any>(
+      this.subtaskAssignUrl + '/assign',
+      assignments,
+      { headers: this.getAuthHeaders() }
+    );
   }
 }

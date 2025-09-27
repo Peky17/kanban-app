@@ -18,7 +18,6 @@ import Swal from 'sweetalert2';
   providers: [NgbModalConfig, NgbModal],
 })
 export class AddTaskModalComponent {
-  buckets: Bucket[] = [];
   addFormulario!: FormGroup;
 
   constructor(
@@ -26,18 +25,9 @@ export class AddTaskModalComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private taskService: TaskService,
-    private bucketService: BucketService
   ) {}
 
   ngOnInit(): void {
-    this.bucketService.getBuckets().subscribe({
-      next: (buckets) => {
-        this.buckets = buckets;
-      },
-      error: (error) => {
-        console.error('Error al obtener datos:', error);
-      },
-    });
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
     this.addFormulario = this.fb.group({
@@ -67,7 +57,6 @@ export class AddTaskModalComponent {
       startDate: [formattedDate, [Validators.required]],
       dueDate: [formattedDate, [Validators.required]],
       createdAt: [formattedDate, [Validators.required]],
-      bucket: ['-17', [Validators.required]],
     });
   }
 
