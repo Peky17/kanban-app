@@ -4,7 +4,7 @@
       class="navbar-brand"
       routerLinkActive="active"
       [routerLink]="['/dashboard/home']"
-      ><b>ILP Task Manager</b></a
+      ><b>ILP OnTrack</b></a
     >
     <button
       class="navbar-toggler"
@@ -49,9 +49,21 @@
             style="cursor: pointer"
             class="nav-link"
             routerLinkActive="active"
+            [routerLink]="['/dashboard/my-planner']"
+          >
+            <b>My Planner</b>
+            <i style="margin-left: 5px" class="fa fa-calendar"></i>
+          </a>
+        </li>
+        <!-- My projects -->
+        <li class="nav-item">
+          <a
+            style="cursor: pointer"
+            class="nav-link"
+            routerLinkActive="active"
             [routerLink]="['/dashboard/my-projects']"
           >
-            <b>Assigned Projects</b>
+            <b>My Projects</b>
             <i style="margin-left: 5px" class="fa fa-clipboard"></i>
           </a>
         </li>

@@ -62,13 +62,21 @@ export class AccessRole {
       roleAccess: ['Administrator', 'Manager'],
       redirection: '/dashboard/project-members',
     },
-    // Associate components
+    // -----> Associate components -----------------------------
+    // ---------------------------------------------------------
     {
       title: 'My Performance',
       description: 'View my performance metrics',
       icon: 'fa fa-line-chart',
       roleAccess: ['Associate', 'Administrator', 'Manager'],
       redirection: '/dashboard/my-performance',
+    },
+    {
+      title: 'My Planner',
+      description: 'View my personal planner',
+      icon: 'fa fa-calendar',
+      roleAccess: ['Associate', 'Administrator', 'Manager'],
+      redirection: '/dashboard/my-planner',
     },
     {
       title: 'My Tasks',

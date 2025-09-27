@@ -43,6 +43,7 @@ import { MyPerformanceComponent } from './pages/assignations/my-performance/my-p
 import { NgChartsModule } from 'ng2-charts';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ChatbotComponent } from './shared/chatbot/chatbot.component';
+import { MyPlannerComponent } from './pages/my-planner/my-planner.component';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -82,6 +83,7 @@ import { ChatbotComponent } from './shared/chatbot/chatbot.component';
     ProjectTeamTableComponent,
     MyPerformanceComponent,
     ChatbotComponent,
+    MyPlannerComponent,
   ],
   imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule, NgChartsModule, LoaderComponent],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],

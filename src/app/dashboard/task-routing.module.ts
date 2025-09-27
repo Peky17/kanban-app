@@ -19,6 +19,7 @@ import { MyProfileComponent } from './pages/my-profile/my-profile.component';
 import { ProjectMembersComponent } from './pages/projects/project-members/project-members.component';
 import { AccessGuard } from '../guards/access.guard';
 import { MyPerformanceComponent } from './pages/assignations/my-performance/my-performance.component';
+import { MyPlannerComponent } from './pages/my-planner/my-planner.component';
 
 const routes: Routes = [
   {
@@ -112,6 +113,12 @@ const routes: Routes = [
       {
         path: 'my-performance',
         component: MyPerformanceComponent,
+        canActivate: [AuthGuard, AccessGuard],
+        canLoad: [AuthGuard, AccessGuard],
+      },
+      {
+        path: 'my-planner',
+        component: MyPlannerComponent,
         canActivate: [AuthGuard, AccessGuard],
         canLoad: [AuthGuard, AccessGuard],
       },
