@@ -102,6 +102,4 @@ export class TaskService {
       });
     });
   }
-
-  // Versión duplicada eliminada, solo queda la versión reactiva
 }
