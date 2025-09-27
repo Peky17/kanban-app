@@ -190,16 +190,26 @@ export class BulkTaskAssignModalComponent implements OnInit {
             });
             console.log('Payload para asignar subtasks:', subtaskAssignments);
             if (subtaskAssignments.length > 0) {
-              this.taskAssignationService.assignUserSubtasks(subtaskAssignments).subscribe({
-                next: (response) => {
-                  console.log('Respuesta del backend al asignar subtasks:', response);
-                  this.finalizeBulkAssignSuccess();
-                },
-                error: (err) => {
-                  this.submitting = false;
-                  console.error('Error assigning subtasks:', err);
-                  Swal.fire('Error', 'Failed to assign subtasks. Please try again.', 'error');
-                }
+              // Hacer una petición por cada asignación
+              const requests = this.taskAssignationService.assignUserSubtasks(subtaskAssignments);
+              let completed = 0;
+              let hasError = false;
+              requests.forEach((obs, idx) => {
+                obs.subscribe({
+                  next: (response) => {
+                    console.log(`Respuesta backend asignando subtask [${idx}]:`, response);
+                    completed++;
+                    if (completed === requests.length && !hasError) {
+                      this.finalizeBulkAssignSuccess();
+                    }
+                  },
+                  error: (err) => {
+                    hasError = true;
+                    this.submitting = false;
+                    console.error('Error assigning subtasks:', err);
+                    Swal.fire('Error', 'Failed to assign subtasks. Please try again.', 'error');
+                  }
+                });
               });
             } else {
               this.finalizeBulkAssignSuccess();

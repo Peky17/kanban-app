@@ -92,13 +92,13 @@ export class TaskAssignationService {
   }
 
   /**
-   * Asigna subtareas a usuarios llamando a /api/user-subtasks/assign
+   * Asigna subtareas a usuarios llamando a /api/user-subtasks/assign?userId=...&subtaskId=...
+   * Devuelve un array de observables para cada asignación
    */
-  assignUserSubtasks(assignments: UserSubtaskAssign[]): Observable<any> {
-    return this.httpClient.post<any>(
-      this.subtaskAssignUrl + '/assign',
-      assignments,
-      { headers: this.getAuthHeaders() }
-    );
+  assignUserSubtasks(assignments: UserSubtaskAssign[]): Observable<any>[] {
+    return assignments.map(a => {
+      const url = `${this.subtaskAssignUrl}/assign?userId=${a.userId}&subtaskId=${a.subtaskId}`;
+      return this.httpClient.post<any>(url, null, { headers: this.getAuthHeaders() });
+    });
   }
 }
