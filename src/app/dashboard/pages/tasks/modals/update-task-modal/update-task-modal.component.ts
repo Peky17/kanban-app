@@ -8,7 +8,6 @@ import {
   NgbModalConfig,
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { Task } from 'src/app/interfaces/task.interface';
 import Swal from 'sweetalert2';
 
