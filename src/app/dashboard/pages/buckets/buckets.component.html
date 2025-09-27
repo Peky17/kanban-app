@@ -35,6 +35,8 @@
                   <th>Description</th>
                   <th>Created At</th>
                   <th>Board Id</th>
+                  <th>Employee ID</th>
+                  <th>Creator Name</th>
                   <th>Action</th>
                 </tr>
               </thead>
@@ -45,6 +47,8 @@
                   <td>{{ bucket.description }}</td>
                   <td>{{ bucket.createdAt }}</td>
                   <td>{{ bucket.board.id }}</td>
+                  <td>{{ getUserById(bucket.createdBy.id)?.employeeNumber || '-' }}</td>
+                  <td>{{ getUserById(bucket.createdBy.id)?.name || '-' }}</td>
                   <td>
                     <app-update-bucket-modal
                       [bucket]="bucket"

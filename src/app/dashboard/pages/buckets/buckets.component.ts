@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { AdministratorService } from 'src/app/services/administrator.service';
+import { User } from 'src/app/interfaces/user.interface';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
 import Swal from 'sweetalert2';
@@ -14,10 +16,17 @@ export class BucketsComponent {
   filteredBuckets: Bucket[] = [];
   paginator: Paginator<Bucket> = new Paginator([], 5);
   searchTerm: string = '';
+  users: User[] = [];
 
-  constructor(private bucketService: BucketService) {}
+  constructor(
+    private bucketService: BucketService,
+    private administratorService: AdministratorService
+  ) {}
 
   ngOnInit(): void {
+    this.administratorService.getAdministrators().subscribe(users => {
+      this.users = users;
+    });
     Swal.fire({
       title: 'Loading...',
       html: 'Please wait while we fetch the buckets.',
@@ -87,5 +96,8 @@ export class BucketsComponent {
         Swal.fire('Error', 'There was a problem deleting the bucket.', 'error');
       }
     );
+  }
+  getUserById(id: number): User | undefined {
+    return this.users.find(u => u.id === id);
   }
 }
