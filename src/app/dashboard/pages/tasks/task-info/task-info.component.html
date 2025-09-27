@@ -41,7 +41,7 @@
     <div>{{ userTaskAssignation.task.description }}</div>
     <br />
     <h5>Actions:</h5>
-    <div class="btn-group mb-2">
+    <div class="d-flex align-items-center gap-2 mb-2">
       <button
         class="btn btn-secondary"
         type="button"
@@ -51,6 +51,13 @@
         [attr.aria-controls]="'subtasksTable' + userTaskAssignation.task.id"
       >
         View subtasks <i class="fa fa-list"></i>
+      </button>
+      <button
+        class="btn btn-success"
+        (click)="markAsDone()"
+        [disabled]="userSubtasks.length > 0 && !allSubtasksCompleted()"
+      >
+        Mark as Done! <i class="fa fa-check"></i>
       </button>
     </div>
     <div class="collapse" [id]="'subtasksTable' + userTaskAssignation.task.id">
@@ -110,14 +117,6 @@
         No subtasks assigned.
       </div>
     </div>
-    <div class="btn-group mt-2">
-      <button
-        class="btn btn-success"
-        (click)="markAsDone()"
-        [disabled]="userSubtasks.length > 0 && !allSubtasksCompleted()"
-      >
-        Mark as Done! <i class="fa fa-check"></i>
-      </button>
-    </div>
+    <!-- Botón Mark as Done movido arriba para alineación -->
   </div>
 </div>
