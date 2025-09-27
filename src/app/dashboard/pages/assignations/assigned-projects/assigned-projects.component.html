@@ -24,7 +24,6 @@
                   <th>Start Date</th>
                   <th>Due Date</th>
                   <th>Created At</th>
-                  <th>Action</th>
                 </tr>
               </thead>
               <tbody>
@@ -35,17 +34,6 @@
                   <td>{{ project.startDate }}</td>
                   <td>{{ project.dueDate }}</td>
                   <td>{{ project.createdAt }}</td>
-                  <td>
-                    <div>
-                      <button
-                        class="btn btn-secondary"
-                        (click)="redirectToProjectBoards(project)"
-                      >
-                        View Boards
-                        <i class="fa fa-eye"></i>
-                      </button>
-                    </div>
-                  </td>
                 </tr>
               </tbody>
             </table>
