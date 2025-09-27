@@ -1,5 +1,5 @@
-import { BoardService } from './../../../../../services/board.service';
 import { Component } from '@angular/core';
+import { BoardService } from './../../../../../services/board.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
   NgbActiveModal,
@@ -12,12 +12,12 @@ import { AdministratorService } from 'src/app/services/administrator.service';
 import Swal from 'sweetalert2';
 
 @Component({
-  selector: 'app-add-kanban-modal',
-  templateUrl: './add-kanban-modal.component.html',
-  styleUrls: ['./add-kanban-modal.component.css'],
+  selector: 'app-create-board-modal-planner',
+  templateUrl: './create-board-modal-planner.component.html',
+  styleUrls: ['./create-board-modal-planner.component.css'],
   providers: [NgbModalConfig, NgbModal],
 })
-export class AddKanbanModalComponent {
+export class CreateBoardModalPlannerComponent {
   users: User[] = [];
   addFormulario!: FormGroup;
 
@@ -26,12 +26,12 @@ export class AddKanbanModalComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private boardService: BoardService,
-  private administratorService: AdministratorService
+    private administratorService: AdministratorService
   ) {}
 
   ngOnInit(): void {
-  // get all users
-  this.getAllUsers();
+    // get all users
+    this.getAllUsers();
     // init reactive form
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
@@ -60,7 +60,7 @@ export class AddKanbanModalComponent {
           Validators.maxLength(10),
         ],
       ],
-  createdBy: [-17, [Validators.required]],
+      createdBy: [-17, [Validators.required]],
     });
   }
 
@@ -76,8 +76,8 @@ export class AddKanbanModalComponent {
   createBoard(): void {
     const formData = this.addFormulario.value;
     console.log(formData);
-  let createdById = this.addFormulario.value.createdBy;
-  if (this.addFormulario.invalid || createdById == -17) {
+    let createdById = this.addFormulario.value.createdBy;
+    if (this.addFormulario.invalid || createdById == -17) {
       Swal.fire({
         toast: true,
         title: 'FAILED ACTION!',

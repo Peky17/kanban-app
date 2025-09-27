@@ -44,6 +44,8 @@ import { NgChartsModule } from 'ng2-charts';
 import { LoaderComponent } from '../shared/loader/loader.component';
 import { ChatbotComponent } from './shared/chatbot/chatbot.component';
 import { MyPlannerComponent } from './pages/my-planner/my-planner.component';
+import { CreateBoardModalPlannerComponent } from './pages/my-planner/modals/create-board-modal-planner/create-board-modal-planner.component';
+import { UpdateBoardModalPlannerComponent } from './pages/my-planner/modals/update-board-modal-planner/update-board-modal-planner.component';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -84,6 +86,8 @@ import { MyPlannerComponent } from './pages/my-planner/my-planner.component';
     MyPerformanceComponent,
     ChatbotComponent,
     MyPlannerComponent,
+    CreateBoardModalPlannerComponent,
+    UpdateBoardModalPlannerComponent,
   ],
   imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule, NgChartsModule, LoaderComponent],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],
