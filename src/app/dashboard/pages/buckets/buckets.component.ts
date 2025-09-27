@@ -52,13 +52,20 @@ export class BucketsComponent {
       this.filteredBuckets = this.buckets;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredBuckets = this.buckets.filter(bucket =>
-        bucket.name.toLowerCase().includes(term) ||
-        bucket.id.toString().includes(term) ||
-        (bucket.description && bucket.description.toLowerCase().includes(term)) ||
-        (bucket.createdAt && bucket.createdAt.toLowerCase().includes(term)) ||
-        bucket.board.id.toString().includes(term)
-      );
+      this.filteredBuckets = this.buckets.filter(bucket => {
+        const creator = this.getUserById(bucket.createdBy.id);
+        return (
+          bucket.name.toLowerCase().includes(term) ||
+          bucket.id.toString().includes(term) ||
+          (bucket.description && bucket.description.toLowerCase().includes(term)) ||
+          (bucket.createdAt && bucket.createdAt.toLowerCase().includes(term)) ||
+          bucket.board.id.toString().includes(term) ||
+          (creator && (
+            (creator.employeeNumber && creator.employeeNumber.toLowerCase().includes(term)) ||
+            (creator.name && creator.name.toLowerCase().includes(term))
+          ))
+        );
+      });
     }
     this.paginator.setItems(this.filteredBuckets);
   }

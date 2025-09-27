@@ -64,12 +64,19 @@ export class KanbanComponent {
       this.filteredBoards = this.boards;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredBoards = this.boards.filter(board =>
-        board.name.toLowerCase().includes(term) ||
-        board.id.toString().includes(term) ||
-        (board.createdBy && board.createdBy.id.toString().includes(term)) ||
-        (board.createdAt && board.createdAt.toLowerCase().includes(term))
-      );
+      this.filteredBoards = this.boards.filter(board => {
+        const creator = this.getUserById(board.createdBy.id);
+        return (
+          board.name.toLowerCase().includes(term) ||
+          board.id.toString().includes(term) ||
+          (board.createdBy && board.createdBy.id.toString().includes(term)) ||
+          (board.createdAt && board.createdAt.toLowerCase().includes(term)) ||
+          (creator && (
+            (creator.employeeNumber && creator.employeeNumber.toLowerCase().includes(term)) ||
+            (creator.name && creator.name.toLowerCase().includes(term))
+          ))
+        );
+      });
     }
     this.paginator.setItems(this.filteredBoards);
   }
