@@ -7,9 +7,9 @@ import {
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
 import { Board } from 'src/app/interfaces/board.interface';
-import { Project } from 'src/app/interfaces/project.interface';
 import { BoardService } from 'src/app/services/board.service';
-import { ProjectService } from 'src/app/services/project.service';
+import { User } from 'src/app/interfaces/user.interface';
+import { AdministratorService } from 'src/app/services/administrator.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -20,7 +20,7 @@ import Swal from 'sweetalert2';
 })
 export class UpdateKanbanModalComponent {
   @Input() board!: Board;
-  projects: Project[] = [];
+  users: User[] = [];
   updateFormulario!: FormGroup;
 
   constructor(
@@ -28,12 +28,12 @@ export class UpdateKanbanModalComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private boardService: BoardService,
-    private projectService: ProjectService
+  private administratorService: AdministratorService
   ) {}
 
   ngOnInit(): void {
     // get all projects
-    this.getAllProjects();
+      this.getAllUsers();
     // init reactive form
     this.updateFormulario = this.fb.group({
       name: [
@@ -60,17 +60,17 @@ export class UpdateKanbanModalComponent {
           Validators.maxLength(10),
         ],
       ],
-      project: [this.board.project.id, [Validators.required]],
+    createdBy: [this.board.createdBy?.id, [Validators.required]],
     });
   }
 
-  getAllProjects() {
-    this.projectService.getProjects().subscribe({
-      next: (projects) => {
-        this.projects = projects;
+  getAllUsers() {
+    this.administratorService.getAdministrators().subscribe({
+      next: (users: User[]) => {
+        this.users = users;
       },
       error: (error) => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching users:', error);
       },
     });
   }
@@ -87,8 +87,8 @@ export class UpdateKanbanModalComponent {
   updateBoard() {
     let formData = this.updateFormulario.value;
     console.log(formData);
-    let projectId = this.updateFormulario.value.project;
-    if (this.updateFormulario.invalid || projectId == -17) {
+    let createdById = this.updateFormulario.value.createdBy;
+    if (this.updateFormulario.invalid || createdById == -17) {
       Swal.fire({
         toast: true,
         title: 'FAILED ACTION!',

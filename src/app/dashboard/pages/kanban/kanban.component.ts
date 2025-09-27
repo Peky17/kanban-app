@@ -53,7 +53,7 @@ export class KanbanComponent {
       this.filteredBoards = this.boards.filter(board =>
         board.name.toLowerCase().includes(term) ||
         board.id.toString().includes(term) ||
-        board.project.id.toString().includes(term) ||
+        (board.createdBy && board.createdBy.id.toString().includes(term)) ||
         (board.createdAt && board.createdAt.toLowerCase().includes(term))
       );
     }

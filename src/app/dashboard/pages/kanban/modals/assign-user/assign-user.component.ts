@@ -6,8 +6,8 @@ import {
   NgbModalConfig,
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
-import { Project } from 'src/app/interfaces/project.interface';
-import { ProjectService } from 'src/app/services/project.service';
+import { Board } from 'src/app/interfaces/board.interface';
+import { BoardService } from 'src/app/services/board.service';
 import Swal from 'sweetalert2';
 import { AdministratorService } from 'src/app/services/administrator.service';
 import { User } from 'src/app/interfaces/user.interface';
@@ -20,7 +20,7 @@ import { ProjectAssignationService } from 'src/app/services/project-assignation.
   providers: [NgbModalConfig, NgbModal],
 })
 export class AssignUserComponent {
-  projects: Project[] = [];
+  boards: Board[] = [];
   users: User[] = [];
   addFormulario!: FormGroup;
 
@@ -29,8 +29,8 @@ export class AssignUserComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private administratorService: AdministratorService,
-    private projectService: ProjectService,
-    private projectAssignationService: ProjectAssignationService
+  private boardService: BoardService,
+  private projectAssignationService: ProjectAssignationService
   ) {}
 
   open(content: any) {
@@ -43,13 +43,13 @@ export class AssignUserComponent {
   }
 
   ngOnInit(): void {
-    // get all projects
-    this.getAllProjects();
+  // get all boards
+  this.getAllBoards();
     // get all users
     this.getAllUsers();
     // init reactive form
     this.addFormulario = this.fb.group({
-      project: [-17, [Validators.required]],
+      board: [-17, [Validators.required]],
       user: [-17, [Validators.required]],
     });
   }
@@ -57,8 +57,8 @@ export class AssignUserComponent {
   assignUser() {
     const formData = this.addFormulario.value;
     console.log(formData);
-    let projectId = this.addFormulario.value.project;
-    if (this.addFormulario.invalid || projectId == -17) {
+  let boardId = this.addFormulario.value.board;
+  if (this.addFormulario.invalid || boardId == -17) {
       Swal.fire({
         toast: true,
         title: 'FAILED ACTION!',
@@ -70,7 +70,7 @@ export class AssignUserComponent {
         showConfirmButton: false,
       });
     } else {
-      this.projectAssignationService.createAssignation(formData).subscribe(
+  this.projectAssignationService.createAssignation(formData).subscribe(
         (res) => {
           this.modalService.dismissAll();
           Swal.fire({
@@ -91,13 +91,13 @@ export class AssignUserComponent {
     }
   }
 
-  getAllProjects() {
-    this.projectService.getProjects().subscribe({
-      next: (projects: Project[]) => {
-        this.projects = projects;
+  getAllBoards() {
+    this.boardService.getBoards().subscribe({
+      next: (boards: Board[]) => {
+        this.boards = boards;
       },
       error: (error) => {
-        console.error('Error fetching data:', error);
+        console.error('Error fetching boards:', error);
       },
     });
   }

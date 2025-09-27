@@ -6,7 +6,5 @@ export interface Board {
   createdBy: {
     id: number;
   };
-  project: {
-    id: number;
-  };
+  buckets?: any[];
 }
