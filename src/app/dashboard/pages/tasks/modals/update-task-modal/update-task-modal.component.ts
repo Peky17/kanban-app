@@ -20,7 +20,6 @@ import Swal from 'sweetalert2';
 })
 export class UpdateTaskModalComponent {
   @Input() task!: Task;
-  buckets: Bucket[] = [];
   updateFormulario!: FormGroup;
 
   constructor(
@@ -32,14 +31,6 @@ export class UpdateTaskModalComponent {
   ) {}
 
   ngOnInit(): void {
-    this.bucketService.getBuckets().subscribe({
-      next: (buckets) => {
-        this.buckets = buckets;
-      },
-      error: (error) => {
-        console.error('Error al obtener datos:', error);
-      },
-    });
     const currentDate = new Date();
     const formattedDate = currentDate.toISOString().slice(0, 10);
     this.updateFormulario = this.fb.group({
@@ -66,7 +57,6 @@ export class UpdateTaskModalComponent {
       startDate: [this.task.startDate, [Validators.required]],
       dueDate: [this.task.dueDate, [Validators.required]],
       createdAt: [this.task.createdAt, [Validators.required]],
-      bucket: [this.task.bucket.id, [Validators.required]],
     });
   }
 
