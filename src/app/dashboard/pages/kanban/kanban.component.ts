@@ -104,9 +104,4 @@ export class KanbanComponent {
       }
     );
   }
-
-  redirectToBoard(board: Board): void {
-    // Send data and redirect
-    this.router.navigate(['/dashboard/board', board]);
-  }
 }

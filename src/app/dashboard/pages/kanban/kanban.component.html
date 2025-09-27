@@ -46,13 +46,6 @@
                   <td>{{ getUserById(board.createdBy.id)?.employeeNumber || '-' }}</td>
                   <td>{{ getUserById(board.createdBy.id)?.name || '-' }}</td>
                   <td>
-                    <button
-                      class="btn btn-secondary"
-                      (click)="redirectToBoard(board)"
-                    >
-                      View
-                      <i class="fa fa-eye"></i>
-                    </button>
                     <app-update-kanban-modal
                       [board]="board"
                     ></app-update-kanban-modal>
