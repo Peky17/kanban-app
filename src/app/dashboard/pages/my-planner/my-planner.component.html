@@ -7,13 +7,10 @@
         Here you can manage your personal Kanban boards
       </p>
     </div>
-    <button
-      class="btn btn-primary"
-      title="Create new board"
-      > Create New Board
+    <button class="btn btn-primary" title="Create new board">
+      Create New Board
       <i class="fa fa-plus"></i>
     </button>
-
   </section>
   <br />
   <section class="jumbotron text-center">
@@ -22,7 +19,9 @@
         <!-- cards -->
         <div class="col-lg-3" *ngFor="let board of personalBoards">
           <div class="card-module card mb-3">
-            <div class="card-header d-flex justify-content-between align-items-center">
+            <div
+              class="card-header d-flex justify-content-between align-items-center"
+            >
               <span><i class="fa fa-table"></i></span>
               <div class="btn-group" role="group">
                 <button
@@ -53,6 +52,9 @@
                 {{ board.name }}
               </h4>
               <p class="card-text">{{ board.description }}</p>
+            </div>
+            <div class="card-footer text-muted">
+               {{ board.createdAt | date : "medium" }}
             </div>
           </div>
         </div>
