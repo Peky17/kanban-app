@@ -9,8 +9,44 @@ import { UserSubtaskAssign } from '../interfaces/userSubtaskAssign.interface';
   providedIn: 'root',
 })
 export class TaskAssignationService {
+  /**
+   * Obtiene todas las subtasks asignadas a un usuario
+   * @param userId ID del usuario
+   */
+  getUserSubtasksByUserId(userId: number) {
+    const url = `${this.subtaskAssignUrl}/user/${userId}`;
+    return this.httpClient.get<any[]>(url, { headers: this.getAuthHeaders() });
+  }
+  /**
+   * Obtiene la asignación de subtask para un usuario por id de subtask
+   * @param subtaskId ID de la subtask
+   */
+  getUserSubtaskBySubtaskId(subtaskId: number): Observable<UserSubtaskAssign> {
+    const url = `${this.subtaskAssignUrl}/subtask/${subtaskId}`;
+    return this.httpClient.get<UserSubtaskAssign>(url, { headers: this.getAuthHeaders() });
+  }
+
+  /**
+   * Obtiene las subtasks asignadas a un usuario para una tarea específica
+   * @param userId ID del usuario
+   * @param taskId ID de la tarea
+   */
+  getUserSubtasksByTask(userId: number, taskId: number): Observable<UserSubtaskAssign[]> {
+    const url = `${this.subtaskAssignUrl}/by-user-task?userId=${userId}&taskId=${taskId}`;
+    return this.httpClient.get<UserSubtaskAssign[]>(url, { headers: this.getAuthHeaders() });
+  }
   private baseUrl = environment.baseUrl + '/user-tasks';
   private subtaskAssignUrl = environment.baseUrl + '/user-subtasks';
+
+    /**
+     * Actualiza el estado de completado de una subtask asignada
+     * @param id ID de la asignación de la subtask (user-subtask)
+     * @param completed Estado a actualizar (true/false)
+     */
+    updateUserSubtaskStatus(id: number, completed: boolean): Observable<any> {
+      const url = `${this.subtaskAssignUrl}/${id}/status?completed=${completed}`;
+      return this.httpClient.put<any>(url, null, { headers: this.getAuthHeaders() });
+    }
 
   constructor(private httpClient: HttpClient) {}
 

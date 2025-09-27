@@ -40,16 +40,84 @@
     <h5>Task description:</h5>
     <div>{{ userTaskAssignation.task.description }}</div>
     <br />
-    <!-- subtasks -->
     <h5>Actions:</h5>
-    <!-- buttons -->
-    <div class="btn-group">
-      <a class="btn btn-secondary" (click)="redirectToBoard()"
-        >View Board <i class="fa fa-eye"></i
-      ></a>
-      <a class="btn btn-success" (click)="markAsDone()"
-        >Mark as Done! <i class="fa fa-check"></i
-      ></a>
+    <div class="btn-group mb-2">
+      <button
+        class="btn btn-secondary"
+        type="button"
+        data-bs-toggle="collapse"
+        [attr.data-bs-target]="'#subtasksTable' + userTaskAssignation.task.id"
+        aria-expanded="false"
+        [attr.aria-controls]="'subtasksTable' + userTaskAssignation.task.id"
+      >
+        View subtasks <i class="fa fa-list"></i>
+      </button>
+    </div>
+    <div class="collapse" [id]="'subtasksTable' + userTaskAssignation.task.id">
+      <div *ngIf="loadingSubtasks">Loading subtasks...</div>
+      <table
+        *ngIf="!loadingSubtasks && userSubtasks.length > 0"
+        class="table table-hover bordered border-light"
+      >
+        <thead>
+          <tr>
+            <th scope="col">Name</th>
+            <th scope="col">Priority</th>
+            <th scope="col">Due Date</th>
+            <th scope="col" class="text-center">Completed</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let sub of userSubtasks">
+            <td>
+              {{
+                (subtaskDetails[sub.subtaskId] &&
+                  subtaskDetails[sub.subtaskId].name) ||
+                  "-"
+              }}
+            </td>
+            <td>
+              {{
+                (subtaskDetails[sub.subtaskId] &&
+                  subtaskDetails[sub.subtaskId].priority) ||
+                  "-"
+              }}
+            </td>
+            <td>
+              {{
+                (subtaskDetails[sub.subtaskId] &&
+                  subtaskDetails[sub.subtaskId].dueDate) ||
+                  "-"
+              }}
+            </td>
+            <td class="text-center">
+              <div class="form-check d-flex justify-content-center">
+                <input
+                  class="form-check-input"
+                  type="checkbox"
+                  [checked]="sub.completed"
+                  (change)="onSubtaskCheckChange(sub, getChecked($event))"
+                />
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <div
+        *ngIf="!loadingSubtasks && userSubtasks.length === 0"
+        class="text-muted"
+      >
+        No subtasks assigned.
+      </div>
+    </div>
+    <div class="btn-group mt-2">
+      <button
+        class="btn btn-success"
+        (click)="markAsDone()"
+        [disabled]="userSubtasks.length > 0 && !allSubtasksCompleted()"
+      >
+        Mark as Done! <i class="fa fa-check"></i>
+      </button>
     </div>
   </div>
 </div>

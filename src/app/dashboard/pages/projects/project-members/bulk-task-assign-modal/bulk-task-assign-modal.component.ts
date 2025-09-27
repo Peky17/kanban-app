@@ -184,7 +184,8 @@ export class BulkTaskAssignModalComponent implements OnInit {
               subtasks.forEach(subtask => {
                 subtaskAssignments.push({
                   userId: member.id.toString(),
-                  subtaskId: subtask.id.toString()
+                  subtaskId: subtask.id.toString(),
+                  completed: false
                 });
               });
             });
