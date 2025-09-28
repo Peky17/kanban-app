@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { BoardService } from './../../../../../services/board.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -20,8 +20,8 @@ import Swal from 'sweetalert2';
 export class CreateBoardModalPlannerComponent {
   users: User[] = [];
   addFormulario!: FormGroup;
-
   currentUserId: number | null = null;
+  @Output() boardCreated = new EventEmitter<any>();
 
   constructor(
     private fb: FormBuilder,
@@ -99,6 +99,7 @@ export class CreateBoardModalPlannerComponent {
           // Crear la asociación user-board
           this.boardService.createUserBoardAssociation(this.currentUserId!, board.id).subscribe({
             next: () => {
+              this.boardCreated.emit(board); // Notificar al padre
               this.modalService.dismissAll();
               Swal.fire({
                 title: 'SUCCESS',

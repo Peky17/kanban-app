@@ -1,4 +1,3 @@
-
 import { Component, OnInit } from '@angular/core';
 import { Board } from 'src/app/interfaces/board.interface';
 import { Router } from '@angular/router';
@@ -12,6 +11,7 @@ import { UserBoard } from 'src/app/interfaces/board.interface';
   styleUrls: ['./my-planner.component.css']
 })
 
+
 export class MyPlannerComponent implements OnInit {
   personalBoards: Board[] = [];
   userId: number | null = null;
@@ -21,6 +21,12 @@ export class MyPlannerComponent implements OnInit {
     private boardService: BoardService,
     private authService: AuthService
   ) {}
+
+  onBoardCreated(board: Board) {
+    if (board) {
+      this.personalBoards = [board, ...this.personalBoards];
+    }
+  }
 
   ngOnInit(): void {
     // 1. Obtener el usuario en sesión

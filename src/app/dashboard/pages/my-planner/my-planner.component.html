@@ -7,7 +7,7 @@
         Here you can manage your personal Kanban boards
       </p>
     </div>
-    <app-create-board-modal-planner></app-create-board-modal-planner>
+  <app-create-board-modal-planner (boardCreated)="onBoardCreated($event)"></app-create-board-modal-planner>
   </section>
   <br />
   <section class="jumbotron text-center">
