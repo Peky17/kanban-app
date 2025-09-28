@@ -1,1 +1,51 @@
-<p>update-board-modal-planner works!</p>
+
+<div class="modal-header" [attr.id]="'modal-header-board-' + (board.id || '')">
+  <h4 class="modal-title" id="modal-basic-title">Update Kanban Board</h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="updateForm" (ngSubmit)="updateBoard()">
+    <!-- name -->
+    <div class="form-group">
+      <label for="name"><b>Name</b></label>
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Kanban name"
+      />
+    </div>
+    <!-- description -->
+    <div class="form-group">
+      <label for="description"><b>Description</b></label>
+      <textarea
+        class="form-control"
+        formControlName="description"
+        placeholder="Board description"
+      ></textarea>
+    </div>
+    <!-- createdBy (hidden) -->
+    <input type="hidden" formControlName="createdBy" [attr.value]="updateForm.get('createdBy')?.value ?? ''" />
+    <!-- created at (readonly) -->
+    <div class="form-group" hidden>
+      <label for="createdAt"><b>CreatedAt</b></label>
+      <input
+        formControlName="createdAt"
+        class="form-control"
+        type="date"
+        readonly
+      />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary">
+      Update Kanban Board
+      <i class="fa fa-edit" style="margin-left: 4px"></i>
+    </button>
+  </form>
+</div>

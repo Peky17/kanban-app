@@ -4,6 +4,8 @@ import { Router } from '@angular/router';
 import { BoardService } from 'src/app/services/board.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { UserBoard } from 'src/app/interfaces/board.interface';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { UpdateBoardModalPlannerComponent } from './modals/update-board-modal-planner/update-board-modal-planner.component';
 
 @Component({
   selector: 'app-my-planner',
@@ -19,7 +21,8 @@ export class MyPlannerComponent implements OnInit {
   constructor(
     private router: Router,
     private boardService: BoardService,
-    private authService: AuthService
+    private authService: AuthService,
+    private modalService: NgbModal
   ) {}
 
   onBoardCreated(board: Board) {
@@ -68,8 +71,15 @@ export class MyPlannerComponent implements OnInit {
   }
 
   editBoard(board: Board) {
-    // Lógica para editar tablero
-    alert('Editar tablero: ' + board.name);
+    const modalRef = this.modalService.open(UpdateBoardModalPlannerComponent, {
+      backdrop: 'static',
+      keyboard: true,
+    });
+    modalRef.componentInstance.board = board;
+    modalRef.componentInstance.boardUpdated.subscribe((updatedBoard: Board) => {
+      // Actualizar la lista local de boards
+      this.personalBoards = this.personalBoards.map(b => b.id === updatedBoard.id ? updatedBoard : b);
+    });
   }
 
   deleteBoard(board: Board) {
