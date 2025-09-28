@@ -6,6 +6,7 @@ import { AuthService } from 'src/app/services/auth.service';
 import { UserBoard } from 'src/app/interfaces/board.interface';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { UpdateBoardModalPlannerComponent } from './modals/update-board-modal-planner/update-board-modal-planner.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-planner',
@@ -83,9 +84,27 @@ export class MyPlannerComponent implements OnInit {
   }
 
   deleteBoard(board: Board) {
-    if (confirm('¿Eliminar tablero: ' + board.name + '?')) {
-      this.boardService.deleteBoardById(board.id).subscribe();
-    }
+    Swal.fire({
+      title: 'Are you sure?',
+      text: `Do you want to delete the board "${board.name}"? This action cannot be undone!`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'Cancel',
+      reverseButtons: true
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.boardService.deleteBoardById(board.id).subscribe({
+          next: () => {
+            this.personalBoards = this.personalBoards.filter(b => b.id !== board.id);
+            Swal.fire('Deleted!', 'The board has been deleted.', 'success');
+          },
+          error: (err) => {
+            Swal.fire('Error', err.error?.message || 'Could not delete the board.', 'error');
+          }
+        });
+      }
+    });
   }
 
   redirectToBoards(board: Board) {
