@@ -94,16 +94,29 @@ export class CreateBoardModalPlannerComponent {
         showConfirmButton: false,
       });
     } else {
-      this.boardService.createBoard(formData).subscribe(
-        (res) => {
-          this.modalService.dismissAll();
-          Swal.fire({
-            title: 'SUCCESS',
-            text: 'Board created successfully',
-            icon: 'success',
+      this.boardService.createBoard(formData).subscribe({
+        next: (board) => {
+          // Crear la asociación user-board
+          this.boardService.createUserBoardAssociation(this.currentUserId!, board.id).subscribe({
+            next: () => {
+              this.modalService.dismissAll();
+              Swal.fire({
+                title: 'SUCCESS',
+                text: 'Board created and associated successfully',
+                icon: 'success',
+              });
+            },
+            error: (err) => {
+              Swal.fire({
+                title: 'Board created, but association failed',
+                text: err.error?.message || 'Error creating user-board association',
+                icon: 'warning',
+              });
+              this.modalService.dismissAll();
+            }
           });
         },
-        (err) => {
+        error: (err) => {
           Swal.fire({
             title: 'FAILED ACTION!',
             text: err.error.message,
@@ -111,7 +124,7 @@ export class CreateBoardModalPlannerComponent {
           });
           this.modalService.dismissAll();
         }
-      );
+      });
     }
   }
 }

@@ -8,3 +8,9 @@ export interface Board {
   };
   buckets?: any[];
 }
+
+export interface UserBoard {
+  id: number;
+  userId: number;
+  boardId: number;
+}

@@ -29,7 +29,6 @@ import { SubtasksComponent } from './pages/subtasks/subtasks.component';
 import { AddSubtaskModalComponent } from './pages/subtasks/modals/add-subtask-modal/add-subtask-modal.component';
 import { UpdateSubtaskModalComponent } from './pages/subtasks/modals/update-subtask-modal/update-subtask-modal.component';
 import { ProjectInfoComponent } from './pages/projects/project-info/project-info.component';
-import { ProjectBoardsComponent } from './pages/projects/project-boards/project-boards.component';
 import { AssignUserComponent } from './pages/kanban/modals/assign-user/assign-user.component';
 import { AssignTaskComponent } from './pages/tasks/modals/assign-task/assign-task.component';
 import { AssignedProjectsComponent } from './pages/assignations/assigned-projects/assigned-projects.component';
@@ -73,7 +72,6 @@ import { UpdateBoardModalPlannerComponent } from './pages/my-planner/modals/upda
     AddSubtaskModalComponent,
     UpdateSubtaskModalComponent,
     ProjectInfoComponent,
-    ProjectBoardsComponent,
     AssignUserComponent,
     AssignTaskComponent,
     AssignedProjectsComponent,

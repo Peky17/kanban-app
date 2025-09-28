@@ -11,7 +11,6 @@ import { ProjectsComponent } from './pages/projects/projects.component';
 import { BucketsComponent } from './pages/buckets/buckets.component';
 import { BadgesComponent } from './pages/badges/badges.component';
 import { SubtasksComponent } from './pages/subtasks/subtasks.component';
-import { ProjectBoardsComponent } from './pages/projects/project-boards/project-boards.component';
 import { KanbanBoardComponent } from './pages/kanban/kanban-board/kanban-board.component';
 import { AssignedProjectsComponent } from './pages/assignations/assigned-projects/assigned-projects.component';
 import { AssignedTasksComponent } from './pages/assignations/assigned-tasks/assigned-tasks.component';
@@ -79,12 +78,6 @@ const routes: Routes = [
         component: BadgesComponent,
         canActivate: [AuthGuard, AccessGuard],
         canLoad: [AuthGuard, AccessGuard],
-      },
-      {
-        path: 'project-boards',
-        component: ProjectBoardsComponent,
-        canActivate: [AuthGuard],
-        canLoad: [AuthGuard],
       },
       {
         path: 'board',
