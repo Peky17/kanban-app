@@ -32,20 +32,8 @@
           ></textarea>
         </div>
       </div>
-      <!-- createdBy -->
-      <div class="form-group">
-        <div class="form-group">
-          <label for="createdBy"><b>Select the user</b></label>
-          <select class="form-control" formControlName="createdBy">
-            <option disabled value="-17">Select the user</option>
-            <div *ngFor="let user of users">
-              <option value="{{ user.id }}">
-                {{ user.name }} ({{ user.employeeNumber }})
-              </option>
-            </div>
-          </select>
-        </div>
-      </div>
+  <!-- createdBy (hidden, se asigna automáticamente) -->
+  <input type="hidden" formControlName="createdBy" [attr.value]="addFormulario.get('createdBy')?.value ?? ''" />
       <!-- created at -->
       <div class="form-group" hidden>
         <div class="form-group">

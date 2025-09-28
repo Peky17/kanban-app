@@ -1,3 +1,5 @@
+
+
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
@@ -17,6 +19,27 @@ export class AuthService {
   private baseUrl = environment.baseUrl;
 
   private _user: any = {};
+
+  /**
+   * Devuelve el id del usuario en sesión, si está disponible en localStorage o en _user
+   */
+  getCurrentUserId(): number | null {
+    if (this._user && this._user.id) {
+      return this._user.id;
+    }
+    try {
+      const userStr = localStorage.getItem('user');
+      if (userStr) {
+        const userObj = JSON.parse(userStr);
+        if (userObj && userObj.id) {
+          return userObj.id;
+        }
+      }
+    } catch (e) {
+      return null;
+    }
+    return null;
+  }
 
   private getAuthHeaders(): HttpHeaders {
     const token = JSON.parse(localStorage.getItem('token')!);

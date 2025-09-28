@@ -8,7 +8,7 @@ import {
   NgbModalOptions,
 } from '@ng-bootstrap/ng-bootstrap';
 import { User } from 'src/app/interfaces/user.interface';
-import { AdministratorService } from 'src/app/services/administrator.service';
+import { AuthService } from 'src/app/services/auth.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -21,46 +21,50 @@ export class CreateBoardModalPlannerComponent {
   users: User[] = [];
   addFormulario!: FormGroup;
 
+  currentUserId: number | null = null;
+
   constructor(
     private fb: FormBuilder,
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private boardService: BoardService,
-    private administratorService: AdministratorService
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
-    // get all users
-    this.getAllUsers();
-    // init reactive form
-    const currentDate = new Date();
-    const formattedDate = currentDate.toISOString().slice(0, 10);
-    this.addFormulario = this.fb.group({
-      name: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(20),
-        ],
-      ],
-      description: [
-        '',
-        [
-          Validators.required,
-          Validators.minLength(4),
-          Validators.maxLength(40),
-        ],
-      ],
-      createdAt: [
-        formattedDate,
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(10),
-        ],
-      ],
-      createdBy: [-17, [Validators.required]],
+    this.authService.getUserRole().subscribe({
+      next: (user) => {
+        this.currentUserId = user.id;
+        const currentDate = new Date();
+        const formattedDate = currentDate.toISOString().slice(0, 10);
+        this.addFormulario = this.fb.group({
+          name: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(4),
+              Validators.maxLength(20),
+            ],
+          ],
+          description: [
+            '',
+            [
+              Validators.required,
+              Validators.minLength(4),
+              Validators.maxLength(80),
+            ],
+          ],
+          createdAt: [formattedDate, [Validators.required]],
+          createdBy: [user.id, [Validators.required]],
+        });
+      },
+      error: (err) => {
+        Swal.fire({
+          title: 'Error',
+          text: 'No se pudo obtener el usuario en sesión',
+          icon: 'error',
+        });
+      },
     });
   }
 
@@ -74,10 +78,11 @@ export class CreateBoardModalPlannerComponent {
   }
 
   createBoard(): void {
+    if (this.currentUserId) {
+      this.addFormulario.get('createdBy')?.setValue(this.currentUserId);
+    }
     const formData = this.addFormulario.value;
-    console.log(formData);
-    let createdById = this.addFormulario.value.createdBy;
-    if (this.addFormulario.invalid || createdById == -17) {
+    if (this.addFormulario.invalid || !this.currentUserId) {
       Swal.fire({
         toast: true,
         title: 'FAILED ACTION!',
@@ -108,16 +113,5 @@ export class CreateBoardModalPlannerComponent {
         }
       );
     }
-  }
-
-  getAllUsers() {
-    this.administratorService.getAdministrators().subscribe({
-      next: (users) => {
-        this.users = users;
-      },
-      error: (error) => {
-        console.error('Error fetching users:', error);
-      },
-    });
   }
 }
