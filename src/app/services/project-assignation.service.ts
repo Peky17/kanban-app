@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ProjectAssignation } from '../interfaces/projectAssignation.interface';
 import { Project } from '../interfaces/project.interface';
+import { User } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +37,18 @@ export class ProjectAssignationService {
     projectId: number
   ): Observable<ProjectAssignation[]> {
     return this.httpClient.get<ProjectAssignation[]>(
+      this.baseUrl + '/users/' + projectId,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  /**
+   * Obtiene los usuarios asignados a un proyecto específico
+   */
+  getUsersByProjectId(projectId: number): Observable<User[]> {
+    return this.httpClient.get<User[]>(
       this.baseUrl + '/users/' + projectId,
       {
         headers: this.getAuthHeaders(),

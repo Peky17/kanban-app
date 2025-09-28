@@ -2,14 +2,14 @@ import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
-import { Subtask } from '../interfaces/subtask.interface';
+import { Subtask, UserSubtask } from '../interfaces/subtask.interface';
 
 @Injectable({
   providedIn: 'root',
 })
-
 export class SubtaskService {
   private baseUrl = environment.baseUrl + '/subtasks';
+  private baseUrlUserSubtask = environment.baseUrl + '/user-subtasks';
   private subtasksSubject = new BehaviorSubject<Subtask[]>([]);
   public subtasks$ = this.subtasksSubject.asObservable();
 
@@ -24,19 +24,20 @@ export class SubtaskService {
     });
   }
 
-
   /**
    * Obtiene las subtareas asociadas a una tarea específica
    */
   getSubtasksByTaskId(taskId: number): Observable<Subtask[]> {
-    return new Observable(observer => {
+    return new Observable((observer) => {
       this.getSubtasks().subscribe({
         next: (subtasks) => {
-          const filtered = subtasks.filter(subtask => subtask.task && subtask.task.id === taskId);
+          const filtered = subtasks.filter(
+            (subtask) => subtask.task && subtask.task.id === taskId
+          );
           observer.next(filtered);
           observer.complete();
         },
-        error: (err) => observer.error(err)
+        error: (err) => observer.error(err),
       });
     });
   }
@@ -46,12 +47,14 @@ export class SubtaskService {
   }
 
   private loadSubtasks(): void {
-    this.httpClient.get<Subtask[]>(this.baseUrl, {
-      headers: this.getAuthHeaders(),
-    }).subscribe({
-      next: (subtasks) => this.subtasksSubject.next(subtasks),
-      error: () => this.subtasksSubject.next([])
-    });
+    this.httpClient
+      .get<Subtask[]>(this.baseUrl, {
+        headers: this.getAuthHeaders(),
+      })
+      .subscribe({
+        next: (subtasks) => this.subtasksSubject.next(subtasks),
+        error: () => this.subtasksSubject.next([]),
+      });
   }
 
   getSubtaskById(id: number): Observable<Subtask> {
@@ -61,47 +64,66 @@ export class SubtaskService {
   }
 
   createSubtask(subTask: Subtask): Observable<Subtask> {
-    return new Observable(observer => {
-      this.httpClient.post<Subtask>(this.baseUrl, subTask, {
-        headers: this.getAuthHeaders(),
-      }).subscribe({
-        next: (res) => {
-          this.loadSubtasks();
-          observer.next(res);
-          observer.complete();
-        },
-        error: (err) => observer.error(err)
-      });
+    return new Observable((observer) => {
+      this.httpClient
+        .post<Subtask>(this.baseUrl, subTask, {
+          headers: this.getAuthHeaders(),
+        })
+        .subscribe({
+          next: (res) => {
+            this.loadSubtasks();
+            observer.next(res);
+            observer.complete();
+          },
+          error: (err) => observer.error(err),
+        });
     });
   }
 
   updateSubtask(id: number, subTask: Subtask): Observable<Subtask> {
-    return new Observable(observer => {
-      this.httpClient.put<Subtask>(this.baseUrl + '/' + id, subTask, {
-        headers: this.getAuthHeaders(),
-      }).subscribe({
-        next: (res) => {
-          this.loadSubtasks();
-          observer.next(res);
-          observer.complete();
-        },
-        error: (err) => observer.error(err)
-      });
+    return new Observable((observer) => {
+      this.httpClient
+        .put<Subtask>(this.baseUrl + '/' + id, subTask, {
+          headers: this.getAuthHeaders(),
+        })
+        .subscribe({
+          next: (res) => {
+            this.loadSubtasks();
+            observer.next(res);
+            observer.complete();
+          },
+          error: (err) => observer.error(err),
+        });
     });
   }
 
   deleteSubtaskById(id: number): Observable<Subtask> {
-    return new Observable(observer => {
-      this.httpClient.delete<Subtask>(this.baseUrl + '/' + id, {
-        headers: this.getAuthHeaders(),
-      }).subscribe({
-        next: (res) => {
-          this.loadSubtasks();
-          observer.next(res);
-          observer.complete();
-        },
-        error: (err) => observer.error(err)
-      });
+    return new Observable((observer) => {
+      this.httpClient
+        .delete<Subtask>(this.baseUrl + '/' + id, {
+          headers: this.getAuthHeaders(),
+        })
+        .subscribe({
+          next: (res) => {
+            this.loadSubtasks();
+            observer.next(res);
+            observer.complete();
+          },
+          error: (err) => observer.error(err),
+        });
     });
+  }
+
+  // Método para asignar un usuario a una subtarea
+  assignUserToSubtask(
+    userId: number,
+    subtaskId: number
+  ): Observable<UserSubtask> {
+    const url = `${this.baseUrlUserSubtask}/assign?userId=${userId}&subtaskId=${subtaskId}`;
+    return this.httpClient.post<UserSubtask>(
+      url,
+      {},
+      { headers: this.getAuthHeaders() }
+    );
   }
 }

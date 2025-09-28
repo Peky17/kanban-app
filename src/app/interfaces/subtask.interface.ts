@@ -12,3 +12,9 @@ export interface Subtask {
     id: number;
   };
 }
+
+export interface UserSubtask {
+  userId: number;
+  subtaskId: number;
+  completed: boolean;
+}

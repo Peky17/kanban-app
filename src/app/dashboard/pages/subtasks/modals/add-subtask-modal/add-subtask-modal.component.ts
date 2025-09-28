@@ -1,4 +1,4 @@
-import { TaskService } from './../../../../../services/task.service';
+// import { TaskService } from './../../../../../services/task.service';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import {
@@ -9,6 +9,9 @@ import {
 } from '@ng-bootstrap/ng-bootstrap';
 import { Task } from 'src/app/interfaces/task.interface';
 import { SubtaskService } from 'src/app/services/subtask.service';
+import { User } from 'src/app/interfaces/user.interface';
+import { UserTaskService } from 'src/app/services/user-task.service';
+import { TaskService } from 'src/app/services/task.service';
 import Swal from 'sweetalert2';
 
 @Component({
@@ -26,7 +29,8 @@ export class AddSubtaskModalComponent {
     public activeModal: NgbActiveModal,
     private modalService: NgbModal,
     private subtaskService: SubtaskService,
-    private taskService: TaskService
+    private taskService: TaskService,
+    private userTaskService: UserTaskService
   ) {}
 
   ngOnInit(): void {
@@ -59,7 +63,6 @@ export class AddSubtaskModalComponent {
 
   createSubtask(): void {
     const formData = this.addFormulario.value;
-    console.log(formData);
     if (this.addFormulario.invalid) {
       Swal.fire({
         toast: true,
@@ -71,26 +74,45 @@ export class AddSubtaskModalComponent {
         timerProgressBar: true,
         showConfirmButton: false,
       });
-    } else {
-      this.subtaskService.createSubtask(formData).subscribe(
-        (res) => {
-          this.modalService.dismissAll();
-          Swal.fire({
-            title: 'SUCCESS',
-            text: 'Subtask saved successfully',
-            icon: 'success',
-          });
-        },
-        (err) => {
-          Swal.fire({
-            title: 'FAILED ACTION!',
-            text: err.error.message,
-            icon: 'error',
-          });
-          this.modalService.dismissAll();
-        }
-      );
+      return;
     }
+
+    this.subtaskService.createSubtask(formData).subscribe(
+      (subtask) => {
+        const taskId = formData.task;
+        this.userTaskService.getUsersByTaskId(taskId).subscribe({
+          next: (users: User[]) => {
+            users.forEach((user) => {
+              this.subtaskService
+                .assignUserToSubtask(user.id, subtask.id)
+                .subscribe();
+            });
+            this.modalService.dismissAll();
+            Swal.fire({
+              title: 'SUCCESS',
+              text: 'Subtask saved and assigned to all task users.',
+              icon: 'success',
+            });
+          },
+          error: () => {
+            this.modalService.dismissAll();
+            Swal.fire({
+              title: 'FAILED ACTION!',
+              text: 'No se pudieron obtener los usuarios de la tarea.',
+              icon: 'error',
+            });
+          },
+        });
+      },
+      (err) => {
+        Swal.fire({
+          title: 'FAILED ACTION!',
+          text: err.error.message,
+          icon: 'error',
+        });
+        this.modalService.dismissAll();
+      }
+    );
   }
 
   open(content: any) {
