@@ -1,3 +1,4 @@
+import { KanbanPersonalTaskModalComponent } from './kanban-personal-task-modal.component';
 import { PersonalTask } from './../../../../interfaces/personalTask.interface';
 import {
   CdkDrag,
@@ -117,6 +118,16 @@ export class KanbanBoardComponent implements OnInit {
               this.bucketTasks.push({ id: bucket.id, tasks });
             });
             this.isLoading = false;
+            // Bootstrap tooltips initialization
+            setTimeout(() => {
+              // @ts-ignore
+              const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+              // @ts-ignore
+              tooltipTriggerList.forEach(function (tooltipTriggerEl) {
+                // @ts-ignore
+                new window.bootstrap.Tooltip(tooltipTriggerEl);
+              });
+            }, 0);
           },
           error: (err) => {
             this.isLoading = false;
@@ -272,5 +283,25 @@ export class KanbanBoardComponent implements OnInit {
         });
       }
     });
+  }
+
+  // Open modal to create a new personal task for a bucket
+  openCreatePersonalTaskModal(bucket: Bucket): void {
+    const modalRef = this.modalService.open(KanbanPersonalTaskModalComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.mode = 'create';
+    modalRef.componentInstance.bucketId = bucket.id;
+    modalRef.componentInstance.userId = this.currentUser.id;
+    modalRef.componentInstance.boardId = this.board.id;
+    modalRef.result.then(
+      (result) => {
+        if (result === 'created') {
+          this.initBucketsAndPersonalTasks();
+        }
+      },
+      () => {}
+    );
   }
 }

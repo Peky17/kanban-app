@@ -28,15 +28,24 @@
           }}"
         >
           <h4 class="mb-0">{{ bucket.name }}</h4>
-          <div class="btn-group btn-group-sm ms-2">
+          <div class="btn-group btn-group-sm ms-2" style="z-index:2;">
             <button
-              class="btn btn-outline-primary btn-sm"
+              type="button"
+              class="btn btn-success btn-sm"
+              (click)="openCreatePersonalTaskModal(bucket)"
+            >
+              <i class="fa fa-plus"></i>
+            </button>
+            <button
+              type="button"
+              class="btn btn-light btn-sm"
               (click)="openEditBucketModal(bucket)"
             >
               <i class="fa fa-edit"></i>
             </button>
             <button
-              class="btn btn-outline-danger btn-sm"
+              type="button"
+              class="btn btn-danger btn-sm"
               (click)="confirmDeleteBucket(bucket)"
             >
               <i class="fa fa-trash"></i>
