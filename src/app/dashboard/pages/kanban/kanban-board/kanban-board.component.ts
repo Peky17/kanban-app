@@ -1,5 +1,5 @@
-import { BucketTask } from './../../../../interfaces/bucketTasks.interface';
-import { Task } from './../../../../interfaces/task.interface';
+import { BucketPersonalTask } from './../../../../interfaces/bucketPersonalTasks.interface';
+import { PersonalTask } from './../../../../interfaces/personalTask.interface';
 import {
   CdkDrag,
   CdkDragDrop,
@@ -12,10 +12,10 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
-import { TaskService } from 'src/app/services/task.service';
+import { PersonalTaskService } from 'src/app/services/personal-task.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
-import { TaskAssignation, UserTaskAssignation } from 'src/app/interfaces/taskAssignation';
+import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { User } from 'src/app/interfaces/user.interface';
 import { BoardService } from 'src/app/services/board.service';
 import { LoaderComponent } from 'src/app/shared/loader/loader.component';
@@ -29,7 +29,6 @@ import Swal from 'sweetalert2';
   standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent],
 })
-
 export class KanbanBoardComponent implements OnInit {
   // trackBy para mejorar el rendimiento del ngFor de tareas
   trackByTaskId(index: number, task: any): number {
@@ -37,7 +36,7 @@ export class KanbanBoardComponent implements OnInit {
   }
   board!: any;
   buckets: Bucket[] = [];
-  bucketTasks: BucketTask[] = [];
+  bucketTasks: BucketPersonalTask[] = [];
   currentUser!: User;
   userTaskAssignations: TaskAssignation[] = [];
   isLoading: boolean = true;
@@ -45,7 +44,7 @@ export class KanbanBoardComponent implements OnInit {
   constructor(
     private route: ActivatedRoute,
     private router: Router,
-    private taskService: TaskService,
+    private personalTaskService: PersonalTaskService,
     private bucketService: BucketService,
     private authService: AuthService,
     private taskAssignationService: TaskAssignationService,
@@ -53,82 +52,68 @@ export class KanbanBoardComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    // Get board data
     this.route.params.subscribe({
-      next: (value) => (this.board = value),
+      next: (params) => {
+        const boardId = +params['id'];
+        // Obtener el board completo si es necesario
+        this.boardService.getBoardById(boardId).subscribe({
+          next: (board: Board) => {
+            this.board = board;
+            // Obtener usuario y luego cargar buckets/tasks
+            this.authService.getUserRole().subscribe({
+              next: (user: User) => {
+                this.currentUser = user;
+                this.initBucketsAndPersonalTasks();
+              },
+              error: (err) => {
+                this.isLoading = false;
+                console.error('Error getting user:', err);
+              },
+            });
+          },
+          error: (err) => {
+            this.isLoading = false;
+            console.error('Error getting board:', err);
+          },
+        });
+      },
       error: (err) => console.error('Error:', err),
-    });
-
-    // Get current user and then initialize buckets and tasks
-    this.authService.getUserRole().subscribe({
-      next: (user: User) => {
-        this.currentUser = user;
-        this.getUserTaskAssignations();
-      },
-      error: (err) => {
-        this.isLoading = false;
-        console.error('Error getting user:', err);
-      },
     });
   }
 
-  getUserTaskAssignations(): void {
-    this.taskAssignationService.getTaskAssignationByUserId(this.currentUser.id).subscribe({
-      next: (assignedTasks: TaskAssignation[]) => {
-        this.userTaskAssignations = assignedTasks;
-        // Get board buckets after getting user assignations
-        this.bucketService.getBucketsByBoard(this.board.id).subscribe({
-          next: (bucketsObtained: Bucket[]) => {
-            this.initBucketsAndTasks(bucketsObtained);
+  initBucketsAndPersonalTasks(): void {
+    this.bucketService.getBucketsByBoard(this.board.id).subscribe({
+      next: (bucketsObtained: Bucket[]) => {
+        this.buckets = bucketsObtained.sort((a, b) => a.id - b.id);
+        this.bucketTasks = [];
+        this.personalTaskService.getTasks().subscribe({
+          next: (personalTasks: PersonalTask[]) => {
+            this.buckets.forEach((bucket: Bucket) => {
+              const tasks = personalTasks.filter(
+                (task) =>
+                  task.bucketId === bucket.id &&
+                  task.userId === this.currentUser.id
+              );
+              this.bucketTasks.push({ id: bucket.id, tasks });
+            });
             this.isLoading = false;
           },
           error: (err) => {
             this.isLoading = false;
-            console.error('Error:', err);
+            console.error('Error loading personal tasks:', err);
           },
         });
       },
       error: (err) => {
         this.isLoading = false;
-        console.error('Error getting task assignations:', err);
+        console.error('Error loading buckets:', err);
       },
     });
-  }
-
-  initBucketsAndTasks(bucketsObtained: Bucket[]): void {
-    // Ordenar los buckets por id de menor a mayor
-    this.buckets = bucketsObtained.sort((a, b) => a.id - b.id);
-    this.bucketTasks = [];
-    // get tasks for each bucket y guardar solo los asignados al usuario actual
-    this.buckets.forEach((bucket: Bucket) => {
-      let bucketTaskElement: BucketTask = this.getTasksByBucket(bucket.id);
-      this.bucketTasks.push(bucketTaskElement);
-    });
-  }
-
-  getTasksByBucket(bucketId: number): BucketTask {
-    let tasks: Task[] = [];
-    this.taskService.getTasksByBucket(bucketId).subscribe({
-      next: (bucketTasks: Task[]) => {
-        bucketTasks.forEach((task: Task) => {
-          // Check if this task is assigned to the current user
-          const isAssignedToUser = this.userTaskAssignations.some(
-            (assignation: TaskAssignation) => assignation.task.id === task.id
-          );
-          if (isAssignedToUser) {
-            tasks.push(task);
-          }
-        });
-      },
-    });
-    // set the obtained values
-    let bucketData: BucketTask = { id: bucketId, tasks: tasks };
-    return bucketData;
   }
 
   getBucketPosition(bucketId: number): number {
     let index: number = 0;
-    this.bucketTasks.forEach((bucketTask: BucketTask) => {
+    this.bucketTasks.forEach((bucketTask: BucketPersonalTask) => {
       if (bucketTask.id === bucketId)
         index = this.bucketTasks.indexOf(bucketTask);
     });
@@ -144,7 +129,7 @@ export class KanbanBoardComponent implements OnInit {
     return connectedListIds;
   }
 
-  drop(event: CdkDragDrop<Task[]>) {
+  drop(event: CdkDragDrop<PersonalTask[]>) {
     if (event.previousContainer === event.container) {
       moveItemInArray(
         event.container.data,
@@ -154,118 +139,71 @@ export class KanbanBoardComponent implements OnInit {
     } else {
       // Get the task that was moved
       const movedTask = event.previousContainer.data[event.previousIndex];
-
-      // Extract bucket ID from the container ID (format: "list-{bucketId}")
       const newBucketId = parseInt(event.container.id.replace('list-', ''));
-
-      // Update the task's bucket ID locally first
-      const updatedTask: Task = {
+      const updatedTask: PersonalTask = {
         ...movedTask,
-        bucket: {
-          ...movedTask.bucket,
-          id: newBucketId
-        }
+        bucketId: newBucketId,
       };
-
-      // Move the item in the UI
       transferArrayItem(
         event.previousContainer.data,
         event.container.data,
         event.previousIndex,
         event.currentIndex
       );
-
-      // Update the task in the backend
-      this.taskService.updateTask(movedTask.id, updatedTask).subscribe({
-        next: (response: Task) => {
-          console.log('Task updated successfully:', response);
+      this.personalTaskService.updateTask(movedTask.id, updatedTask).subscribe({
+        next: (response: PersonalTask) => {
+          console.log('PersonalTask updated successfully:', response);
         },
         error: (err) => {
-          console.error('Error updating task:', err);
-          // Revert the change if the backend update fails
+          console.error('Error updating personal task:', err);
           transferArrayItem(
             event.container.data,
             event.previousContainer.data,
             event.currentIndex,
             event.previousIndex
           );
-        }
+        },
       });
     }
   }
 
-  // Get UserTaskAssignation for a specific task
-  getUserTaskAssignationForTask(task: Task): UserTaskAssignation | null {
-    const assignation = this.userTaskAssignations.find(
-      (assignment: TaskAssignation) => assignment.task.id === task.id
-    );
-
-    if (assignation) {
-      return {
-        id: assignation.id,
-        task: task,
-        user: this.currentUser,
-        isCompleted: assignation.completed
-      };
-    }
-    return null;
-  }
-
-  // Mark task as completed
-  markTaskAsCompleted(task: Task): void {
-    const userTaskAssignation = this.getUserTaskAssignationForTask(task);
-
-    if (!userTaskAssignation) {
-      console.error('Task assignation not found');
-      return;
-    }
-
-    const taskAssignation: TaskAssignation = {
-      id: userTaskAssignation.id,
-      user: {
-        id: this.currentUser.id,
-      },
-      task: {
-        id: task.id,
-      },
+  markTaskAsCompleted(task: PersonalTask): void {
+    const updatedTask: PersonalTask = {
+      ...task,
       completed: true,
     };
-
-    this.taskAssignationService
-      .updateAssignation(userTaskAssignation.id, taskAssignation)
-      .subscribe({
-        next: (assignationUpdated: TaskAssignation) => {
-          Swal.fire('Task completed', 'Task completed successfully!', 'success');
-          // Remove the task from the UI
-          this.removeTaskFromBuckets(task.id);
-        },
-        error: (err) => {
-          console.error('Error marking task as completed:', err);
-          Swal.fire('Error', 'Failed to mark task as completed', 'error');
-        }
-      });
+    this.personalTaskService.updateTask(task.id, updatedTask).subscribe({
+      next: (response: PersonalTask) => {
+        Swal.fire('Task completed', 'Task completed successfully!', 'success');
+        this.removeTaskFromBuckets(task.id);
+      },
+      error: (err) => {
+        console.error('Error marking personal task as completed:', err);
+        Swal.fire('Error', 'Failed to mark task as completed', 'error');
+      },
+    });
   }
 
   // Remove task from buckets array after completion
   private removeTaskFromBuckets(taskId: number): void {
-    this.bucketTasks.forEach((bucketTask: BucketTask) => {
-      bucketTask.tasks = bucketTask.tasks.filter(task => task.id !== taskId);
+    this.bucketTasks.forEach((bucketTask: BucketPersonalTask) => {
+      bucketTask.tasks = bucketTask.tasks.filter((task) => task.id !== taskId);
     });
   }
 
   // Redirect to board (for the view button functionality)
-  redirectToBoard(task: Task): void {
-    const bucketId: number = task.bucket.id;
+  redirectToBoard(task: PersonalTask): void {
+    const bucketId: number = task.bucketId;
     this.bucketService.getBucketById(bucketId).subscribe({
       next: (bucket: Bucket) => {
         this.boardService.getBoardById(bucket.board.id).subscribe({
           next: (board: Board) => {
             this.router.navigate(['/dashboard/board', board]);
           },
-          error: (err) => console.error('Error getting board:', err)
+          error: (err) => console.error('Error getting board:', err),
         });
       },
-      error: (err) => console.error('Error getting bucket:', err)
+      error: (err) => console.error('Error getting bucket:', err),
     });
   }
 }

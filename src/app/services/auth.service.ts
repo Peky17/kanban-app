@@ -169,14 +169,20 @@ export class AuthService {
           map((user: User) => {
             let accessItems: MenuItem[] = this.accessRole.getAccessItems();
             let currentRole: string = user.role.name;
-            let itemFound = accessItems.find(
-              (item) => item.redirection == path
-            );
-            let canAccess = false;
-            itemFound!.roleAccess.forEach((role: string) => {
-              if (role === currentRole) canAccess = true;
-              console.log(role);
+            // Permitir rutas con parámetros dinámicos (por ejemplo, /dashboard/board/123)
+            let itemFound = accessItems.find((item) => {
+              // Si la ruta coincide exactamente
+              if (item.redirection === path) return true;
+              // Si la ruta es dinámica, por ejemplo /dashboard/board/123 debe coincidir con /dashboard/board
+              if (item.redirection && path.startsWith(item.redirection + '/')) return true;
+              return false;
             });
+            let canAccess = false;
+            if (itemFound) {
+              itemFound.roleAccess.forEach((role: string) => {
+                if (role === currentRole) canAccess = true;
+              });
+            }
             return canAccess;
           }),
           catchError((err) => {

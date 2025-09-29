@@ -63,7 +63,7 @@ export class MyPlannerComponent implements OnInit {
   }
 
   goToBoard(board: Board) {
-    this.router.navigate(['/dashboard/kanban', board.id]);
+    this.router.navigate(['/dashboard/board', board.id]);
   }
 
   openCreateBoardModal() {

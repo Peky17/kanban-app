@@ -80,7 +80,7 @@ const routes: Routes = [
         canLoad: [AuthGuard, AccessGuard],
       },
       {
-        path: 'board',
+        path: 'board/:id',
         component: KanbanBoardComponent,
         canActivate: [AuthGuard],
         canLoad: [AuthGuard],

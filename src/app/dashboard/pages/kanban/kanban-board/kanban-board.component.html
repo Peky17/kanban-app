@@ -30,7 +30,7 @@
               *ngFor="let task of bucketTasks[getBucketPosition(bucket.id)].tasks; trackBy: trackByTaskId"
             >
               <div class="example-box" cdkDrag>
-                {{ task.name }}
+                {{ task.title }}
                 <div class="btn-group btn-sm">
                   <button
                     class="btn btn-secondary btn-sm"
@@ -62,7 +62,7 @@
                     class="offcanvas-title"
                     [id]="'offcanvasExampleLabel' + task.id"
                   >
-                    {{ task.name }}
+                    {{ task.title }}
                   </h3>
                   <button
                     type="button"
@@ -73,19 +73,8 @@
                 </div>
                 <!-- canvas body -->
                 <div class="offcanvas-body" style="text-align: left">
-                  <p><b>Start Date:</b> {{ task.startDate }}</p>
                   <p><b>Due Date:</b> {{ task.dueDate }}</p>
                   <p><b>Created At:</b> {{ task.createdAt }}</p>
-                  <p><b>Priority:</b>
-                    <span
-                      class="badge"
-                      [class.bg-danger]="task.priority === 'High'"
-                      [class.bg-warning]="task.priority === 'Medium'"
-                      [class.bg-success]="task.priority === 'Low'"
-                    >
-                      {{ task.priority }}
-                    </span>
-                  </p>
                   <br />
                   <h5>Task description:</h5>
                   <div>{{ task.description }}</div>
