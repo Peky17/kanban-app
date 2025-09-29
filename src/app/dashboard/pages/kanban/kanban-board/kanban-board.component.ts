@@ -1,4 +1,3 @@
-import { BucketPersonalTask } from './../../../../interfaces/bucketPersonalTasks.interface';
 import { PersonalTask } from './../../../../interfaces/personalTask.interface';
 import {
   CdkDrag,
@@ -9,6 +8,8 @@ import {
 } from '@angular/cdk/drag-drop';
 import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { KanbanBucketModalComponent } from './kanban-bucket-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
@@ -21,6 +22,7 @@ import { BoardService } from 'src/app/services/board.service';
 import { LoaderComponent } from 'src/app/shared/loader/loader.component';
 import { Board } from 'src/app/interfaces/board.interface';
 import Swal from 'sweetalert2';
+import { BucketPersonalTask } from 'src/app/interfaces/bucketPersonalTasks.interface';
 
 @Component({
   selector: 'app-kanban-board',
@@ -30,6 +32,23 @@ import Swal from 'sweetalert2';
   imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent],
 })
 export class KanbanBoardComponent implements OnInit {
+  // Método para abrir el modal de creación de bucket
+  openCreateBucketModal(): void {
+    const modalRef = this.modalService.open(KanbanBucketModalComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.mode = 'create';
+    modalRef.componentInstance.boardId = this.board.id;
+    modalRef.result.then(
+      (result) => {
+        if (result === 'created') {
+          this.initBucketsAndPersonalTasks();
+        }
+      },
+      () => {}
+    );
+  }
   // trackBy para mejorar el rendimiento del ngFor de tareas
   trackByTaskId(index: number, task: any): number {
     return task.id;
@@ -48,7 +67,8 @@ export class KanbanBoardComponent implements OnInit {
     private bucketService: BucketService,
     private authService: AuthService,
     private taskAssignationService: TaskAssignationService,
-    private boardService: BoardService
+    private boardService: BoardService,
+    private modalService: NgbModal
   ) {}
 
   ngOnInit(): void {
@@ -204,6 +224,53 @@ export class KanbanBoardComponent implements OnInit {
         });
       },
       error: (err) => console.error('Error getting bucket:', err),
+    });
+  }
+
+  // Método para abrir el modal de edición de bucket
+  openEditBucketModal(bucket: any): void {
+    const modalRef = this.modalService.open(KanbanBucketModalComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.mode = 'edit';
+    modalRef.componentInstance.bucket = bucket;
+    modalRef.componentInstance.boardId = this.board.id;
+    modalRef.result.then(
+      (result) => {
+        if (result === 'updated') {
+          this.initBucketsAndPersonalTasks();
+        }
+      },
+      () => {}
+    );
+  }
+
+  // Método para confirmar y eliminar bucket
+  confirmDeleteBucket(bucket: any): void {
+    Swal.fire({
+      title: '¿Eliminar bucket?',
+      text: `Esta acción no se puede deshacer. ¿Eliminar "${bucket.name}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.bucketService.deleteBucketById(bucket.id).subscribe({
+          next: () => {
+            Swal.fire('Eliminado', 'El bucket fue eliminado.', 'success');
+            this.initBucketsAndPersonalTasks();
+          },
+          error: (err) => {
+            Swal.fire(
+              'Error',
+              err.error?.message || 'No se pudo eliminar el bucket',
+              'error'
+            );
+          },
+        });
+      }
     });
   }
 }

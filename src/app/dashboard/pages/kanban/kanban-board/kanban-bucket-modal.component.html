@@ -1,0 +1,105 @@
+<div class="modal-header">
+  <h4 class="modal-title">
+    {{ mode === "create" ? "New Bucket" : "Edit Bucket" }}
+  </h4>
+  <button
+    type="button"
+    class="btn-close"
+    aria-label="Close"
+    (click)="activeModal.dismiss('Cross click')"
+  ></button>
+</div>
+<div class="modal-body">
+  <form [formGroup]="bucketForm" (ngSubmit)="saveBucket()">
+    <!-- name -->
+    <div class="form-group mb-2">
+      <label for="name"><b>Name</b></label>
+      <input
+        formControlName="name"
+        type="text"
+        class="form-control"
+        id="name"
+        placeholder="Bucket name"
+      />
+    </div>
+    <!-- description -->
+    <div class="form-group mb-2">
+      <label for="description"><b>Description</b></label>
+      <textarea
+        class="form-control"
+        formControlName="description"
+        placeholder="Bucket description"
+      ></textarea>
+    </div>
+    <!-- color picker -->
+    <div class="form-group mb-2">
+      <label for="colorpicker"><b>Color</b></label
+      ><br />
+      <div class="btn-group" role="group" aria-label="Color options">
+        <input
+          type="radio"
+          class="btn-check"
+          name="color"
+          id="color-secondary"
+          value="secondary"
+          formControlName="color"
+        />
+        <label class="btn btn-outline-secondary" for="color-secondary"
+          >White</label
+        >
+        <input
+          type="radio"
+          class="btn-check"
+          name="color"
+          id="color-success"
+          value="success"
+          formControlName="color"
+        />
+        <label class="btn btn-outline-success" for="color-success">Green</label>
+        <input
+          type="radio"
+          class="btn-check"
+          name="color"
+          id="color-info"
+          value="info"
+          formControlName="color"
+        />
+        <label class="btn btn-outline-info" for="color-info">Blue</label>
+        <input
+          type="radio"
+          class="btn-check"
+          name="color"
+          id="color-warning"
+          value="warning"
+          formControlName="color"
+        />
+        <label class="btn btn-outline-warning" for="color-warning"
+          >Orange</label
+        >
+        <input
+          type="radio"
+          class="btn-check"
+          name="color"
+          id="color-danger"
+          value="danger"
+          formControlName="color"
+        />
+        <label class="btn btn-outline-danger" for="color-danger">Red</label>
+      </div>
+    </div>
+    <!-- created at (hidden) -->
+    <input
+      formControlName="createdAt"
+      type="date"
+      class="form-control"
+      hidden
+    />
+    <!-- board (hidden) -->
+    <input formControlName="board" type="number" class="form-control" hidden />
+    <br />
+    <button type="submit" class="btn btn-primary w-100">
+      {{ mode === "create" ? "Save Bucket" : "Update Bucket" }}
+      <i class="fa fa-check ms-2"></i>
+    </button>
+  </form>
+</div>

@@ -1,0 +1,4 @@
+.modal-header { border-bottom: 1px solid #dee2e6; }
+.modal-title { font-weight: 600; }
+.btn-close { outline: none; }
+.btn-group .btn { min-width: 70px; }

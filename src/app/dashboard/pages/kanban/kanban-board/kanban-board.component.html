@@ -3,21 +3,45 @@
   <app-loader *ngIf="isLoading"></app-loader>
 
   <!-- Alerta de validación si no hay buckets y no está cargando -->
-  <div
-    *ngIf="!isLoading && buckets.length === 0"
-    class="d-flex justify-content-center align-items-center mt-4"
-  >
-    <div class="alert alert-warning text-center w-50" role="alert">
-      <strong>Warning!</strong> There are no buckets to display on this board.
+  <div>
+    <div class="d-flex justify-content-end align-items-center mt-3 mb-2">
+      <button class="btn btn-primary" (click)="openCreateBucketModal()">
+        <i class="fa fa-bookmark me-2"></i> Create new Bucket
+      </button>
+    </div>
+    <div
+      *ngIf="!isLoading && buckets.length === 0"
+      class="d-flex justify-content-center align-items-center mt-4"
+    >
+      <div class="alert alert-warning text-center w-50" role="alert">
+        <strong>Warning!</strong> There are no buckets to display on this board.
+      </div>
     </div>
   </div>
-
   <!-- Buckets -->
   <div class="row" *ngIf="!isLoading && buckets.length > 0">
     <div class="col" *ngFor="let bucket of buckets">
       <div class="card mb-3" style="max-width: 20rem">
-        <div class="card-header text-center bg-{{ bucket.color }}">
-          <h4>{{ bucket.name }}</h4>
+        <div
+          class="card-header d-flex justify-content-between align-items-center bg-{{
+            bucket.color
+          }}"
+        >
+          <h4 class="mb-0">{{ bucket.name }}</h4>
+          <div class="btn-group btn-group-sm ms-2">
+            <button
+              class="btn btn-outline-primary btn-sm"
+              (click)="openEditBucketModal(bucket)"
+            >
+              <i class="fa fa-edit"></i>
+            </button>
+            <button
+              class="btn btn-outline-danger btn-sm"
+              (click)="confirmDeleteBucket(bucket)"
+            >
+              <i class="fa fa-trash"></i>
+            </button>
+          </div>
         </div>
         <div class="card-body">
           <!-- Tasks here -->
