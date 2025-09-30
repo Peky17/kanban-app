@@ -1,4 +1,3 @@
-import { KanbanPersonalTaskModalComponent } from './kanban-personal-task-modal.component';
 import { PersonalTask } from './../../../../interfaces/personalTask.interface';
 import {
   CdkDrag,
@@ -10,7 +9,6 @@ import {
 import { NgFor, NgIf } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
-import { KanbanBucketModalComponent } from './kanban-bucket-modal.component';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
@@ -24,6 +22,8 @@ import { LoaderComponent } from 'src/app/shared/loader/loader.component';
 import { Board } from 'src/app/interfaces/board.interface';
 import Swal from 'sweetalert2';
 import { BucketPersonalTask } from 'src/app/interfaces/bucketPersonalTasks.interface';
+import { KanbanBucketModalComponent } from './modals/kanban-bucket-modal.component';
+import { KanbanPersonalTaskModalComponent } from './modals/kanban-personal-task-modal.component';
 
 @Component({
   selector: 'app-kanban-board',
