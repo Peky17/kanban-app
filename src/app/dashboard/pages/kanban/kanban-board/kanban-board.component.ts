@@ -72,6 +72,27 @@ export class KanbanBoardComponent implements OnInit {
     private modalService: NgbModal
   ) {}
 
+  // --- FAB (Floating Action Button) ---
+  fabOpen = false;
+
+  toggleFab(): void {
+    this.fabOpen = !this.fabOpen;
+  }
+
+  closeFab(): void {
+    this.fabOpen = false;
+  }
+
+  keepFabOpen(): void {
+    this.fabOpen = true;
+  }
+
+  openChatbot(): void {
+    // Aquí deberías abrir el chatbot, por ejemplo mostrando un componente, modal, etc.
+    // Por ahora solo muestra un alert temporal
+    alert('Abrir chatbot (implementar lógica)');
+  }
+
   ngOnInit(): void {
     this.route.params.subscribe({
       next: (params) => {

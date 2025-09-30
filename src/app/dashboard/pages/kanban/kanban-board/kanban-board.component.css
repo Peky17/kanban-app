@@ -1,3 +1,91 @@
+
+/* FAB styles */
+/* FAB container bottom right */
+/* FAB container bottom right, más abajo */
+.fab-container {
+  position: fixed;
+  right: 2rem;
+  bottom: 3.5rem;
+  z-index: 2001;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* FAB main button: azul, circular, sombra, grande */
+.fab-main {
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.25);
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s;
+}
+.fab-main:hover {
+  background: #1565c0;
+}
+
+/* FAB actions: despliega hacia ARRIBA */
+/* FAB actions: despliega hacia ARRIBA (de abajo hacia arriba) */
+.fab-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  margin-bottom: 0.5rem;
+  pointer-events: none;
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.2s, transform 0.2s;
+  position: relative;
+  bottom: 0;
+}
+.fab-actions.open {
+  pointer-events: auto;
+  opacity: 1;
+  transform: translateY(-10px);
+}
+/* Espaciado entre acciones: hacia arriba */
+.fab-action {
+  margin-bottom: 0.7rem;
+  background: #0d6efd;
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 48px;
+  height: 48px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.18);
+  font-size: 1.7rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, color 0.2s;
+}
+.fab-action:hover {
+  background: #1565c0;
+  color: #fff;
+}
+/* Material icons fallback */
+.material-icons {
+  font-family: 'Material Icons';
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 1;
+  letter-spacing: normal;
+  text-transform: none;
+  display: inline-block;
+  direction: ltr;
+  -webkit-font-feature-settings: 'liga';
+  -webkit-font-smoothing: antialiased;
+}
 .example-container {
   width: 400px;
   max-width: 100%;

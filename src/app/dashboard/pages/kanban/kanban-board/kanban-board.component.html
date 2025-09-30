@@ -4,11 +4,6 @@
 
   <!-- Alerta de validación si no hay buckets y no está cargando -->
   <div>
-    <div class="d-flex justify-content-end align-items-center mt-3 mb-2">
-      <button class="btn btn-primary" (click)="openCreateBucketModal()">
-        <i class="fa fa-bookmark me-2"></i> Create new Bucket
-      </button>
-    </div>
     <div
       *ngIf="!isLoading && buckets.length === 0"
       class="d-flex justify-content-center align-items-center mt-4"
@@ -130,5 +125,27 @@
         </div>
       </div>
     </div>
+  </div>
+</div>
+
+<!-- Floating Action Button (FAB) -->
+<div class="fab-container">
+  <button *ngIf="!fabOpen" class="fab-main" (click)="toggleFab()">
+    <i class="fa fa-plus"></i>
+  </button>
+  <div
+    class="fab-actions"
+    [class.open]="fabOpen"
+    *ngIf="fabOpen"
+  >
+    <button class="fab-action" title="Crear bucket" (click)="openCreateBucketModal()">
+      <i class="fa fa-bookmark"></i>
+    </button>
+    <button class="fab-action" title="Chatbot" (click)="openChatbot()">
+      <i class="fa fa-comments"></i>
+    </button>
+    <button class="fab-action" title="Cerrar" (click)="closeFab()">
+      <i class="fa fa-times"></i>
+    </button>
   </div>
 </div>
