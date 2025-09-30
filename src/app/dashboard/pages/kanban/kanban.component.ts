@@ -26,7 +26,7 @@ export class KanbanComponent {
   ) {}
 
   ngOnInit(): void {
-    this.administratorService.getAdministrators().subscribe(users => {
+    this.administratorService.getAdministrators().subscribe((users) => {
       this.users = users;
     });
     Swal.fire({
@@ -47,12 +47,16 @@ export class KanbanComponent {
       error: (error) => {
         console.error('Error al obtener datos:', error);
         Swal.fire('Error', 'Failed to load boards.', 'error');
-      }
+      },
     });
   }
 
+  viewBoard(id: number): void {
+    this.router.navigateByUrl(`/dashboard/board/${id}`);
+  }
+
   getUserById(id: number): User | undefined {
-    return this.users.find(u => u.id === id);
+    return this.users.find((u) => u.id === id);
   }
 
   onPageChange(page: number) {
@@ -64,17 +68,17 @@ export class KanbanComponent {
       this.filteredBoards = this.boards;
     } else {
       const term = this.searchTerm.toLowerCase();
-      this.filteredBoards = this.boards.filter(board => {
+      this.filteredBoards = this.boards.filter((board) => {
         const creator = this.getUserById(board.createdBy.id);
         return (
           board.name.toLowerCase().includes(term) ||
           board.id.toString().includes(term) ||
           (board.createdBy && board.createdBy.id.toString().includes(term)) ||
           (board.createdAt && board.createdAt.toLowerCase().includes(term)) ||
-          (creator && (
-            (creator.employeeNumber && creator.employeeNumber.toLowerCase().includes(term)) ||
-            (creator.name && creator.name.toLowerCase().includes(term))
-          ))
+          (creator &&
+            ((creator.employeeNumber &&
+              creator.employeeNumber.toLowerCase().includes(term)) ||
+              (creator.name && creator.name.toLowerCase().includes(term))))
         );
       });
     }
