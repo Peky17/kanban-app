@@ -14,7 +14,6 @@ import { Bucket } from 'src/app/interfaces/bucket.interface';
 import { BucketService } from 'src/app/services/bucket.service';
 import { PersonalTaskService } from 'src/app/services/personal-task.service';
 import { AuthService } from 'src/app/services/auth.service';
-import { TaskAssignationService } from 'src/app/services/task-assignation.service';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { User } from 'src/app/interfaces/user.interface';
 import { BoardService } from 'src/app/services/board.service';

@@ -23,10 +23,10 @@
           }}"
         >
           <h4 class="mb-0">{{ bucket.name }}</h4>
-          <div class="btn-group btn-group-sm ms-2" style="z-index:2;">
+          <div class="btn-group btn-group-sm ms-2" style="z-index: 2">
             <button
               type="button"
-              class="btn btn-success btn-sm"
+              class="btn btn-primary btn-sm"
               (click)="openCreatePersonalTaskModal(bucket)"
             >
               <i class="fa fa-plus"></i>
@@ -67,12 +67,25 @@
                 {{ task.title }}
                 <div class="btn-group btn-sm">
                   <button
+                    title="View Details"
                     class="btn btn-secondary btn-sm"
                     data-bs-toggle="offcanvas"
                     [attr.data-bs-target]="'#offcanvasExample' + task.id"
                     aria-controls="offcanvasExample"
                   >
                     <i class="fa fa-eye"></i>
+                  </button>
+                  <button
+                    title="Edit Personal Task"
+                    class="btn btn-secondary btn-sm"
+                  >
+                    <i class="fa fa-edit"></i>
+                  </button>
+                  <button
+                    title="Delete Personal Task"
+                    class="btn btn-secondary btn-sm"
+                  >
+                    <i class="fa fa-trash"></i>
                   </button>
                 </div>
               </div>
@@ -133,12 +146,12 @@
   <button *ngIf="!fabOpen" class="fab-main" (click)="toggleFab()">
     <i class="fa fa-plus"></i>
   </button>
-  <div
-    class="fab-actions"
-    [class.open]="fabOpen"
-    *ngIf="fabOpen"
-  >
-    <button class="fab-action" title="Create bucket" (click)="openCreateBucketModal()">
+  <div class="fab-actions" [class.open]="fabOpen" *ngIf="fabOpen">
+    <button
+      class="fab-action"
+      title="Create bucket"
+      (click)="openCreateBucketModal()"
+    >
       <i class="fa fa-bookmark"></i>
     </button>
     <button class="fab-action" title="Chatbot" (click)="openChatbot()">
