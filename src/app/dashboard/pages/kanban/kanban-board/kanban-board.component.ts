@@ -23,6 +23,7 @@ import Swal from 'sweetalert2';
 import { BucketPersonalTask } from 'src/app/interfaces/bucketPersonalTasks.interface';
 import { KanbanBucketModalComponent } from './modals/kanban-bucket-modal.component';
 import { KanbanPersonalTaskModalComponent } from './modals/kanban-personal-task-modal.component';
+import { KanbanEditPersonalTaskModalComponent } from './modals/kanban-edit-personal-task-modal.component';
 
 @Component({
   selector: 'app-kanban-board',
@@ -30,6 +31,9 @@ import { KanbanPersonalTaskModalComponent } from './modals/kanban-personal-task-
   styleUrls: ['./kanban-board.component.css'],
   standalone: true,
   imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent],
+  // Add the edit modal component to the standalone imports
+  // (if using standalone components, otherwise add to module)
+  // KanbanEditPersonalTaskModalComponent,
 })
 export class KanbanBoardComponent implements OnInit {
   // Método para abrir el modal de creación de bucket
@@ -323,6 +327,23 @@ export class KanbanBoardComponent implements OnInit {
     modalRef.result.then(
       (result) => {
         if (result === 'created') {
+          this.initBucketsAndPersonalTasks();
+        }
+      },
+      () => {}
+    );
+  }
+
+  // Open modal to edit a personal task
+  openEditPersonalTaskModal(task: PersonalTask): void {
+    const modalRef = this.modalService.open(KanbanEditPersonalTaskModalComponent, {
+      size: 'md',
+      backdrop: 'static',
+    });
+    modalRef.componentInstance.task = task;
+    modalRef.result.then(
+      (result) => {
+        if (result === 'updated') {
           this.initBucketsAndPersonalTasks();
         }
       },

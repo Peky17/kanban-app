@@ -1,0 +1,43 @@
+<div class="modal-header">
+  <h5 class="modal-title">Edit Personal Task</h5>
+  <button type="button" class="btn-close" aria-label="Close" (click)="closeModal()"></button>
+</div>
+<div class="modal-body">
+  <form (ngSubmit)="updateTask()" #editTaskForm="ngForm">
+    <div class="mb-3">
+      <label for="title" class="form-label">Title</label>
+      <input
+        type="text"
+        id="title"
+        class="form-control"
+        [(ngModel)]="title"
+        name="title"
+        required
+      />
+    </div>
+    <div class="mb-3">
+      <label for="description" class="form-label">Description</label>
+      <textarea
+        id="description"
+        class="form-control"
+        [(ngModel)]="description"
+        name="description"
+        rows="3"
+      ></textarea>
+    </div>
+    <div class="mb-3">
+      <label for="dueDate" class="form-label">Due Date</label>
+      <input
+        type="date"
+        id="dueDate"
+        class="form-control"
+        [(ngModel)]="dueDate"
+        name="dueDate"
+      />
+    </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-secondary" (click)="closeModal()" [disabled]="isLoading">Cancel</button>
+      <button type="submit" class="btn btn-primary" [disabled]="isLoading">Update</button>
+    </div>
+  </form>
+</div>

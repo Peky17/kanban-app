@@ -1,0 +1,14 @@
+.modal-header {
+  background: #f8f9fa;
+  border-bottom: 1px solid #dee2e6;
+}
+.modal-title {
+  font-weight: 600;
+}
+.modal-footer {
+  border-top: 1px solid #dee2e6;
+  background: #f8f9fa;
+}
+.btn[disabled] {
+  opacity: 0.7;
+}
