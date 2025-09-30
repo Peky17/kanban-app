@@ -67,7 +67,6 @@ export class KanbanBoardComponent implements OnInit {
     private personalTaskService: PersonalTaskService,
     private bucketService: BucketService,
     private authService: AuthService,
-    private taskAssignationService: TaskAssignationService,
     private boardService: BoardService,
     private modalService: NgbModal
   ) {}
@@ -283,23 +282,27 @@ export class KanbanBoardComponent implements OnInit {
   // Método para confirmar y eliminar bucket
   confirmDeleteBucket(bucket: any): void {
     Swal.fire({
-      title: '¿Eliminar bucket?',
-      text: `Esta acción no se puede deshacer. ¿Eliminar "${bucket.name}"?`,
+      title: 'Delete bucket?',
+      text: `This action cannot be undone. Delete "${bucket.name}"?`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
-      cancelButtonText: 'Cancelar',
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
     }).then((result) => {
       if (result.isConfirmed) {
         this.bucketService.deleteBucketById(bucket.id).subscribe({
           next: () => {
-            Swal.fire('Eliminado', 'El bucket fue eliminado.', 'success');
+            Swal.fire(
+              'Deleted',
+              'The bucket was deleted successfully.',
+              'success'
+            );
             this.initBucketsAndPersonalTasks();
           },
           error: (err) => {
             Swal.fire(
               'Error',
-              err.error?.message || 'No se pudo eliminar el bucket',
+              err.error?.message || 'Failed to delete the bucket',
               'error'
             );
           },
