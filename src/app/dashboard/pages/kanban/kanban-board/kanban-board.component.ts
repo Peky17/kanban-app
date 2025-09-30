@@ -350,4 +350,28 @@ export class KanbanBoardComponent implements OnInit {
       () => {}
     );
   }
+
+  // Delete a personal task with confirmation
+  deletePersonalTask(task: PersonalTask): void {
+    Swal.fire({
+      title: 'Delete personal task?',
+      text: `This action cannot be undone. Delete "${task.title}"?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete',
+      cancelButtonText: 'Cancel',
+    }).then((result) => {
+      if (result.isConfirmed) {
+  this.personalTaskService.deleteTaskById(task.id).subscribe({
+          next: () => {
+            Swal.fire('Deleted', 'The personal task was deleted successfully.', 'success');
+            this.removeTaskFromBuckets(task.id);
+          },
+          error: (err) => {
+            Swal.fire('Error', err.error?.message || 'Failed to delete the personal task', 'error');
+          },
+        });
+      }
+    });
+  }
 }
