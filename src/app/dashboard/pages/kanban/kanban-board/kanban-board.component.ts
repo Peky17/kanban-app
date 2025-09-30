@@ -121,7 +121,9 @@ export class KanbanBoardComponent implements OnInit {
             // Bootstrap tooltips initialization
             setTimeout(() => {
               // @ts-ignore
-              const tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+              const tooltipTriggerList = [].slice.call(
+                document.querySelectorAll('[data-bs-toggle="tooltip"]')
+              );
               // @ts-ignore
               tooltipTriggerList.forEach(function (tooltipTriggerEl) {
                 // @ts-ignore
