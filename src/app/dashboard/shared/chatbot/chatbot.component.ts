@@ -91,70 +91,72 @@ export class ChatbotComponent {
       return;
     }
     this.chatbotService
-      .getProjectById({ userId, message: this.userInput })
+      .askAboutTasks({ userId, message: this.userInput })
       .subscribe(
         (res: ChatbotResponse) => {
           this.messages.push({ from: 'bot', text: res.response });
           if (res.tasks && res.tasks.length > 0) {
-            this.taskAssignationService.getTaskAssignationByUserId(userId).subscribe(
-              (userAssignations: TaskAssignation[]) => {
-                const tasksWithAssignation: Array<
-                  TaskAssignation & { name: string }
-                > = res.tasks.map((task) => {
-                  if (!task || typeof task.id === 'undefined') {
+            this.taskAssignationService
+              .getTaskAssignationByUserId(userId)
+              .subscribe(
+                (userAssignations: TaskAssignation[]) => {
+                  const tasksWithAssignation: Array<
+                    TaskAssignation & { name: string }
+                  > = res.tasks.map((task) => {
+                    if (!task || typeof task.id === 'undefined') {
+                      return {
+                        id: 0,
+                        user: { id: userId },
+                        task: { id: task.id },
+                        completed: false,
+                        name: task.name,
+                      };
+                    }
+                    const assignation = userAssignations.find(
+                      (a) =>
+                        a.task &&
+                        typeof a.task.id !== 'undefined' &&
+                        a.task.id === task.id
+                    );
+                    // Log para depuración
+                    console.log('Assignation from backend:', assignation);
                     return {
-                      id: 0,
-                      user: { id: userId },
-                      task: { id: task.id },
-                      completed: false,
+                      id: assignation ? assignation.id : 0,
+                      user: assignation ? assignation.user : { id: userId },
+                      task: assignation ? assignation.task : { id: task.id },
+                      completed: assignation
+                        ? (assignation as any).isCompleted ??
+                          assignation.completed ??
+                          false
+                        : false,
                       name: task.name,
                     };
-                  }
-                  const assignation = userAssignations.find(
-                    (a) =>
-                      a.task &&
-                      typeof a.task.id !== 'undefined' &&
-                      a.task.id === task.id
-                  );
-                  // Log para depuración
-                  console.log('Assignation from backend:', assignation);
-                  return {
-                    id: assignation ? assignation.id : 0,
-                    user: assignation ? assignation.user : { id: userId },
-                    task: assignation ? assignation.task : { id: task.id },
-                    completed: assignation
-                      ? (assignation as any).isCompleted ??
-                        assignation.completed ??
-                        false
-                      : false,
+                  });
+                  this.messages.push({
+                    from: 'bot',
+                    text: 'Related tasks:',
+                    tasks: tasksWithAssignation,
+                  });
+                  this.loading = false;
+                },
+                () => {
+                  const tasksWithAssignation: Array<
+                    TaskAssignation & { name: string }
+                  > = res.tasks.map((task) => ({
+                    id: 0,
+                    user: { id: userId },
+                    task: { id: task.id },
+                    completed: false,
                     name: task.name,
-                  };
-                });
-                this.messages.push({
-                  from: 'bot',
-                  text: 'Related tasks:',
-                  tasks: tasksWithAssignation,
-                });
-                this.loading = false;
-              },
-              () => {
-                const tasksWithAssignation: Array<
-                  TaskAssignation & { name: string }
-                > = res.tasks.map((task) => ({
-                  id: 0,
-                  user: { id: userId },
-                  task: { id: task.id },
-                  completed: false,
-                  name: task.name,
-                }));
-                this.messages.push({
-                  from: 'bot',
-                  text: 'Related tasks:',
-                  tasks: tasksWithAssignation,
-                });
-                this.loading = false;
-              }
-            );
+                  }));
+                  this.messages.push({
+                    from: 'bot',
+                    text: 'Related tasks:',
+                    tasks: tasksWithAssignation,
+                  });
+                  this.loading = false;
+                }
+              );
           } else {
             this.loading = false;
           }

@@ -4,6 +4,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import {
   ChatbotRequest,
   ChatbotResponse,
+  RecommendedPersonalTasks,
 } from '../interfaces/chatbot.interface';
 import { Observable } from 'rxjs';
 
@@ -22,9 +23,21 @@ export class ChatbotService {
     });
   }
 
-  getProjectById(chatbotRequest: ChatbotRequest): Observable<ChatbotResponse> {
+  askAboutTasks(chatbotRequest: ChatbotRequest): Observable<ChatbotResponse> {
     return this.httpClient.post<ChatbotResponse>(
       this.baseUrl + '/ask',
+      chatbotRequest,
+      {
+        headers: this.getAuthHeaders(),
+      }
+    );
+  }
+
+  getRecommendedTasks(
+    chatbotRequest: ChatbotRequest
+  ): Observable<RecommendedPersonalTasks> {
+    return this.httpClient.post<RecommendedPersonalTasks>(
+      this.baseUrl + '/personal-tasks',
       chatbotRequest,
       {
         headers: this.getAuthHeaders(),
