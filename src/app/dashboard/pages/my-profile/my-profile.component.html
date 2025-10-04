@@ -1,3 +1,4 @@
+
 <main class="jumbotron" role="main">
   <section>
     <div class="container">
@@ -10,20 +11,17 @@
               <div class="account-settings">
                 <div class="user-profile">
                   <div class="user-avatar">
-                    <img
-                      src="assets/user.png"
-                      alt="Maxwell Admin"
-                    />
+                    <img src="assets/user.png" alt="{{ user?.name }}" />
                   </div>
-                  <h5 class="user-name">Yuki Hayashi</h5>
-                  <h6 class="user-email">myemail.com</h6>
+                  <h5 class="user-name">{{ user?.name }}</h5>
+                  <h6 class="user-email">{{ user?.email }}</h6>
                 </div>
                 <div class="about">
-                  <h5>About</h5>
-                  <p>
-                    I'm Yuki. Full Stack Designer I enjoy creating user-centric,
-                    delightful and human experiences.
-                  </p>
+                  <div class="btn-group">
+                    <button class="btn btn-secondary" (click)="enableEdit()" [disabled]="isEditing">
+                      Edit Profile <i style="margin-left: 6px;" class="fa fa-edit"></i>
+                    </button>
+                  </div>
                 </div>
               </div>
             </div>
@@ -34,100 +32,99 @@
           <div class="card h-100">
             <div class="card-header text-center"><h5>Personal data</h5></div>
             <div class="card-body">
-              <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                  <h6 class="mb-2"><b>Personal Details</b></h6>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="fullName">Full Name</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="fullName"
-                      placeholder="Enter full name"
-                    />
+              <form [formGroup]="profileForm" (ngSubmit)="updateProfile()">
+                <div class="row gutters">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <h6 class="mb-2"><b>Personal Details</b></h6>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                      <label for="fullName">Full Name</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="fullName"
+                        formControlName="name"
+                        placeholder="Enter full name"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                      <label for="eMail">Email</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="eMail"
+                        formControlName="email"
+                        placeholder="Enter email ID"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                      <label for="phone">Phone</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="phone"
+                        formControlName="cellphone"
+                        placeholder="Enter phone number"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <!-- Website field removed -->
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                      <label for="won">WON</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="won"
+                        formControlName="won"
+                        placeholder="Enter WON identifier"
+                      />
+                    </div>
+                  </div>
+                  <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+                    <div class="form-group">
+                      <label for="employeeNumber">Employee Number</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="employeeNumber"
+                        formControlName="employeeNumber"
+                        placeholder="Enter employee number"
+                      />
+                    </div>
                   </div>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="eMail">Email</label>
-                    <input
-                      type="email"
-                      class="form-control"
-                      id="eMail"
-                      placeholder="Enter email ID"
-                    />
+                <br />
+                <div class="row gutters">
+                  <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+                    <div class="text-right">
+                      <button
+                        type="button"
+                        class="btn btn-secondary"
+                        *ngIf="isEditing"
+                        (click)="cancelEdit()"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="submit"
+                        class="btn btn-primary"
+                        *ngIf="isEditing"
+                        [disabled]="profileForm.invalid || loading"
+                      >
+                        Update
+                      </button>
+                    </div>
                   </div>
                 </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="phone">Phone</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="phone"
-                      placeholder="Enter phone number"
-                    />
-                  </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="website">Website URL</label>
-                    <input
-                      type="url"
-                      class="form-control"
-                      id="website"
-                      placeholder="Website url"
-                    />
-                  </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="won">WON</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="won"
-                      placeholder="Enter WON identifier"
-                    />
-                  </div>
-                </div>
-                <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
-                  <div class="form-group">
-                    <label for="employeeNumber">Employee Number</label>
-                    <input
-                      type="text"
-                      class="form-control"
-                      id="employeeNumber"
-                      placeholder="Enter employee number"
-                    />
-                  </div>
-                </div>
-              </div>
-              <br />
-              <div class="row gutters">
-                <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-                  <div class="text-right">
-                    <button
-                      type="button"
-                      id="submit"
-                      name="submit"
-                      class="btn btn-secondary"
-                    >
-                      Cancel
-                    </button>
-                    <button
-                      type="button"
-                      id="submit"
-                      name="submit"
-                      class="btn btn-primary"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </div>
-              </div>
+              </form>
             </div>
           </div>
         </div>

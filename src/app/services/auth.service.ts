@@ -1,5 +1,3 @@
-
-
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, catchError, map, of, tap } from 'rxjs';
@@ -69,6 +67,12 @@ export class AuthService {
   }
 
   getUserRole(): Observable<User> {
+    return this.httpClient.get<User>(this.baseUrl + '/auth/me', {
+      headers: this.getAuthHeaders(),
+    });
+  }
+
+  getUserInSession(): Observable<User> {
     return this.httpClient.get<User>(this.baseUrl + '/auth/me', {
       headers: this.getAuthHeaders(),
     });
@@ -174,7 +178,8 @@ export class AuthService {
               // Si la ruta coincide exactamente
               if (item.redirection === path) return true;
               // Si la ruta es dinámica, por ejemplo /dashboard/board/123 debe coincidir con /dashboard/board
-              if (item.redirection && path.startsWith(item.redirection + '/')) return true;
+              if (item.redirection && path.startsWith(item.redirection + '/'))
+                return true;
               return false;
             });
             let canAccess = false;
