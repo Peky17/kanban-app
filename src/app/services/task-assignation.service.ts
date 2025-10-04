@@ -10,6 +10,21 @@ import { UserSubtaskAssign } from '../interfaces/userSubtaskAssign.interface';
 })
 export class TaskAssignationService {
   /**
+   * Obtiene los buckets del usuario
+   */
+  getBucketsByUserId(userId: number): Observable<any[]> {
+    const url = `${environment.baseUrl}/buckets/user/${userId}`;
+    return this.httpClient.get<any[]>(url, { headers: this.getAuthHeaders() });
+  }
+
+  /**
+   * Crea una tarea personal
+   */
+  createPersonalTask(task: any): Observable<any> {
+    const url = `${environment.baseUrl}/personal-tasks`;
+    return this.httpClient.post<any>(url, task, { headers: this.getAuthHeaders() });
+  }
+  /**
    * Obtiene todas las subtasks asignadas a un usuario
    * @param userId ID del usuario
    */

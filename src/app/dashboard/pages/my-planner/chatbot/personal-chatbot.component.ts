@@ -24,6 +24,7 @@ export class PersonalChatbotComponent {
     from: 'user' | 'bot';
     text: string;
     tasks?: Array<TaskAssignation & { name: string }>;
+    personalTasks?: any[];
   }> = [];
   userInput: string = '';
   loading: boolean = false;
@@ -84,95 +85,140 @@ export class PersonalChatbotComponent {
     private authService: AuthService
   ) {}
 
+  // Estado para flujo conversacional
+  private awaitingAcceptRecommended = false;
+  private recommendedPersonalTasks: any[] = [];
+  private awaitingBucketSelection = false;
+  private bucketOptions: any[] = [];
+  private selectedBucketId: number | null = null;
+
   sendMessage() {
     if (!this.userInput.trim()) return;
-    this.messages.push({ from: 'user', text: this.userInput });
+  this.messages.push({ from: 'user', text: this.userInput });
     this.loading = true;
     const userId = this.currentUserId;
     if (!userId) {
-      this.messages.push({ from: 'bot', text: 'No user en sesión.' });
+      this.messages.push({ from: 'bot', text: 'No user in session.' });
       this.loading = false;
       return;
     }
-    this.chatbotService
-      .askAboutTasks({ userId, message: this.userInput })
-      .subscribe(
-        (res: ChatbotResponse) => {
-          this.messages.push({ from: 'bot', text: res.response });
-          if (res.tasks && res.tasks.length > 0) {
-            this.taskAssignationService
-              .getTaskAssignationByUserId(userId)
-              .subscribe(
-                (userAssignations: TaskAssignation[]) => {
-                  const tasksWithAssignation: Array<
-                    TaskAssignation & { name: string }
-                  > = res.tasks.map((task) => {
-                    if (!task || typeof task.id === 'undefined') {
-                      return {
-                        id: 0,
-                        user: { id: userId },
-                        task: { id: task.id },
-                        completed: false,
-                        name: task.name,
-                      };
-                    }
-                    const assignation = userAssignations.find(
-                      (a) =>
-                        a.task &&
-                        typeof a.task.id !== 'undefined' &&
-                        a.task.id === task.id
-                    );
-                    // Log para depuración
-                    console.log('Assignation from backend:', assignation);
-                    return {
-                      id: assignation ? assignation.id : 0,
-                      user: assignation ? assignation.user : { id: userId },
-                      task: assignation ? assignation.task : { id: task.id },
-                      completed: assignation
-                        ? (assignation as any).isCompleted ??
-                          assignation.completed ??
-                          false
-                        : false,
-                      name: task.name,
-                    };
-                  });
-                  this.messages.push({
-                    from: 'bot',
-                    text: 'Related tasks:',
-                    tasks: tasksWithAssignation,
-                  });
-                  this.loading = false;
-                },
-                () => {
-                  const tasksWithAssignation: Array<
-                    TaskAssignation & { name: string }
-                  > = res.tasks.map((task) => ({
-                    id: 0,
-                    user: { id: userId },
-                    task: { id: task.id },
-                    completed: false,
-                    name: task.name,
-                  }));
-                  this.messages.push({
-                    from: 'bot',
-                    text: 'Related tasks:',
-                    tasks: tasksWithAssignation,
-                  });
-                  this.loading = false;
-                }
-              );
-          } else {
+
+    // Si está esperando aceptación de tareas recomendadas
+    if (this.awaitingAcceptRecommended) {
+      const input = this.userInput.trim().toLowerCase();
+      if (input === 'sí' || input === 'si' || input === 'yes') {
+        // Preguntar por bucket
+        this.awaitingAcceptRecommended = false;
+        this.awaitingBucketSelection = true;
+        // Obtener buckets del usuario
+        this.taskAssignationService.getBucketsByUserId(userId).subscribe({
+          next: (buckets: any[]) => {
+            this.bucketOptions = buckets;
+            if (buckets.length === 0) {
+              this.messages.push({ from: 'bot', text: 'No tienes buckets disponibles. Crea uno primero.' });
+              this.loading = false;
+              this.userInput = '';
+              return;
+            }
+            let bucketList = buckets.map(b => `- ${b.name}`).join('\n');
+            this.messages.push({ from: 'bot', text: `¿En qué bucket quieres guardar las tareas?\n${bucketList}` });
             this.loading = false;
+            this.userInput = '';
+          },
+          error: () => {
+            this.messages.push({ from: 'bot', text: 'Error obteniendo buckets.' });
+            this.loading = false;
+            this.userInput = '';
           }
-        },
-        (err) => {
-          this.messages.push({
-            from: 'bot',
-            text: 'Error connecting to assistant.',
-          });
+        });
+        return;
+      } else {
+        this.messages.push({ from: 'bot', text: 'Tareas recomendadas descartadas.' });
+        this.awaitingAcceptRecommended = false;
+        this.loading = false;
+        this.userInput = '';
+        return;
+      }
+    }
+
+    // Si está esperando selección de bucket
+    if (this.awaitingBucketSelection) {
+      const bucketName = this.userInput.trim();
+      const bucket = this.bucketOptions.find(b => b.name.toLowerCase() === bucketName.toLowerCase());
+      if (!bucket) {
+        this.messages.push({ from: 'bot', text: 'Bucket no encontrado. Escribe el nombre exacto.' });
+        this.loading = false;
+        this.userInput = '';
+        return;
+      }
+      this.selectedBucketId = bucket.id;
+      this.awaitingBucketSelection = false;
+      // Guardar cada tarea recomendada
+      const now = new Date();
+      const createdAt = now.toISOString().split('T')[0];
+      const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      let saveCount = 0;
+      let saveErrors = 0;
+      this.recommendedPersonalTasks.forEach((task) => {
+        const newTask = {
+          title: task.title,
+          description: task.description,
+          userId: userId,
+          bucketId: this.selectedBucketId,
+          createdAt: createdAt,
+          dueDate: dueDate,
+          completed: false
+        };
+        this.taskAssignationService.createPersonalTask(newTask).subscribe({
+          next: () => {
+            saveCount++;
+            if (saveCount + saveErrors === this.recommendedPersonalTasks.length) {
+              this.messages.push({ from: 'bot', text: `Tareas guardadas en el bucket '${bucket.name}'.` });
+              this.loading = false;
+              this.userInput = '';
+            }
+          },
+          error: () => {
+            saveErrors++;
+            if (saveCount + saveErrors === this.recommendedPersonalTasks.length) {
+              this.messages.push({ from: 'bot', text: `Algunas tareas no se pudieron guardar.` });
+              this.loading = false;
+              this.userInput = '';
+            }
+          }
+        });
+      });
+      return;
+    }
+
+    // Flujo normal: pedir recomendaciones
+    this.chatbotService
+      .getRecommendedTasks({ userId, message: this.userInput })
+      .subscribe(
+        (res: any) => {
+          // Renderizar tareas personales recomendadas
+          if (res.personalTasks && res.personalTasks.length > 0) {
+            this.recommendedPersonalTasks = res.personalTasks;
+            // Mostrar cards de tareas personales recomendadas
+            this.messages.push({
+              from: 'bot',
+              text: res.response || 'Tareas personales recomendadas:',
+              personalTasks: res.personalTasks
+            });
+            // Preguntar si está de acuerdo
+            this.messages.push({ from: 'bot', text: '¿Estás de acuerdo con las tareas personales recomendadas? (Responde sí/no)' });
+            this.awaitingAcceptRecommended = true;
+          } else {
+            this.messages.push({ from: 'bot', text: res.response || 'No se encontraron tareas recomendadas.' });
+          }
           this.loading = false;
+          this.userInput = '';
+        },
+        (err: any) => {
+          this.messages.push({ from: 'bot', text: 'Error conectando con el asistente.' });
+          this.loading = false;
+          this.userInput = '';
         }
       );
-    this.userInput = '';
   }
 }

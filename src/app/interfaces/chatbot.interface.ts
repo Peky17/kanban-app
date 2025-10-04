@@ -8,7 +8,7 @@ export interface ChatbotResponse {
 
 export interface RecommendedPersonalTasks {
   response: string;
-  tasks: PersonalTask[];
+  personalTasks: PersonalTask[];
 }
 
 export interface ChatbotRequest {
