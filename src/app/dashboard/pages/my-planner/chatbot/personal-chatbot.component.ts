@@ -27,6 +27,7 @@ export class PersonalChatbotComponent {
     text: string;
     tasks?: Array<TaskAssignation & { name: string }>;
     personalTasks?: any[];
+    bucketOptions?: any[];
   }> = [];
   userInput: string = '';
   loading: boolean = false;
@@ -161,7 +162,8 @@ export class PersonalChatbotComponent {
               .join('\n');
             this.messages.push({
               from: 'bot',
-              text: `Which bucket do you want to save the tasks in?\n${bucketList}`,
+              text: `Which bucket do you want to save the tasks in?`,
+              bucketOptions: filteredBuckets
             });
             this.loading = false;
             this.userInput = '';
@@ -268,19 +270,19 @@ export class PersonalChatbotComponent {
             // Mostrar cards de tareas personales recomendadas
             this.messages.push({
               from: 'bot',
-              text: res.response || 'Tareas personales recomendadas:',
+              text: res.response || 'Recommended personal tasks:',
               personalTasks: res.personalTasks,
             });
             // Preguntar si está de acuerdo
             this.messages.push({
               from: 'bot',
-              text: '¿Estás de acuerdo con las tareas personales recomendadas? (Responde sí/no)',
+              text: 'Do you agree with the recommended personal tasks? (Reply with yes/no)',
             });
             this.awaitingAcceptRecommended = true;
           } else {
             this.messages.push({
               from: 'bot',
-              text: res.response || 'No se encontraron tareas recomendadas.',
+              text: res.response || 'No recommended personal tasks found.',
             });
           }
           this.loading = false;
@@ -289,7 +291,7 @@ export class PersonalChatbotComponent {
         (err: any) => {
           this.messages.push({
             from: 'bot',
-            text: 'Error conectando con el asistente.',
+            text: 'Error connecting to the assistant.',
           });
           this.loading = false;
           this.userInput = '';

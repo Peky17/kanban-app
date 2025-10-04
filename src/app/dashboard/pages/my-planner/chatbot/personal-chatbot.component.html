@@ -42,11 +42,14 @@
       }"
     >
       <div
-        class="d-inline-block p-2 my-1 rounded w-100"
+        class="d-inline-block p-2 my-1 rounded"
         [ngClass]="{
           'bg-primary text-white': msg.from === 'user',
           'bg-light border': msg.from === 'bot'
         }"
+        [style.maxWidth]="'80%'"
+        [style.minWidth]="'120px'"
+        [style.width]="msg.personalTasks ? '100%' : 'auto'"
       >
         <!-- Renderizar cards de personalTasks si existen -->
         <ng-container *ngIf="msg.personalTasks">
@@ -60,6 +63,24 @@
                   <span class="badge bg-secondary mb-1">{{ i + 1 }}</span>
                   <div class="fw-bold">{{ task.title }}</div>
                   <div class="text-muted">{{ task.description }}</div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div *ngIf="msg.text">{{ msg.text }}</div>
+        </ng-container>
+        <!-- Buckets como cards -->
+        <ng-container *ngIf="msg.bucketOptions">
+          <div class="row g-2 mb-2">
+            <div
+              class="col-12 col-md-6 col-lg-4"
+              *ngFor="let bucket of msg.bucketOptions; let i = index"
+            >
+              <div class="card h-100 shadow-sm border-primary">
+                <div class="card-body">
+                  <span class="badge bg-primary mb-1">{{ i + 1 }}</span>
+                  <div class="fw-bold">{{ bucket.name }}</div>
+                  <div class="text-muted">ID: {{ bucket.id }}</div>
                 </div>
               </div>
             </div>
