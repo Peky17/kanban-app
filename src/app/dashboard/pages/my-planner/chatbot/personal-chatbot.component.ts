@@ -2,6 +2,8 @@ import { Component, Output, EventEmitter } from '@angular/core';
 import { ChatbotService } from 'src/app/services/chatbot.service';
 import { AuthService } from 'src/app/services/auth.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
+import { BucketService } from 'src/app/services/bucket.service';
+import { ActivatedRoute } from '@angular/router';
 import { ChatbotResponse } from 'src/app/interfaces/chatbot.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
@@ -15,6 +17,7 @@ import { FormsModule } from '@angular/forms';
   imports: [NgStyle, NgClass, NgFor, NgIf, FormsModule],
 })
 export class PersonalChatbotComponent {
+  private boardId: number | null = null;
   // Drag and drop
   dragging = false;
   dragOffset = { x: 0, y: 0 };
@@ -65,6 +68,22 @@ export class PersonalChatbotComponent {
   ngOnInit() {
     window.addEventListener('mousemove', this.onDragMove.bind(this));
     window.addEventListener('mouseup', this.onDragEnd.bind(this));
+    // Obtener boardId desde la URL
+    this.route.parent?.params.subscribe({
+      next: (params) => {
+        if (params['id']) {
+          this.boardId = +params['id'];
+        }
+      },
+    });
+    // Fallback si no está en parent
+    this.route.params.subscribe({
+      next: (params) => {
+        if (params['id']) {
+          this.boardId = +params['id'];
+        }
+      },
+    });
     this.authService.getUserRole().subscribe({
       next: (user) => {
         this.currentUserId = user.id;
@@ -82,7 +101,9 @@ export class PersonalChatbotComponent {
   constructor(
     private chatbotService: ChatbotService,
     private taskAssignationService: TaskAssignationService,
-    private authService: AuthService
+    private authService: AuthService,
+    private bucketService: BucketService,
+    private route: ActivatedRoute
   ) {}
 
   // Estado para flujo conversacional
@@ -110,23 +131,31 @@ export class PersonalChatbotComponent {
         // Preguntar por bucket
         this.awaitingAcceptRecommended = false;
         this.awaitingBucketSelection = true;
-        // Obtener buckets del usuario
-        this.taskAssignationService.getBucketsByUserId(userId).subscribe({
+        // Obtener buckets del board y filtrar por usuario
+        if (!this.boardId) {
+          this.messages.push({ from: 'bot', text: 'No se pudo obtener el board.' });
+          this.loading = false;
+          this.userInput = '';
+          return;
+        }
+        this.bucketService.getBucketsByBoard(this.boardId).subscribe({
           next: (buckets: any[]) => {
-            this.bucketOptions = buckets;
-            if (buckets.length === 0) {
-              this.messages.push({ from: 'bot', text: 'No tienes buckets disponibles. Crea uno primero.' });
+            // Si los buckets tienen userId, filtrar por el usuario actual
+            const filteredBuckets = buckets.filter(b => !b.userId || b.userId === userId);
+            this.bucketOptions = filteredBuckets;
+            if (filteredBuckets.length === 0) {
+              this.messages.push({ from: 'bot', text: 'No tienes buckets disponibles en este board. Crea uno primero.' });
               this.loading = false;
               this.userInput = '';
               return;
             }
-            let bucketList = buckets.map(b => `- ${b.name}`).join('\n');
+            let bucketList = filteredBuckets.map(b => `- ${b.name}`).join('\n');
             this.messages.push({ from: 'bot', text: `¿En qué bucket quieres guardar las tareas?\n${bucketList}` });
             this.loading = false;
             this.userInput = '';
           },
           error: () => {
-            this.messages.push({ from: 'bot', text: 'Error obteniendo buckets.' });
+            this.messages.push({ from: 'bot', text: 'Error obteniendo buckets del board.' });
             this.loading = false;
             this.userInput = '';
           }
