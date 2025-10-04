@@ -114,10 +114,37 @@ export class PersonalChatbotComponent {
   private bucketOptions: any[] = [];
   private selectedBucketId: number | null = null;
 
+  // Estado para confirmación de recarga
+  private awaitingReloadConfirmation = false;
+
   sendMessage() {
     if (!this.userInput.trim()) return;
     this.messages.push({ from: 'user', text: this.userInput });
     this.loading = true;
+
+    // Confirmación de recarga de vista
+    if (this.awaitingReloadConfirmation) {
+      const input = this.userInput.trim().toLowerCase();
+      if (input === 'sí' || input === 'si' || input === 'yes') {
+        this.messages.push({
+          from: 'bot',
+          text: 'Reloading the view...',
+        });
+        setTimeout(() => {
+          window.location.reload();
+        }, 800);
+      } else {
+        this.messages.push({
+          from: 'bot',
+          text: 'Okay, the view will not be reloaded.',
+        });
+      }
+      this.awaitingReloadConfirmation = false;
+      this.loading = false;
+      this.userInput = '';
+      return;
+    }
+
     const userId = this.currentUserId;
     if (!userId) {
       this.messages.push({ from: 'bot', text: 'No user in session.' });
@@ -146,7 +173,7 @@ export class PersonalChatbotComponent {
           next: (buckets: any[]) => {
             // Si los buckets tienen userId, filtrar por el usuario actual
             const filteredBuckets = buckets.filter(
-              (b) => !b.userId || b.userId === userId
+              (b: any) => !b.userId || b.userId === userId
             );
             this.bucketOptions = filteredBuckets;
             if (filteredBuckets.length === 0) {
@@ -158,13 +185,10 @@ export class PersonalChatbotComponent {
               this.userInput = '';
               return;
             }
-            let bucketList = filteredBuckets
-              .map((b) => `- ${b.name}`)
-              .join('\n');
             this.messages.push({
               from: 'bot',
               text: `Which bucket do you want to save the tasks in?`,
-              bucketOptions: filteredBuckets
+              bucketOptions: filteredBuckets,
             });
             this.loading = false;
             this.userInput = '';
@@ -195,7 +219,7 @@ export class PersonalChatbotComponent {
     if (this.awaitingBucketSelection) {
       const bucketName = this.userInput.trim();
       const bucket = this.bucketOptions.find(
-        (b) => b.name.toLowerCase() === bucketName.toLowerCase()
+        (b: any) => b.name.toLowerCase() === bucketName.toLowerCase()
       );
       if (!bucket) {
         this.messages.push({
@@ -217,7 +241,7 @@ export class PersonalChatbotComponent {
       let saveCount = 0;
       let saveErrors = 0;
       const createdTasks: any[] = [];
-      this.recommendedPersonalTasks.forEach((task) => {
+      this.recommendedPersonalTasks.forEach((task: any) => {
         const newTask = {
           title: task.title,
           description: task.description,
@@ -228,7 +252,7 @@ export class PersonalChatbotComponent {
           completed: false,
         };
         this.taskAssignationService.createPersonalTask(newTask).subscribe({
-          next: (created) => {
+          next: (created: any) => {
             saveCount++;
             createdTasks.push(created);
             if (
@@ -239,9 +263,13 @@ export class PersonalChatbotComponent {
                 from: 'bot',
                 text: `Tasks saved in the bucket: '${bucket.name}'.`,
               });
+              this.messages.push({
+                from: 'bot',
+                text: 'Do you want to reload the view to see the new tasks? (Reply with yes/no)',
+              });
               this.loading = false;
               this.userInput = '';
-              // Emitir evento al padre con las tareas creadas
+              this.awaitingReloadConfirmation = true;
               this.personalTasksCreated.emit(createdTasks);
             }
           },
@@ -267,7 +295,7 @@ export class PersonalChatbotComponent {
 
     // Flujo normal: pedir recomendaciones
     this.chatbotService
-      .getRecommendedTasks({ userId, message: this.userInput })
+      .getRecommendedTasks({ userId: userId, message: this.userInput })
       .subscribe(
         (res: any) => {
           // Renderizar tareas personales recomendadas
