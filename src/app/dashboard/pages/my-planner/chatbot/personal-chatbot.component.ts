@@ -5,7 +5,7 @@ import { TaskAssignationService } from 'src/app/services/task-assignation.servic
 import { ChatbotResponse } from 'src/app/interfaces/chatbot.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
-import { FormsModule, NgModel } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-personal-chatbot',
