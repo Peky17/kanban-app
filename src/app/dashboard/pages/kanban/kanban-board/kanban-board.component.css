@@ -1,3 +1,15 @@
+/* Overlay para fade detrás del chatbot */
+.chatbot-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0,0,0,0.45);
+  z-index: 2000;
+  opacity: 1;
+  transition: opacity 0.3s;
+}
 
 /* FAB styles */
 /* FAB container bottom right */

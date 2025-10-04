@@ -176,11 +176,12 @@
 <!-- Overlay para fade detrás del chatbot -->
 <div
   *ngIf="showChatbot"
-  class="chatbot-overlay"
+  class="chatbot-overlay fade show"
   (click)="showChatbot = false"
+  style="position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: rgba(0,0,0,0.45); z-index: 2000; transition: opacity 0.3s;"
 ></div>
 
 <!-- Chatbot modal/flotante fuera del container -->
 <div *ngIf="showChatbot" class="chatbot-slide-in">
-  <app-personal-chatbot (closeChatbot)="showChatbot = false"></app-personal-chatbot>
+  <app-personal-chatbot (close)="showChatbot = false"></app-personal-chatbot>
 </div>
