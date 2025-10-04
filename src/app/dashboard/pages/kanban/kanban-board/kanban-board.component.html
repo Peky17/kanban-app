@@ -183,5 +183,8 @@
 
 <!-- Chatbot modal/flotante fuera del container -->
 <div *ngIf="showChatbot" class="chatbot-slide-in">
-  <app-personal-chatbot (close)="showChatbot = false"></app-personal-chatbot>
+  <app-personal-chatbot
+    (close)="showChatbot = false"
+    (personalTasksCreated)="onPersonalTasksCreated()"
+  ></app-personal-chatbot>
 </div>

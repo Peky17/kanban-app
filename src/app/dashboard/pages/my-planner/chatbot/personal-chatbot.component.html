@@ -47,9 +47,9 @@
           'bg-primary text-white': msg.from === 'user',
           'bg-light border': msg.from === 'bot'
         }"
-        [style.maxWidth]="'80%'"
-        [style.minWidth]="'120px'"
-        [style.width]="msg.personalTasks ? '100%' : 'auto'"
+        [style.maxWidth]="msg.from === 'user' ? '80%' : '100%'"
+        [style.minWidth]="msg.from === 'user' ? '120px' : '100%'"
+        [style.width]="msg.from === 'bot' ? '100%' : 'auto'"
       >
         <!-- Renderizar cards de personalTasks si existen -->
         <ng-container *ngIf="msg.personalTasks">

@@ -52,6 +52,11 @@ export class KanbanBoardComponent implements OnInit {
       () => {}
     );
   }
+    // Handler for personal tasks created from chatbot
+    onPersonalTasksCreated(): void {
+      // Recargar buckets y tareas desde el backend
+      this.initBucketsAndPersonalTasks();
+    }
   // trackBy para mejorar el rendimiento del ngFor de tareas
   trackByTaskId(index: number, task: any): number {
     return task.id;

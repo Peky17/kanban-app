@@ -22,6 +22,7 @@ export class PersonalChatbotComponent {
   dragOffset = { x: 0, y: 0 };
   chatbotPosition = { x: null as number | null, y: null as number | null };
   @Output() close = new EventEmitter<void>();
+  @Output() personalTasksCreated = new EventEmitter<any[]>();
   messages: Array<{
     from: 'user' | 'bot';
     text: string;
@@ -215,6 +216,7 @@ export class PersonalChatbotComponent {
         .split('T')[0];
       let saveCount = 0;
       let saveErrors = 0;
+      const createdTasks: any[] = [];
       this.recommendedPersonalTasks.forEach((task) => {
         const newTask = {
           title: task.title,
@@ -226,8 +228,9 @@ export class PersonalChatbotComponent {
           completed: false,
         };
         this.taskAssignationService.createPersonalTask(newTask).subscribe({
-          next: () => {
+          next: (created) => {
             saveCount++;
+            createdTasks.push(created);
             if (
               saveCount + saveErrors ===
               this.recommendedPersonalTasks.length
@@ -238,6 +241,8 @@ export class PersonalChatbotComponent {
               });
               this.loading = false;
               this.userInput = '';
+              // Emitir evento al padre con las tareas creadas
+              this.personalTasksCreated.emit(createdTasks);
             }
           },
           error: () => {
@@ -252,6 +257,7 @@ export class PersonalChatbotComponent {
               });
               this.loading = false;
               this.userInput = '';
+              this.personalTasksCreated.emit(createdTasks);
             }
           },
         });
