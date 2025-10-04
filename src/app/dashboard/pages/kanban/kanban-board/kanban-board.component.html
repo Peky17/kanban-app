@@ -144,10 +144,13 @@
 </div>
 
 <!-- Floating Action Button (FAB) -->
+
 <div class="fab-container">
+  <!-- FAB main button: visible only when fabOpen is false -->
   <button *ngIf="!fabOpen" class="fab-main" (click)="toggleFab()">
     <i class="fa fa-plus"></i>
   </button>
+  <!-- FAB actions: visible only when fabOpen is true -->
   <div class="fab-actions" [class.open]="fabOpen" *ngIf="fabOpen">
     <button
       class="fab-action"
@@ -163,10 +166,11 @@
     >
       <i class="fa fa-comments"></i>
     </button>
+    <!-- FAB close button: visible only when fabOpen is true -->
+    <button class="fab-action" title="Close" (click)="closeFab()">
+      <i class="fa fa-times"></i>
+    </button>
   </div>
-  <button class="fab-action" title="Close" (click)="closeFab()">
-    <i class="fa fa-times"></i>
-  </button>
 </div>
 
 <!-- Overlay para fade detrás del chatbot -->
