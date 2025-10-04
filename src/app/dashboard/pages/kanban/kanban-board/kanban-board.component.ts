@@ -36,6 +36,7 @@ import { KanbanEditPersonalTaskModalComponent } from './modals/kanban-edit-perso
   // KanbanEditPersonalTaskModalComponent,
 })
 export class KanbanBoardComponent implements OnInit {
+  showChatbot: boolean = false;
   // Método para abrir el modal de creación de bucket
   openCreateBucketModal(): void {
     const modalRef = this.modalService.open(KanbanBucketModalComponent, {
@@ -76,6 +77,7 @@ export class KanbanBoardComponent implements OnInit {
 
   // --- FAB (Floating Action Button) ---
   fabOpen = false;
+  showPersonalChatbot = false;
 
   toggleFab(): void {
     this.fabOpen = !this.fabOpen;
@@ -87,12 +89,6 @@ export class KanbanBoardComponent implements OnInit {
 
   keepFabOpen(): void {
     this.fabOpen = true;
-  }
-
-  openChatbot(): void {
-    // Aquí deberías abrir el chatbot, por ejemplo mostrando un componente, modal, etc.
-    // Por ahora solo muestra un alert temporal
-    alert('Abrir chatbot (implementar lógica)');
   }
 
   ngOnInit(): void {

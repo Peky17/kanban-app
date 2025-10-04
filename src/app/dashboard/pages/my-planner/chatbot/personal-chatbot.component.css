@@ -1,0 +1,53 @@
+/* Área de arrastre: todo el header azul */
+.chatbot-drag-area {
+  cursor: grab;
+  user-select: none;
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  background: #0d6efd;
+  /* Asegura que el área azul sea completa */
+  display: flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+/* Estilos para el chatbot Bootstrap */
+.chatbot-container {
+  max-width: 600px;
+  width: 95vw;
+  position: fixed;
+  z-index: 2000;
+  margin: 0;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  background: #fff;
+  border-radius: 12px;
+  max-height: 70vh;
+  overflow-y: auto;
+  /* Las siguientes propiedades solo se aplican si no se está moviendo manualmente */
+  left: 50%;
+  bottom: 0px;
+  transform: translateX(-50%);
+}
+.chatbot-messages {
+  font-size: 0.95rem;
+}
+
+/* Responsividad para pantallas pequeñas */
+@media (max-width: 600px) {
+  .chatbot-container {
+    max-width: 98vw;
+    width: 98vw;
+    border-radius: 8px;
+    max-height: 90vh;
+    /* Solo centrar si no se está moviendo manualmente */
+    left: 50%;
+    bottom: 0;
+    top: auto;
+    transform: translateX(-50%);
+  }
+  .chatbot-messages {
+    font-size: 1rem;
+  }
+}

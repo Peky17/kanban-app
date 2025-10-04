@@ -1,0 +1,100 @@
+<div
+  class="card chatbot-container shadow-sm"
+  [ngStyle]="
+    chatbotPosition.x !== null && chatbotPosition.y !== null
+      ? {
+          left: chatbotPosition.x + 'px',
+          top: chatbotPosition.y + 'px',
+          right: 'auto',
+          bottom: 'auto',
+          transform: 'none',
+          position: 'fixed'
+        }
+      : {}
+  "
+>
+  <div
+    class="card-header bg-primary text-white d-flex justify-content-between align-items-center chatbot-drag-area"
+    (mousedown)="onDragStart($event)"
+    [ngStyle]="{ cursor: dragging ? 'grabbing' : 'grab', userSelect: 'none' }"
+  >
+    <div class="w-100 d-flex justify-content-between align-items-center">
+      <h5 class="mb-0">Chatbot Assistant</h5>
+      <button
+        class="btn btn-sm btn-danger"
+        (click)="closeChatbot()"
+        aria-label="Close"
+      >
+        <i class="fa fa-times"></i>
+      </button>
+    </div>
+  </div>
+  <div
+    class="card-body chatbot-messages"
+    [ngStyle]="expanded ? { height: '600px' } : { height: '350px' }"
+    style="overflow-y: auto"
+  >
+    <div
+      *ngFor="let msg of messages"
+      [ngClass]="{
+        'text-end': msg.from === 'user',
+        'text-start': msg.from === 'bot'
+      }"
+    >
+      <div
+        class="d-inline-block p-2 my-1 rounded"
+        [ngClass]="{
+          'bg-primary text-white': msg.from === 'user',
+          'bg-light border': msg.from === 'bot'
+        }"
+      >
+        <ng-container *ngIf="!msg.tasks">
+          {{ msg.text }}
+        </ng-container>
+        <ng-container *ngIf="msg.tasks">
+          <div>{{ msg.text }}</div>
+          <ul class="list-group list-group-flush">
+            <li
+              *ngFor="let task of msg.tasks"
+              class="list-group-item px-0 py-1"
+            >
+              <span class="fw-bold">{{ task.name }}</span>
+              <span
+                class="badge ms-2"
+                [ngClass]="{
+                  'bg-success': task.completed === true,
+                  'bg-danger': task.completed === false
+                }"
+              >
+                {{ task.completed === true ? "Completed" : "Pending" }}
+              </span>
+            </li>
+          </ul>
+        </ng-container>
+      </div>
+    </div>
+    <div *ngIf="loading" class="text-center my-2">
+      <span class="spinner-border spinner-border-sm"></span> Thinking...
+    </div>
+  </div>
+  <div class="card-footer">
+    <form (ngSubmit)="sendMessage()" class="d-flex">
+      <input
+        type="text"
+        class="form-control me-2"
+        [(ngModel)]="userInput"
+        [placeholder]="'Type your query about tasks...'"
+        name="chatInput"
+        autocomplete="off"
+        [disabled]="loading"
+      />
+      <button
+        class="btn btn-primary"
+        type="submit"
+        [disabled]="loading || !userInput.trim()"
+      >
+        Send
+      </button>
+    </form>
+  </div>
+</div>
