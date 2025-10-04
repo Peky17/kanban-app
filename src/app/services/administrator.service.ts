@@ -2,6 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable, BehaviorSubject } from 'rxjs';
 import { environment } from '../environments/environment';
+import { User, UserProfileUpdate } from '../interfaces/user.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -60,9 +61,9 @@ export class AdministratorService {
   }
 
 
-  updateAdministrator(id: string, data: any): Observable<any> {
+  updateAdministrator(id: string, data: UserProfileUpdate): Observable<User> {
     return new Observable(observer => {
-      this.httpClient.put<any>(`${this.baseUrl}/${id}`, data, {
+      this.httpClient.put<User>(`${this.baseUrl}/${id}`, data, {
         headers: this.getAuthHeaders(),
       }).subscribe({
         next: (res) => {

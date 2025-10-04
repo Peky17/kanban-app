@@ -17,3 +17,11 @@ export interface User {
   accountNonExpired: boolean;
   accountNonLocked: boolean;
 }
+
+export interface UserProfileUpdate {
+  name: string;
+  email: string;
+  cellphone: string;
+  won: string;
+  employeeNumber: string;
+}

@@ -1,10 +1,10 @@
-
 import { Component } from '@angular/core';
 import { User } from 'src/app/interfaces/user.interface';
 import { AuthService } from 'src/app/services/auth.service';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { AdministratorService } from 'src/app/services/administrator.service';
 
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-my-profile',
@@ -24,7 +24,10 @@ export class MyProfileComponent {
   ) {
     this.profileForm = this.fb.group({
       name: [{ value: '', disabled: true }, Validators.required],
-      email: [{ value: '', disabled: true }, [Validators.required, Validators.email]],
+      email: [
+        { value: '', disabled: true },
+        [Validators.required, Validators.email],
+      ],
       cellphone: [{ value: '', disabled: true }],
       won: [{ value: '', disabled: true }],
       employeeNumber: [{ value: '', disabled: true }],
@@ -69,15 +72,23 @@ export class MyProfileComponent {
       ...this.user,
       ...this.profileForm.value,
     };
-    this.administratorService.updateAdministrator(this.user.id.toString(), updatedData).subscribe({
-      next: (res) => {
-        this.user = { ...this.user, ...this.profileForm.value };
-        this.cancelEdit();
-        this.loading = false;
-      },
-      error: () => {
-        this.loading = false;
-      },
-    });
+    this.administratorService
+      .updateAdministrator(this.user.id.toString(), updatedData)
+      .subscribe({
+        next: (_res: any) => {
+          this.user = { ...this.user, ...this.profileForm.value };
+          this.cancelEdit();
+          this.loading = false;
+          Swal.fire({
+            icon: 'success',
+            title: 'Profile updated',
+            text: 'Your changes have been saved successfully.',
+            confirmButtonText: 'Ok',
+          });
+        },
+        error: () => {
+          this.loading = false;
+        },
+      });
   }
 }
