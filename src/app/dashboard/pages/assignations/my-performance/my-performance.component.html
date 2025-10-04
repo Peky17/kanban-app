@@ -11,7 +11,7 @@
     <div class="col-12 col-md-6 col-lg-4">
       <div class="card shadow-sm h-100">
         <div class="card-body d-flex flex-column align-items-center">
-          <h5 class="card-title text-center mb-3">Tasks Completed per Day</h5>
+          <h5 class="card-title text-center mb-3">Tasks by Priority & Status</h5>
           <canvas
             baseChart
             [data]="barChartData"
@@ -20,6 +20,11 @@
             style="max-height: 260px; width: 100%"
           >
           </canvas>
+          <div class="mt-2 text-muted text-center">
+            <small>
+              Shows the number of completed and pending tasks grouped by priority (High, Medium, Low).
+            </small>
+          </div>
         </div>
       </div>
     </div>

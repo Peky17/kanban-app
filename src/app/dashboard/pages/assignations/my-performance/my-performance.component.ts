@@ -16,13 +16,16 @@ export class MyPerformanceComponent implements OnInit {
   userId!: number;
   assignedTasks: TaskAssignation[] = [];
   completedTasks: TaskAssignation[] = [];
-  // English labels for days
-  periodLabels: string[] = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
-  completedTasksData: number[] = [0, 0, 0, 0, 0, 0, 0];
+  tasksMap: { [id: number]: import('src/app/interfaces/task.interface').Task } = {};
+  // Priorities for mapping
+  priorityLabels: string[] = ['High', 'Medium', 'Low'];
+  priorityCompletedData: number[] = [0, 0, 0];
+  priorityPendingData: number[] = [0, 0, 0];
   barChartData: ChartData<'bar'> = {
-    labels: this.periodLabels,
+    labels: this.priorityLabels,
     datasets: [
-      { data: this.completedTasksData, label: 'Completed Tasks', backgroundColor: '#42A5F5' }
+      { data: this.priorityCompletedData, label: 'Completed', backgroundColor: '#66BB6A' },
+      { data: this.priorityPendingData, label: 'Pending', backgroundColor: '#EF5350' }
     ]
   };
   barChartOptions: ChartOptions<'bar'> = {
@@ -67,8 +70,18 @@ export class MyPerformanceComponent implements OnInit {
       next: (tasks: TaskAssignation[]) => {
         this.assignedTasks = tasks;
         this.completedTasks = tasks.filter(t => t.completed);
-        this.updateCharts();
-        this.isLoading = false;
+        // Obtener los IDs únicos de las tareas asignadas
+        const taskIds = Array.from(new Set(tasks.map(t => t.task.id)));
+        // Obtener detalles completos de las tareas
+        this.taskService.tasks$.subscribe((allTasks) => {
+          this.tasksMap = {};
+          taskIds.forEach(id => {
+            const found = allTasks.find(t => t.id === id);
+            if (found) this.tasksMap[id] = found;
+          });
+          this.updateCharts();
+          this.isLoading = false;
+        });
       },
       error: () => {
         this.isLoading = false;
@@ -77,18 +90,28 @@ export class MyPerformanceComponent implements OnInit {
   }
 
   updateCharts() {
-    // Reset data
-    this.completedTasksData = [0, 0, 0, 0, 0, 0, 0];
-    // Count completed tasks per day (by dueDate or createdAt)
-    this.completedTasks.forEach(taskAssign => {
-      // For demo, use random day. Replace with real date logic as needed.
-      const dayIdx = Math.floor(Math.random() * 7); // Replace with: getDayIndex(task)
-      this.completedTasksData[dayIdx]++;
+    // Reset priority data
+    this.priorityCompletedData = [0, 0, 0];
+    this.priorityPendingData = [0, 0, 0];
+    // Map tasks by priority and completion
+    this.assignedTasks.forEach(taskAssign => {
+      // Usar la tarea completa desde tasksMap
+      const task = this.tasksMap[taskAssign.task.id];
+      const priority = task?.priority || '';
+      const idx = this.priorityLabels.findIndex(p => p.toLowerCase() === priority.toLowerCase());
+      if (idx !== -1) {
+        if (taskAssign.completed) {
+          this.priorityCompletedData[idx]++;
+        } else {
+          this.priorityPendingData[idx]++;
+        }
+      }
     });
     this.barChartData = {
-      labels: this.periodLabels,
+      labels: this.priorityLabels,
       datasets: [
-        { data: this.completedTasksData, label: 'Completed Tasks', backgroundColor: '#42A5F5' }
+        { data: this.priorityCompletedData, label: 'Completed', backgroundColor: '#66BB6A' },
+        { data: this.priorityPendingData, label: 'Pending', backgroundColor: '#EF5350' }
       ]
     };
     // Pie chart
