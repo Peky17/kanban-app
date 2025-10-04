@@ -4,7 +4,6 @@ import { AuthService } from 'src/app/services/auth.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
 import { BucketService } from 'src/app/services/bucket.service';
 import { ActivatedRoute } from '@angular/router';
-import { ChatbotResponse } from 'src/app/interfaces/chatbot.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
 import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -135,7 +134,7 @@ export class PersonalChatbotComponent {
         if (!this.boardId) {
           this.messages.push({
             from: 'bot',
-            text: 'No se pudo obtener el board.',
+            text: 'Board not found.',
           });
           this.loading = false;
           this.userInput = '';
@@ -151,7 +150,7 @@ export class PersonalChatbotComponent {
             if (filteredBuckets.length === 0) {
               this.messages.push({
                 from: 'bot',
-                text: 'No tienes buckets disponibles en este board. Crea uno primero.',
+                text: 'You have no available buckets in this board. Create one first.',
               });
               this.loading = false;
               this.userInput = '';
@@ -162,7 +161,7 @@ export class PersonalChatbotComponent {
               .join('\n');
             this.messages.push({
               from: 'bot',
-              text: `¿En qué bucket quieres guardar las tareas?\n${bucketList}`,
+              text: `Which bucket do you want to save the tasks in?\n${bucketList}`,
             });
             this.loading = false;
             this.userInput = '';
@@ -170,7 +169,7 @@ export class PersonalChatbotComponent {
           error: () => {
             this.messages.push({
               from: 'bot',
-              text: 'Error obteniendo buckets del board.',
+              text: 'Error fetching board buckets.',
             });
             this.loading = false;
             this.userInput = '';
@@ -180,7 +179,7 @@ export class PersonalChatbotComponent {
       } else {
         this.messages.push({
           from: 'bot',
-          text: 'Tareas recomendadas descartadas.',
+          text: 'Recommended tasks discarded.',
         });
         this.awaitingAcceptRecommended = false;
         this.loading = false;
@@ -198,7 +197,7 @@ export class PersonalChatbotComponent {
       if (!bucket) {
         this.messages.push({
           from: 'bot',
-          text: 'Bucket no encontrado. Escribe el nombre exacto.',
+          text: 'Bucket not found. Please type the exact name.',
         });
         this.loading = false;
         this.userInput = '';
@@ -233,7 +232,7 @@ export class PersonalChatbotComponent {
             ) {
               this.messages.push({
                 from: 'bot',
-                text: `Tareas guardadas en el bucket '${bucket.name}'.`,
+                text: `Tasks saved in the bucket: '${bucket.name}'.`,
               });
               this.loading = false;
               this.userInput = '';
@@ -247,7 +246,7 @@ export class PersonalChatbotComponent {
             ) {
               this.messages.push({
                 from: 'bot',
-                text: `Algunas tareas no se pudieron guardar.`,
+                text: `Some tasks could not be saved.`,
               });
               this.loading = false;
               this.userInput = '';
