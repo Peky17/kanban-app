@@ -4,11 +4,15 @@ import { AuthService } from 'src/app/services/auth.service';
 import { TaskAssignationService } from 'src/app/services/task-assignation.service';
 import { ChatbotResponse } from 'src/app/interfaces/chatbot.interface';
 import { TaskAssignation } from 'src/app/interfaces/taskAssignation';
+import { NgClass, NgFor, NgIf, NgStyle } from '@angular/common';
+import { FormsModule, NgModel } from '@angular/forms';
 
 @Component({
   selector: 'app-personal-chatbot',
   templateUrl: './personal-chatbot.component.html',
   styleUrls: ['./personal-chatbot.component.css'],
+  standalone: true,
+  imports: [NgStyle, NgClass, NgFor, NgIf, FormsModule],
 })
 export class PersonalChatbotComponent {
   // Drag and drop

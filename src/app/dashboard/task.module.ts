@@ -45,7 +45,6 @@ import { ChatbotComponent } from './shared/chatbot/chatbot.component';
 import { MyPlannerComponent } from './pages/my-planner/my-planner.component';
 import { CreateBoardModalPlannerComponent } from './pages/my-planner/modals/create-board-modal-planner/create-board-modal-planner.component';
 import { UpdateBoardModalPlannerComponent } from './pages/my-planner/modals/update-board-modal-planner/update-board-modal-planner.component';
-import { PersonalChatbotComponent } from './pages/my-planner/chatbot/personal-chatbot.component';
 @NgModule({
   declarations: [
     MainTaskComponent,
@@ -87,7 +86,6 @@ import { PersonalChatbotComponent } from './pages/my-planner/chatbot/personal-ch
     MyPlannerComponent,
     CreateBoardModalPlannerComponent,
     UpdateBoardModalPlannerComponent,
-    PersonalChatbotComponent
   ],
   imports: [CommonModule, TaskRoutingModule, ReactiveFormsModule, FormsModule, NgChartsModule, LoaderComponent],
   exports: [MainTaskComponent, NavbarComponent, FooterComponent],

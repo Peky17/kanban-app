@@ -156,11 +156,27 @@
     >
       <i class="fa fa-bookmark"></i>
     </button>
-    <button class="fab-action" title="Chatbot">
+    <button
+      class="fab-action"
+      title="Chatbot"
+      (click)="showChatbot = !showChatbot"
+    >
       <i class="fa fa-comments"></i>
     </button>
   </div>
   <button class="fab-action" title="Close" (click)="closeFab()">
     <i class="fa fa-times"></i>
   </button>
+</div>
+
+<!-- Overlay para fade detrás del chatbot -->
+<div
+  *ngIf="showChatbot"
+  class="chatbot-overlay"
+  (click)="showChatbot = false"
+></div>
+
+<!-- Chatbot modal/flotante fuera del container -->
+<div *ngIf="showChatbot" class="chatbot-slide-in">
+  <app-personal-chatbot (closeChatbot)="showChatbot = false"></app-personal-chatbot>
 </div>

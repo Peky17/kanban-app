@@ -24,16 +24,14 @@ import { BucketPersonalTask } from 'src/app/interfaces/bucketPersonalTasks.inter
 import { KanbanBucketModalComponent } from './modals/kanban-bucket-modal.component';
 import { KanbanPersonalTaskModalComponent } from './modals/kanban-personal-task-modal.component';
 import { KanbanEditPersonalTaskModalComponent } from './modals/kanban-edit-personal-task-modal.component';
+import { PersonalChatbotComponent } from '../../my-planner/chatbot/personal-chatbot.component';
 
 @Component({
   selector: 'app-kanban-board',
   templateUrl: './kanban-board.component.html',
   styleUrls: ['./kanban-board.component.css'],
   standalone: true,
-  imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent],
-  // Add the edit modal component to the standalone imports
-  // (if using standalone components, otherwise add to module)
-  // KanbanEditPersonalTaskModalComponent,
+  imports: [CdkDropList, CdkDrag, NgFor, NgIf, LoaderComponent, PersonalChatbotComponent],
 })
 export class KanbanBoardComponent implements OnInit {
   showChatbot: boolean = false;
