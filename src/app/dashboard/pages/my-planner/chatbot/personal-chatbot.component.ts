@@ -115,7 +115,7 @@ export class PersonalChatbotComponent {
 
   sendMessage() {
     if (!this.userInput.trim()) return;
-  this.messages.push({ from: 'user', text: this.userInput });
+    this.messages.push({ from: 'user', text: this.userInput });
     this.loading = true;
     const userId = this.currentUserId;
     if (!userId) {
@@ -133,7 +133,10 @@ export class PersonalChatbotComponent {
         this.awaitingBucketSelection = true;
         // Obtener buckets del board y filtrar por usuario
         if (!this.boardId) {
-          this.messages.push({ from: 'bot', text: 'No se pudo obtener el board.' });
+          this.messages.push({
+            from: 'bot',
+            text: 'No se pudo obtener el board.',
+          });
           this.loading = false;
           this.userInput = '';
           return;
@@ -141,28 +144,44 @@ export class PersonalChatbotComponent {
         this.bucketService.getBucketsByBoard(this.boardId).subscribe({
           next: (buckets: any[]) => {
             // Si los buckets tienen userId, filtrar por el usuario actual
-            const filteredBuckets = buckets.filter(b => !b.userId || b.userId === userId);
+            const filteredBuckets = buckets.filter(
+              (b) => !b.userId || b.userId === userId
+            );
             this.bucketOptions = filteredBuckets;
             if (filteredBuckets.length === 0) {
-              this.messages.push({ from: 'bot', text: 'No tienes buckets disponibles en este board. Crea uno primero.' });
+              this.messages.push({
+                from: 'bot',
+                text: 'No tienes buckets disponibles en este board. Crea uno primero.',
+              });
               this.loading = false;
               this.userInput = '';
               return;
             }
-            let bucketList = filteredBuckets.map(b => `- ${b.name}`).join('\n');
-            this.messages.push({ from: 'bot', text: `¿En qué bucket quieres guardar las tareas?\n${bucketList}` });
+            let bucketList = filteredBuckets
+              .map((b) => `- ${b.name}`)
+              .join('\n');
+            this.messages.push({
+              from: 'bot',
+              text: `¿En qué bucket quieres guardar las tareas?\n${bucketList}`,
+            });
             this.loading = false;
             this.userInput = '';
           },
           error: () => {
-            this.messages.push({ from: 'bot', text: 'Error obteniendo buckets del board.' });
+            this.messages.push({
+              from: 'bot',
+              text: 'Error obteniendo buckets del board.',
+            });
             this.loading = false;
             this.userInput = '';
-          }
+          },
         });
         return;
       } else {
-        this.messages.push({ from: 'bot', text: 'Tareas recomendadas descartadas.' });
+        this.messages.push({
+          from: 'bot',
+          text: 'Tareas recomendadas descartadas.',
+        });
         this.awaitingAcceptRecommended = false;
         this.loading = false;
         this.userInput = '';
@@ -173,9 +192,14 @@ export class PersonalChatbotComponent {
     // Si está esperando selección de bucket
     if (this.awaitingBucketSelection) {
       const bucketName = this.userInput.trim();
-      const bucket = this.bucketOptions.find(b => b.name.toLowerCase() === bucketName.toLowerCase());
+      const bucket = this.bucketOptions.find(
+        (b) => b.name.toLowerCase() === bucketName.toLowerCase()
+      );
       if (!bucket) {
-        this.messages.push({ from: 'bot', text: 'Bucket no encontrado. Escribe el nombre exacto.' });
+        this.messages.push({
+          from: 'bot',
+          text: 'Bucket no encontrado. Escribe el nombre exacto.',
+        });
         this.loading = false;
         this.userInput = '';
         return;
@@ -185,7 +209,9 @@ export class PersonalChatbotComponent {
       // Guardar cada tarea recomendada
       const now = new Date();
       const createdAt = now.toISOString().split('T')[0];
-      const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0];
+      const dueDate = new Date(now.getTime() + 7 * 24 * 60 * 60 * 1000)
+        .toISOString()
+        .split('T')[0];
       let saveCount = 0;
       let saveErrors = 0;
       this.recommendedPersonalTasks.forEach((task) => {
@@ -196,25 +222,37 @@ export class PersonalChatbotComponent {
           bucketId: this.selectedBucketId,
           createdAt: createdAt,
           dueDate: dueDate,
-          completed: false
+          completed: false,
         };
         this.taskAssignationService.createPersonalTask(newTask).subscribe({
           next: () => {
             saveCount++;
-            if (saveCount + saveErrors === this.recommendedPersonalTasks.length) {
-              this.messages.push({ from: 'bot', text: `Tareas guardadas en el bucket '${bucket.name}'.` });
+            if (
+              saveCount + saveErrors ===
+              this.recommendedPersonalTasks.length
+            ) {
+              this.messages.push({
+                from: 'bot',
+                text: `Tareas guardadas en el bucket '${bucket.name}'.`,
+              });
               this.loading = false;
               this.userInput = '';
             }
           },
           error: () => {
             saveErrors++;
-            if (saveCount + saveErrors === this.recommendedPersonalTasks.length) {
-              this.messages.push({ from: 'bot', text: `Algunas tareas no se pudieron guardar.` });
+            if (
+              saveCount + saveErrors ===
+              this.recommendedPersonalTasks.length
+            ) {
+              this.messages.push({
+                from: 'bot',
+                text: `Algunas tareas no se pudieron guardar.`,
+              });
               this.loading = false;
               this.userInput = '';
             }
-          }
+          },
         });
       });
       return;
@@ -232,19 +270,28 @@ export class PersonalChatbotComponent {
             this.messages.push({
               from: 'bot',
               text: res.response || 'Tareas personales recomendadas:',
-              personalTasks: res.personalTasks
+              personalTasks: res.personalTasks,
             });
             // Preguntar si está de acuerdo
-            this.messages.push({ from: 'bot', text: '¿Estás de acuerdo con las tareas personales recomendadas? (Responde sí/no)' });
+            this.messages.push({
+              from: 'bot',
+              text: '¿Estás de acuerdo con las tareas personales recomendadas? (Responde sí/no)',
+            });
             this.awaitingAcceptRecommended = true;
           } else {
-            this.messages.push({ from: 'bot', text: res.response || 'No se encontraron tareas recomendadas.' });
+            this.messages.push({
+              from: 'bot',
+              text: res.response || 'No se encontraron tareas recomendadas.',
+            });
           }
           this.loading = false;
           this.userInput = '';
         },
         (err: any) => {
-          this.messages.push({ from: 'bot', text: 'Error conectando con el asistente.' });
+          this.messages.push({
+            from: 'bot',
+            text: 'Error conectando con el asistente.',
+          });
           this.loading = false;
           this.userInput = '';
         }
