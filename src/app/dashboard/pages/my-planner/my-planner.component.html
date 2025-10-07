@@ -1,16 +1,18 @@
 <main class="jumbotron" role="main">
+  <!-- Loader -->
+  <app-loader *ngIf="isLoading"></app-loader>
   <!-- Info section -->
-  <section class="jumbotron text-center">
+  <section class="jumbotron text-center" *ngIf="!isLoading">
     <div class="container">
       <h1 class="jumbotron-heading">My Kanban Boards</h1>
       <p class="lead text-muted">
         Here you can manage your personal Kanban boards
       </p>
     </div>
-  <app-create-board-modal-planner (boardCreated)="onBoardCreated($event)"></app-create-board-modal-planner>
+    <app-create-board-modal-planner (boardCreated)="onBoardCreated($event)"></app-create-board-modal-planner>
   </section>
-  <br />
-  <section class="jumbotron text-center">
+  <br *ngIf="!isLoading" />
+  <section class="jumbotron text-center" *ngIf="!isLoading">
     <div class="container">
       <div class="row">
         <!-- cards -->

@@ -18,6 +18,7 @@ import Swal from 'sweetalert2';
 export class MyPlannerComponent implements OnInit {
   personalBoards: Board[] = [];
   userId: number | null = null;
+  isLoading: boolean = true;
 
   constructor(
     private router: Router,
@@ -40,24 +41,27 @@ export class MyPlannerComponent implements OnInit {
         // 2. Obtener asociaciones user-board por userId
         this.boardService.getUserBoardAssociationByUserId(this.userId).subscribe({
           next: (userBoardAssociations) => {
-            // Si el endpoint regresa un array:
             const associations = Array.isArray(userBoardAssociations) ? userBoardAssociations : [userBoardAssociations];
-            // 3. Por cada asociación, obtener el board
             const boardRequests = associations.map((assoc: UserBoard) =>
               this.boardService.getBoardById(assoc.boardId)
             );
-            // Esperar a que todas las peticiones de boards terminen
             Promise.all(boardRequests.map(obs => obs.toPromise())).then((boards: (Board | undefined)[]) => {
               this.personalBoards = boards.filter((b): b is Board => !!b);
+              this.isLoading = false;
+            }).catch(() => {
+              this.personalBoards = [];
+              this.isLoading = false;
             });
           },
           error: (err) => {
             this.personalBoards = [];
+            this.isLoading = false;
           }
         });
       },
       error: (err) => {
         this.personalBoards = [];
+        this.isLoading = false;
       }
     });
   }
@@ -94,13 +98,16 @@ export class MyPlannerComponent implements OnInit {
       reverseButtons: true
     }).then((result) => {
       if (result.isConfirmed) {
+        this.isLoading = true;
         this.boardService.deleteBoardById(board.id).subscribe({
           next: () => {
             this.personalBoards = this.personalBoards.filter(b => b.id !== board.id);
             Swal.fire('Deleted!', 'The board has been deleted.', 'success');
+            this.isLoading = false;
           },
           error: (err) => {
             Swal.fire('Error', err.error?.message || 'Could not delete the board.', 'error');
+            this.isLoading = false;
           }
         });
       }
